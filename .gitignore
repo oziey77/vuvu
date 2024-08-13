@@ -1,0 +1,33 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+
+# celery 
+celerybeat-schedule.* 
+
+# Environments 
+.env 
+.venv 
+env/
+
+# Visual Studio Code # 
+.vscode/* 
+!.vscode/settings.json 
+!.vscode/tasks.json 
+!.vscode/launch.json 
+!.vscode/extensions.json 
+.history
+.vscode
+
+# mkdocs documentation 
+/site 
+static/
+
+# 
+vuvu/settings.py
+settings.py
+test.py
