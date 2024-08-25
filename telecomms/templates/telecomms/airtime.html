@@ -1,0 +1,194 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuvu - Buy Airtime</title>
+    {% include 'users/includes/header.html' %}
+</head>
+<body>
+    <!-- Transaction Form -->
+    <div class="main-content transasction-page" style="display: none;">
+        <div class="top-section">
+            <!-- Header -->
+            <div class="services-header">
+                <div class="back-nav">
+                    <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7071 4.29289C12.0976 4.68342 12.0976 5.31658 11.7071 5.70711L6.41421 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H6.41421L11.7071 18.2929C12.0976 18.6834 12.0976 19.3166 11.7071 19.7071C11.3166 20.0976 10.6834 20.0976 10.2929 19.7071L3.29289 12.7071C3.10536 12.5196 3 12.2652 3 12C3 11.7348 3.10536 11.4804 3.29289 11.2929L10.2929 4.29289C10.6834 3.90237 11.3166 3.90237 11.7071 4.29289Z" fill="#000000"/>
+                    </svg>
+                    <p>Back</p>
+                </div>
+                <div class="service-info">
+                    <p >Airtime</p>
+                    <a href="javascript:void(0)" >Transaction History</a>
+                </div>            
+            </div>
+            <!-- Wallet Balance -->
+            <div class="wallet-summary">
+                <p class="header">Available VPoints</p>
+                <p class="balance">1,000.00</p>
+            </div>
+        </div>
+        
+        <!-- Transaction Form -->
+         <div class="transaction-form">
+            <p class="tag">Fill out the required details below</p>
+            <form action="">
+                <input type="text" name="network" hidden>
+                <div class="operator-container">
+                    <a href="javascript:void(0)" onclick="" id="network-selector">
+                        <div class="network-selector">
+                            <div class="network-group">
+                                <div class="icon-box" id="selectedOperatorImg">
+                                    <img src="" alt="">    
+                                </div>
+                                <p class="operator-text">Select a network</p>
+                            </div>                    
+                            <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>                        
+                        </div>
+                    </a>                    
+                    <div class="dropdown" id="network-dropdown">
+                        <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/mtnlogo.png' %}" network-data="MTN" >
+                            <div class="item">
+                                <div class="icon-box">
+                                    <img src="{% static 'telecomms/images/mtnlogo.png' %}" alt="">
+                                </div>
+                                <div class="list">
+                                    <p>MTN</p>
+                                    <small>MTN Airtime</small>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/glologo.png' %}" network-data="GLO" >
+                            <div class="item">
+                                <div class="icon-box">
+                                    <img src="{% static 'telecomms/images/glologo.png' %}" alt="">
+                                </div>
+                                <div class="list">
+                                    <p>GLO</p>
+                                    <small>Glo Airtime</small>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/airtellogo.png' %}" network-data="Airtel" >
+                            <div class="item">
+                                <div class="icon-box">
+                                    <img src="{% static 'telecomms/images/airtellogo.png' %}" alt="">
+
+                                </div>
+                                <div class="list">
+                                    <p>AIRTEL</p>
+                                    <small>Airtel Airtime</small>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/9mobilelogo.png' %}" network-data="9Mobile" >
+                            <div class="item">
+                                <div class="icon-box">
+                                    <img src="{% static 'telecomms/images/9mobilelogo.png' %}" alt="">
+
+                                </div>
+                                <div class="list">
+                                    <p>9MOBILE</p>
+                                    <small>9Mobile Airtime</small>
+                                </div>
+                            </div>
+                        </a>
+
+
+                    </div>
+                </div>
+                
+                <input type="text" name="phone_number" id="phone_number" placeholder="Enter phone number" maxlength="11" inputmode="numeric">
+                <input type="text" class="" name="amount" id="amount" placeholder="How much?" inputmode="numeric">
+                
+
+                <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="buyAirtime">Buy Airtime</button>
+            </form>
+         </div>
+    </div>
+
+    <!-- Bill Summary -->
+    <div class="main-content transasction-page" id="billSummary" style="display: none;">
+        <div class="top-section">
+            <!-- Header -->
+            <div class="services-header">
+                <div class="back-nav">
+                    <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7071 4.29289C12.0976 4.68342 12.0976 5.31658 11.7071 5.70711L6.41421 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H6.41421L11.7071 18.2929C12.0976 18.6834 12.0976 19.3166 11.7071 19.7071C11.3166 20.0976 10.6834 20.0976 10.2929 19.7071L3.29289 12.7071C3.10536 12.5196 3 12.2652 3 12C3 11.7348 3.10536 11.4804 3.29289 11.2929L10.2929 4.29289C10.6834 3.90237 11.3166 3.90237 11.7071 4.29289Z" fill="#000000"/>
+                    </svg>
+                    <p>Back</p>
+                </div>    
+                <p class="header">Bill Summary</p>       
+            </div>
+        </div>
+        <div class="details">
+            <div class="data">
+                <p class="info">Network Provider</p>
+                <p class="value" id="networOperator">9Mobile</p>
+            </div>
+            <div class="data">
+                <p class="info">Phone Number</p>
+                <p class="value" id="recipient">09158470201</p>
+            </div>
+            <div class="data">
+                <p class="info">Amount</p>
+                <p class="value" id="airtimeAmount">VP60</p>
+            </div>
+            <div class="data">
+                <p class="info">Discount</p>
+                <p class="value" id="discount">VP1.20</p>
+            </div>
+            <hr>
+            <div class="data">
+                <p class="info">Total</p>
+                <p class="value" id="total">VP58.80</p>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button href="javascript:void(0)" class="secondary-btn " id="cancelAirtime">Cancel</button>
+            <button href="javascript:void(0)" class="primary-btn"  id="purchaseAirtime">Purchase</button>
+        </div>
+
+    </div>
+
+    <!-- Transaction Feedback -->
+    <div class="main-content transasction-page" id="transactionFeedback" style="display: block;"> 
+        <div class="close-container">
+            <div class="close-nav">
+                <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="Menu / Close_SM">
+                    <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                </svg>
+                <small>close</small>
+            </div>
+        </div> 
+        <div class="svg-container">
+            <svg width="300px" height="300px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M905.92 237.76a32 32 0 0 0-52.48 36.48A416 416 0 1 1 96 512a418.56 418.56 0 0 1 297.28-398.72 32 32 0 1 0-18.24-61.44A480 480 0 1 0 992 512a477.12 477.12 0 0 0-86.08-274.24z" fill="green" />
+                <path d="M630.72 113.28A413.76 413.76 0 0 1 768 185.28a32 32 0 0 0 39.68-50.24 476.8 476.8 0 0 0-160-83.2 32 32 0 0 0-18.24 61.44zM489.28 86.72a36.8 36.8 0 0 0 10.56 6.72 30.08 30.08 0 0 0 24.32 0 37.12 37.12 0 0 0 10.56-6.72A32 32 0 0 0 544 64a33.6 33.6 0 0 0-9.28-22.72A32 32 0 0 0 505.6 32a20.8 20.8 0 0 0-5.76 1.92 23.68 23.68 0 0 0-5.76 2.88l-4.8 3.84a32 32 0 0 0-6.72 10.56A32 32 0 0 0 480 64a32 32 0 0 0 2.56 12.16 37.12 37.12 0 0 0 6.72 10.56zM230.08 467.84a36.48 36.48 0 0 0 0 51.84L413.12 704a36.48 36.48 0 0 0 51.84 0l328.96-330.56A36.48 36.48 0 0 0 742.08 320l-303.36 303.36-156.8-155.52a36.8 36.8 0 0 0-51.84 0z" fill="green" />
+            </svg>
+        </div> 
+        <div class="feedback">
+            <p>Your Airtime Purchase Was <br>Successfully</p>
+            <small>Check you phone, your airtime <br>should be received within the next <br>minute.</small>
+        </div>
+        
+        <a class="primary-btn reset-successful" href="javscript:void(0)" onclick="">Transaction History</a>       
+        
+    </div>
+
+    <!-- Bottom Navs -->
+    {% include 'users/includes/bottom-navs.html' %}
+    <script src="{% static 'telecomms/js/airtime.js' %}"></script>
+    <script src="{% static 'telecomms/js/simple.money.format.js' %}"></script>
+    <script type="text/javascript">
+		$('.money').simpleMoneyFormat();
+	</script>
+    
+</body>
+</html>

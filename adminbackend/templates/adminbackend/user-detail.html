@@ -1,0 +1,92 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+        
+
+        <!-- Main content -->
+        <div class="main-content">
+            <!-- Fund user -->
+             {% if user.is_staff %}
+            <form action="" method="post">
+                {% csrf_token %}
+                <p class="header">Fund User Wallet</p>
+                <div class="input-group">
+                    <select name="transaction-type" id="" required>
+                        <option value="Admin Deposit">Admin Deposit</option>
+                    </select>
+                </div>                
+                <div class="input-group">
+                    <input type="text" placeholder="Session ID" class="input-element" name="session-id" required>                    
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="Amount" class="input-element" name="amount" required>                    
+                </div>
+                <!-- <div class="input-group">
+                    <input type="text" placeholder="Remark" class="input-element" name="comment" required>                    
+                </div> -->
+                <button class="primary-button full-button">Fund User</button>
+            </form>
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="feedback-messages {{message.tags}}">
+                        <p>{{message}}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% endif %}
+            
+            <!-- Table -->
+            <div class="table-container">
+                <table class="">
+                    <caption>User Detail</caption>
+                    <thead>
+                        <tr>
+                        <th scope="col">SN</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone Number</th>
+                        <th scope="col">Total Transaction</th>
+                        <th scope="col">Balance</th>
+                        <!-- <th scope="col">Transaction Value</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td data-label="SN">1</td>
+                        <td data-label="Username">{{ customer.username }}</td>
+                        <td data-label="Email"> {{ customer.email }}</td>
+                        <td data-label="Phone Number"> {{ customer.phone_number }}</td>
+                        <td data-label="Total Transactions"> {{ customer.transaction_count }}</td>
+                        <td data-label="Balance"> VPoints: {{ customer.wallet_balances.balance|intcomma }}</td>
+                        <!-- <td data-label="Transaction Value"><span>&#8358;</span> {{ data.transaction_value|intcomma }}</td> -->
+                        </tr>
+                    </tbody>
+                </table> 
+                <div class="quick-links">
+                    <a href="{% url 'user-wallet-funding' customer.username %}">Wallet Funding</a>
+                    <a href="javascript:void(0)">Wallet Activities</a>
+                </div>             
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

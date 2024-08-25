@@ -1,0 +1,49 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuvu - Login</title>
+    {% include 'users/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        <h2 class="auth-header">Login With Email</h2>
+        <p class="tagline">Please enter email and password to<br>login to your account</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="email" name="email" id="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="input-group right-float">
+                <input type="password" name="password" id="password" placeholder="Enter Password" required>
+                <a class="password-reveal" href="javascript:void(0)">Show</a>
+            </div>
+            <p class="forgot-password"><a href="{% url 'forgot-password' %}" onclick="">Forgot Password?</a></p>
+
+            <div class="login-group">
+                <p class="auth-prompt">Not yet a user? <a href="{% url 'signup' %}" onclick="">Create Account</a></p>
+                <!-- <input class="disabled" type="submit" value="Sign In"> -->
+                <button class="primary-btn" id="loginBTN" onclick="">Sign In</button>
+            </div>  
+            {% if messages %}
+                <div class="form-errors">
+                    {% for message in messages %}
+                        <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}          
+        
+        </form>
+    </div>
+
+    <!-- Page Preloader -->
+    <div class="loader-overlay">
+        <div class="loader"></div>
+    </div>
+
+    <script src="{% static 'users/js/login.js' %}"></script>
+    
+</body>
+</html>

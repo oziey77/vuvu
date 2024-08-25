@@ -1,0 +1,108 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+
+        <!-- Main content -->
+        <div class="main-content">
+            <!-- Search -->
+            <form action="" method="GET">
+                <div class="input-group">
+                    <input type="text" id="recipient"  placeholder="Search Username/Email" class="input-element" name="search">
+                    <button class="primary-button .search-btn">search</button>
+                </div>
+            </form>
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="feedback-messages {{message.tags}}">
+                        <p>{{message}}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <!-- Table -->
+            <div class="table-container">
+                <p class="sub-info">Total Users: {{totalUser|intcomma}}</p>
+                <table class="">
+                    <caption>Users</caption>
+                    <thead>
+                        <tr>
+                        <th scope="col">SN</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone Number</th>
+                        <th scope="col">Total Transaction</th>
+                        <th scope="col">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in allUsers %}
+                        <tr>
+                        <td data-label="SN">1</td>
+                        <td data-label="Username">{{ data.username }}</td>
+                        <td data-label="Email"> {{ data.email }}</td>
+                        <td data-label="Phone Number"> {{ data.phone_number }}</td>
+                        <td data-label="Total Transactions"> {{ data.transaction_count }}</td>
+                        <td data-label="Balance"> VPoints: {{ customer.wallet_balances.balance|intcomma }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- <div class="user-data-export">
+                    <p class="header">Export User Data</p>
+                    <div class="flex-links"> 
+                    <a href="">Last transaction ( 11 days ago)</a> 
+                    <a href="">Last transaction ( > 30 days)</a>            
+                    <a href="">Active Users( within 10 days)</a>              
+                    <a href="">Zero Transactions</a>
+                    </div>
+                    
+                </div>    -->                
+            </div>
+            <!-- Paginator -->
+            <div class="paginator">
+                <span>
+                    {% if allUsers.has_previous %}
+                    <a href="?page={{ allUsers.previous_page_number }}">Previous</a>
+                    {% else %}
+                    <a>Previous</a>
+                    {% endif %}
+                    
+                    {% for i in allUsers.paginator.page_range %}
+                    {% if i <= allUsers.number|add:5 and i >= allUsers.number|add:-5 %}
+                    {% if allUsers.number == i %}
+                        <a href="#">{{ i }} </a>
+                    {% else %}
+                        <a href="?page={{ i }}">{{ i }}</a>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if allUsers.has_next %}
+                    <a href="?page={{ allUsers.next_page_number }}">Next</a>
+                    {% else %}
+                    <a>Next</a>
+                    {% endif %}
+                </span>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

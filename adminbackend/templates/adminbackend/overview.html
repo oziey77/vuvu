@@ -1,0 +1,93 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Overview</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% include 'adminbackend/includes/admin-sidebar.html' %}
+
+        <!-- Main content -->
+        <div class="main-content">
+            <div class="summary variant-1">
+                <div class="card">
+                    <p class="data" id="user-total">{{totalUsers|intcomma}}</p>
+                    <p class="title">Total Users</p>
+                    <!-- <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="metrics-filter" id="user-filter">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8.46997 10.74L12 14.26L15.53 10.74" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg> -->
+                    <!-- <div class="calender-filter" id="user-calender">
+                        <div class="date">
+                            <label for="start">Start date:</label>
+                            <input type="date" id="user-start" name="trip-start" class="date-picker">
+                        </div>
+                        <div class="date">
+                            <label for="start">End date:</label>
+                            <input type="date" id="user-end" name="trip-start" class="date-picker">
+                        </div>
+                    </div> -->
+                </div>
+                <div class="card">
+                    <p class="data">0</p>
+                    <p class="title">Active Users</p>                    
+                </div>
+                <div class="card">
+                    <p class="data" id="transaction-total">10</p>
+                    <p class="title">Total Transactions</p>
+                    <!-- <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="metrics-filter" id="transaction-filter">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8.46997 10.74L12 14.26L15.53 10.74" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg> -->
+                </div>
+                <div class="card">
+                    <p class="data"><span>&#8358;</span><span id="revenue-total">20</span></p>
+                    <p class="title">Total Revenue</p>
+                    <!-- <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="metrics-filter right-column" id="revenue-filter">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8.46997 10.74L12 14.26L15.53 10.74" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg> -->
+                </div>
+                <div class="card">
+                    <p class="data"><span>&#8358;</span><span id="funding-total"> 15</span> </p>
+                    <p class="title">Total Wallet Funded</p>
+                    <!-- <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="metrics-filter" id="funding-filter">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8.46997 10.74L12 14.26L15.53 10.74" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg> -->
+                </div>
+                <div class="card">
+                    <p class="data"><span>&#8358;</span> 100</p>
+                    <p class="title">Current Wallet Balance</p>
+                </div>
+                <div class="card">
+                    <p class="data"><span>&#8358;</span> 230</p>
+                    <p class="title">Deleted Wallet Balance</p>
+                </div>
+                <div class="card">
+                    <p class="data"><span>&#8358;</span> 10</p>
+                    <p class="title">Deleted Accounts</p>
+                </div>
+                <div class="card">
+                    <p class="data"><span>&#8358;</span> 90</p>
+                    <p class="title">Wallet Refunded</p>
+                </div>
+                <div class="card">
+                    <p class="data"><span>&#8358;</span> 0</p>
+                    <p class="title">Blank Data</p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

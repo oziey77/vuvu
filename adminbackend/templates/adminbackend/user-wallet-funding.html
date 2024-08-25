@@ -1,0 +1,98 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Wallet Funding</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+        
+
+        <!-- Main content -->
+        <div class="main-content">
+            
+            <!-- Table -->
+            <div class="table-container">
+                <div class="quick-links">
+                    <a href="javascript:void(0)">Wallet Activities</a>
+                </div> 
+                <table class="">
+                    <caption>Wallet Funding</caption>
+                    <thead>
+                        <tr>
+                        <th scope="col">SN</th>
+                        <th scope="col">Method</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Bal. Before</th>
+                        <th scope="col">Bal. After</th>
+                        <th scope="col">Session ID</th>
+                        <th scope="col">Acc. No.</th>
+                        <th scope="col">Source Acc. NO.</th>
+                        <th scope="col">Acc. Name</th>
+                        <th scope="col">Date</th>
+                        <!-- <th scope="col">Transaction Value</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in walletFundings %}
+                        <tr>
+                        <td data-label="SN">{{forloop.counter}}</td>
+                        <td data-label="Method">{{ data.method }}</td>
+                        <td data-label="Amount">VPoints: {{ data.amount|intcomma }}</td>
+                        <td data-label="Bal. Before">VPoints: {{ data.balanceBefore|intcomma }}</td>
+                        <td data-label="Bal. After">VPoints: {{ data.balanceAfter|intcomma }}</td>
+                        <td data-label="Session ID"> VPoints: {{ customer.sessionId }}</td>
+                        <td data-label="Acc. No.">{{ data.accountNumber }}</td>
+                        <td data-label="Source Acc. NO.">{{ data.sourceAccountNumber }}</td>
+                        <td data-label="Acc. Name">{{ data.sourceAccountName }}</td>
+                        <td data-label="Date">{{ data.created }}</td>
+                        <!-- <td data-label="Transaction Value"><span>&#8358;</span> {{ data.transaction_value|intcomma }}</td> -->
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>                             
+            </div>
+            <!-- Paginator -->
+            <div class="paginator">
+                <span>
+                    {% if walletFundings.has_previous %}
+                    <a href="?page={{ walletFundings.previous_page_number }}">Previous</a>
+                    {% else %}
+                    <a>Previous</a>
+                    {% endif %}
+                    
+                    {% for i in walletFundings.paginator.page_range %}
+                    {% if i <= walletFundings.number|add:5 and i >= walletFundings.number|add:-5 %}
+                    {% if walletFundings.number == i %}
+                        <a href="#">{{ i }} </a>
+                    {% else %}
+                        <a href="?page={{ i }}">{{ i }}</a>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if walletFundings.has_next %}
+                    <a href="?page={{ walletFundings.next_page_number }}">Next</a>
+                    {% else %}
+                    <a>Next</a>
+                    {% endif %}
+                </span>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

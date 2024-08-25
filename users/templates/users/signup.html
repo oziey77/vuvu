@@ -1,0 +1,59 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuvu - Register</title>
+    {% include 'users/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        <h2 class="auth-header">Create An Account</h2>
+        <p class="tagline">Be sure to provide accurate details</p>
+        <form action="" method="post" id="signup-form">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="username" id="username" placeholder="Create Username" maxlength="25" required>
+                <div class="validation-container" id="usernameValidation">
+                    <p></p>
+                </div>
+            </div>
+            <div class="input-group">
+                <input type="email" name="email" id="email" placeholder="Enter Email" required>
+                <div class="validation-container" id="emailValidation">
+                    <p></p>
+                </div>
+            </div> 
+            <div class="input-group left-float">
+                <input type="text" name="phone_number" id="phone_number" placeholder="Phone Number" inputmode="numeric" minlength="11" maxlength="11" required>
+                <div class="validation-container" id="phoneValidation">
+                    <p></p>
+                </div>
+                <p class="tel-prefix">+234</p>
+            </div>
+            <div class="input-group right-float">
+                <input type="password" class="passwordInput" name="password1" id="password" placeholder="Password" minlength="8" required>
+                <div class="validation-container" id="passwordValidation">
+                    <p></p>
+                </div>
+                <a class="password-reveal" href="javascript:void(0)">Show</a>
+            </div>
+            <div class="input-group">
+                <input type="text" name="referral_code" id="referral_code" placeholder="Enter Referral Code (Optional)"> 
+            </div>
+                       
+            <button class="primary-btn disabled" onclick="" id="createAccountBTN" style="margin-bottom: 10px;" disabled>Create Account</button>
+            <p class="auth-prompt">Already have an account? <a href="{% url 'login' %}" onclick="">Login</a></p>
+        </form>
+    </div>
+
+    <!-- Page Preloader -->
+    <div class="loader-overlay">
+        <div class="loader"></div>
+    </div>
+
+
+    <script src="{% static 'users/js/auth.js' %}"></script>
+    
+</body>
+</html>

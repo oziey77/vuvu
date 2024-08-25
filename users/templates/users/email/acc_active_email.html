@@ -1,0 +1,12 @@
+{% autoescape off %}  
+Hi {{ user.username }}, 
+
+Thank you for registering with us at Vuvu. Please click on the link below to activate your account,  
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}  . You can login to your account immediately after you confirm your registration.
+
+You received this email because you registered at Vuvu App. If you are not the one that register with us, please ignore this email.
+
+Best regards
+Vuvu Team
+
+{% endautoescape %}  
