@@ -1,0 +1,81 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Wallet Funding</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+        
+
+        <!-- Main content -->
+        <div class="main-content">
+            
+            <!-- Table -->
+            <div class="table-container">
+                <!-- Feedback -->
+                {% if messages %}
+                {% for message in messages%}
+                <div class="feedback-messages {{message.tags}}">
+                <p>{{message}}</p>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <table>
+                  <caption>Airtime Discount</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Operator</th>
+                      <th scope="col">Discount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for discount in airtimeDiscounts %}
+                    <tr>
+                      <td data-label="Operator">{{ discount.networkOperator }}</td>
+                      <td data-label="Discount">{{ discount.rate }}%</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table> 
+                
+                <div class="update-form-container">
+                  <p class="header"> Update Airtime Discount</p>
+                  <form method="POST" action="{% url 'update-airtime-discount' %}">
+                      {% csrf_token %}
+                      <div class="input-group-grid">
+                          <label for="networkOperator">Select Operator</label><br>
+                          <select name="networkOperator" id="" required>
+                              {% for discount in airtimeDiscounts %}
+                              <option value="{{ discount.networkOperator }}">{{ discount.networkOperator }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>  
+                      <div class="input-group-grid">
+                          <label for="discount">Discount</label><br>
+                          <input type="text" id="discount" name="rate" required>                                
+                      </div> 
+                      <div class="input-group-grid" style="margin-top: 40px;">
+                          <input type="submit" name="update" value="Update" class="primary-button">
+                      </div>                                                
+                  </form>
+              </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

@@ -13,17 +13,23 @@ from django.utils.encoding import force_bytes,force_str
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
 
+from adminbackend.models import DataBackend
+from telecomms.models import ATNDataPlans, DataServices
+from telecomms.serializers import ATNDataPlanSerializer
 from users.forms import MyUserCreationForm
-from vuvu.custom_functions import is_ajax, reference
-from .models import User, UserConfirmation, UserWallet
+from users.serializers import TransactionSerializer
+from vuvu.custom_functions import is_ajax, isNum, reference
+from .models import Transaction, TransactionPIN, User, UserConfirmation, UserWallet
 
 import uuid
 import random
 import string
 from django.contrib.auth.hashers import make_password,check_password
+from django.contrib.auth.forms import PasswordResetForm,PasswordChangeForm,SetPasswordForm
 
 from django.utils import  six
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 
 # Account Activation Token
 class TokenGenerator(PasswordResetTokenGenerator):  
@@ -186,9 +192,101 @@ def loginPage(request):
                 messages.error(request,'email/password not correct')
     return render(request,'users/login.html')
 
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
 # Forgot Password page
-def forgotPasswordPage(request):
+def forgotPasswordPage(request):    
     return render(request,'users/forgot-password.html')
+
+# Forgot Password page
+def sendOTP(request):    
+    if is_ajax(request) and request.method == "POST":
+        email = request.POST.get('email').strip().lower()
+        try:
+            user = User.objects.get(email=email)
+            if user is not None:
+                OTPCode = random.randrange(111111, 999999, 5)    
+                print(f"OTP CODE IS {OTPCode}")
+                confirmationID = reference(16)
+                confirmationData = ''
+                try:
+                    oldData = UserConfirmation.objects.get(user = user)
+                    if oldData is not None:
+                        oldData.confirmation_id =confirmationID
+                        oldData.otp = OTPCode
+                        oldData.save()
+                        confirmationData = oldData
+                except ObjectDoesNotExist:
+                    confirmationData = UserConfirmation.objects.create(
+                        user = user,
+                        confirmation_id = confirmationID.lower(),
+                        otp = OTPCode,                    
+                    )
+                    confirmationData.refresh_from_db()
+                # IMPLEMENT EMAIL SEND
+                return JsonResponse({
+                    "code":"00",
+                    "confirmCode":confirmationData.confirmation_id
+                })
+
+
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                "code":"09",
+                "message":"No record found for the email address"
+
+            })
+    return render(request,'users/forgot-password.html')
+
+# Reset Password
+def resetPassword(request):
+    if is_ajax(request) and request.method == "POST":
+        confirmationID = request.POST.get('confirmationID')
+        otp = request.POST.get('otp')
+        
+        # Get OTP Data
+        try:
+            OTPData = UserConfirmation.objects.get(confirmation_id=confirmationID,otp=otp)
+            if OTPData is not None:
+                user = OTPData.user
+                form = SetPasswordForm(user, request.POST)
+                if form.is_valid():
+                    user = form.save()
+                    # messages.success(request, 'Your password was successfully updated!')
+                    return JsonResponse({
+                        'code':'00'
+                    })
+                else:            
+                    formErrors = form.errors.as_json()
+                    print(formErrors)
+                    data = json.loads(formErrors)
+                    errorMessages = {}
+                    if 'old_password' in data:    
+                        errorList = data['old_password'][0]          
+                        errorMessages.update({
+                            'old_password':errorList
+                        })
+                    if 'new_password2' in data:    
+                        errorList = data['new_password2'][0]          
+                        errorMessages.update({
+                            'new_password2':errorList
+                        })
+                    return JsonResponse({
+                        'code':'09',
+                        'data':errorMessages,
+                    })
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                'code':'09',
+                'data':"Invalid OTP",
+            })
+    else:
+        return JsonResponse({
+                'code':'09',
+                'data':"Invalid request",
+            })
+
 
 # Password Reset Sent page
 def passwordResetSentPage(request):
@@ -198,14 +296,91 @@ def passwordResetSentPage(request):
 def passwordResetSuccessfulPage(request):
     return render(request,'users/password-reset-successful.html')
 
+# Save Transaction PIN
+@login_required(login_url='login')
+def saveTransactionPin(request):
+    user = request.user
+    if is_ajax(request=request) and request.method == 'POST':
+        print(f"request POST is {request.POST}")
+        pin1 = request.POST['pin1']
+        pin2 = request.POST['pin2']
+        if isNum(pin1) == isNum(pin2):
+            try:
+                transPin = TransactionPIN.objects.get(user=user)
+                if transPin is not None:
+                    return JsonResponse({
+                        'code':'09',
+                        'message':'invalid request'
+                    })
+            except ObjectDoesNotExist:
+                TransactionPIN.objects.create(
+                    user = user,
+                    transaction_pin = make_password(pin1)
+                )
+                return JsonResponse({
+                    'code':'00',
+                    'message':'Transaction pin saved'
+                })
+        else:
+            return JsonResponse({
+                'code':'09',
+                'message':'Invalid pin sequence'
+            })
+
+    else:
+        return JsonResponse({
+            'code':'09',
+            'message':'invalid request'
+        })
+    
+
+@login_required(login_url='login')
+def updateTransactionPin(request):
+    user = request.user
+    if is_ajax(request=request) and request.method == 'POST':
+        oldPin = request.POST['oldPIN']
+        pin1 = request.POST['pin1']
+        pin2 = request.POST['pin2']
+        transPin = TransactionPIN.objects.get(user=user)
+        if check_password(oldPin, transPin.transaction_pin):
+            if isNum(pin1) == isNum(pin2):
+                transPin.transaction_pin = make_password(pin1)
+                transPin.save()
+                return JsonResponse({
+                    'code':'00',
+                    'message':'Transaction pin updated'
+                })
+            else:
+                return JsonResponse({
+                    'code':'09',
+                    'message':'Invalid pin sequence'
+                })
+        else:
+            return JsonResponse({
+                'code':'01',
+                'message':'incorrect old pin'
+                })
+
+    else:
+        return JsonResponse({
+            'code':'09',
+            'message':'invalid request'
+        })
+
 # Password Reset Successful page
 @login_required(login_url='login')
 def dashboardPage(request):
     user = request.user
 
-    print(f"USER firstname is {user.first_name}")
+    pinSet = False
+    try:
+        transactionPIN = TransactionPIN.objects.get(user=user)
+        if transactionPIN is not None:
+            pinSet = True
+    except ObjectDoesNotExist:
+        pass
     context = {
-
+        "pinSet":pinSet
     }
     return render(request,'users/dashboard.html',context)
 
@@ -219,4 +394,122 @@ def fetchWalletBalance(request):
             'cashback': walletInfo['cashback'],
             'referral_bonus': walletInfo['referral_bonus'],
         })
+    
+# Transaction History
+@login_required(login_url='login')
+def transactionHistoryPage(request):
+    user = request.user
+    wallet = UserWallet.objects.get(user=user)
+    userTransactions = Transaction.objects.filter(user=user).order_by("-id")
+
+    transaction = ''
+    if request.GET.get('transaction'):
+        transaction = request.GET.get('transaction')
+        if transaction == 'All':
+            return redirect('transaction-history')
+        else:
+            userTransactions = userTransactions.filter(transaction_type=transaction)
+
+
+    p = Paginator(userTransactions,10)
+    page_number = request.GET.get('page')
+    try:
+        transactions = p.get_page(page_number)
+    except PageNotAnInteger:
+        transactions = p.page(1)
+    except EmptyPage:
+        transactions = p.page(p.num_pages)
+    context = {
+        "wallet":wallet,
+        "totalTransactions":userTransactions.count(),
+        "transactions":transactions
+    }
+    if transaction != '':
+        context.update({
+            "transaction":transaction
+        })
+
+    return render(request,'users/transaction-history.html',context)
+
+# Transaction History
+@login_required(login_url='login')
+def getTransactionDetails(request,pk):
+    user = request.user
+    if is_ajax(request) and request.method == "GET":
+        try:
+            transaction = Transaction.objects.get(id=pk,user=user)
+            if transaction is not None:
+                serializer = TransactionSerializer(transaction,many=False)
+                return JsonResponse({
+                    "code":"00",
+                    'data':serializer.data
+                })
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                "code":'09',
+                "message":"Transaction not found"
+            })
+        
+
+# Settings Page
+@login_required(login_url='login')
+def settingsPage(request):
+    user = request.user
+    pinSet = False
+    try:
+        transactionPIN = TransactionPIN.objects.get(user=user)
+        if transactionPIN is not None:
+            pinSet = True
+    except ObjectDoesNotExist:
+        pass
+
+    print(f"PIN set is {pinSet}")
+    context = {
+        "pinSet":pinSet
+    }
+    return render(request,'users/settings.html',context)
+
+@login_required(login_url='login')
+def changePassword(request):
+    user = request.user
+    if is_ajax(request) and request.method == "POST":
+        form = PasswordChangeForm(user, request.POST)
+        form = PasswordChangeForm(user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            # messages.success(request, 'Your password was successfully updated!')
+            return JsonResponse({
+                'code':'00'
+            })
+        else:            
+            formErrors = form.errors.as_json()
+            print(formErrors)
+            data = json.loads(formErrors)
+            errorMessages = {}
+            if 'old_password' in data:    
+                errorList = data['old_password'][0]          
+                errorMessages.update({
+                    'old_password':errorList
+                })
+            if 'new_password2' in data:    
+                errorList = data['new_password2'][0]          
+                errorMessages.update({
+                    'new_password2':errorList
+                })
+            return JsonResponse({
+                'code':'09',
+                'data':errorMessages,
+            })
+    else:
+        return JsonResponse({
+                'code':'09',
+                'data':"Invalid request",
+            })
+        
+
+
+        
+        
+
 

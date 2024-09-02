@@ -23,37 +23,33 @@
             <!-- Table -->
             <div class="table-container">
                 <div class="quick-links">
-                    <a href="{% url 'user-wallet-activities' username %}">Wallet Activities</a>
+                    <a href="javascript:void(0)">Wallet Activities</a>
                 </div> 
                 <table class="">
-                    <caption>Wallet Funding</caption>
+                    <caption>Wallet Activity</caption>
                     <thead>
                         <tr>
                         <th scope="col">SN</th>
-                        <th scope="col">Method</th>
+                        <th scope="col">Event</th>
+                        <th scope="col">Trans. Type</th>
                         <th scope="col">Amount</th>
                         <th scope="col">Bal. Before</th>
                         <th scope="col">Bal. After</th>
-                        <th scope="col">Session ID</th>
-                        <th scope="col">Acc. No.</th>
-                        <th scope="col">Source Acc. NO.</th>
-                        <th scope="col">Acc. Name</th>
+                        <th scope="col">Comment</th>
                         <th scope="col">Date</th>
                         <!-- <th scope="col">Transaction Value</th> -->
                         </tr>
                     </thead>
                     <tbody>
-                        {% for data in walletFundings %}
+                        {% for data in walletActivities %}
                         <tr>
                         <td data-label="SN">{{forloop.counter}}</td>
-                        <td data-label="Method">{{ data.method }}</td>
+                        <td data-label="Event">{{ data.event_type }}</td>
+                        <td data-label="Trans. Type">{{ data.transaction_type}}</td>
                         <td data-label="Amount">VPoints: {{ data.amount|intcomma }}</td>
                         <td data-label="Bal. Before">VPoints: {{ data.balanceBefore|intcomma }}</td>
                         <td data-label="Bal. After">VPoints: {{ data.balanceAfter|intcomma }}</td>
-                        <td data-label="Session ID">{{ data.sessionId }}</td>
-                        <td data-label="Acc. No.">{{ data.accountNumber }}</td>
-                        <td data-label="Source Acc. NO.">{{ data.sourceAccountNumber }}</td>
-                        <td data-label="Acc. Name">{{ data.sourceAccountName }}</td>
+                        <td data-label="Comment">{{ data.comment }}</td>
                         <td data-label="Date">{{ data.created }}</td>
                         <!-- <td data-label="Transaction Value"><span>&#8358;</span> {{ data.transaction_value|intcomma }}</td> -->
                         </tr>
@@ -64,15 +60,15 @@
             <!-- Paginator -->
             <div class="paginator">
                 <span>
-                    {% if walletFundings.has_previous %}
-                    <a href="?page={{ walletFundings.previous_page_number }}">Previous</a>
+                    {% if walletActivities.has_previous %}
+                    <a href="?page={{ walletActivities.previous_page_number }}">Previous</a>
                     {% else %}
                     <a>Previous</a>
                     {% endif %}
                     
-                    {% for i in walletFundings.paginator.page_range %}
-                    {% if i <= walletFundings.number|add:5 and i >= walletFundings.number|add:-5 %}
-                    {% if walletFundings.number == i %}
+                    {% for i in walletActivities.paginator.page_range %}
+                    {% if i <= walletActivities.number|add:5 and i >= walletActivities.number|add:-5 %}
+                    {% if walletActivities.number == i %}
                         <a href="#">{{ i }} </a>
                     {% else %}
                         <a href="?page={{ i }}">{{ i }}</a>
@@ -80,8 +76,8 @@
                     {% endif %}
                     {% endfor %}
                     
-                    {% if walletFundings.has_next %}
-                    <a href="?page={{ walletFundings.next_page_number }}">Next</a>
+                    {% if walletActivities.has_next %}
+                    <a href="?page={{ walletActivities.next_page_number }}">Next</a>
                     {% else %}
                     <a>Next</a>
                     {% endif %}

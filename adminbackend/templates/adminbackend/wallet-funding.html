@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users</title>
+    <title>Wallet Funding</title>
     {% include 'adminbackend/includes/header.html' %}
 </head>
 <body>
@@ -21,7 +21,7 @@
             <!-- Search -->
             <form action="" method="GET">
                 <div class="input-group">
-                    <input type="text" id="recipient"  placeholder="Search Username/Email" class="input-element" name="search">
+                    <input type="text" id="recipient"  placeholder="Search Username/Email" class="input-element" name="customer">
                     <button class="primary-button .search-btn">search</button>
                 </div>
             </form>
@@ -34,32 +34,38 @@
             {% endif %}
             <!-- Table -->
             <div class="table-container">
-                <p class="sub-info">Total Users: {{totalUser|intcomma}}</p>
+                <!-- <p class="sub-info">Total Users: {{totalUser|intcomma}}</p> -->
                 <table class="">
                     <caption>Users</caption>
                     <thead>
                         <tr>
                         <th scope="col">SN</th>
                         <th scope="col">Username</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Phone Number</th>
-                        <th scope="col">Total Transaction</th>
-                        <th scope="col">Total Funding</th>
-                        <th scope="col">Successful TRX</th>
+                        <th scope="col">Method</th>
+                        <th scope="col">Session ID</th>
+                        <th scope="col">Account No.</th>
+                        <th scope="col">Source Acc. No.</th>
+                        <th scope="col">Source Acc. Name</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Bal. Before</th>
                         <th scope="col">Balance</th>
+                        <th scope="col">Date</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for data in allUsers %}
+                        {% for funding in walletFundings %}
                         <tr>
                         <td data-label="SN">{{forloop.counter}}</td>
-                        <td data-label="Username">{{ data.username }}</td>
-                        <td data-label="Email"> {{ data.email }}</td>
-                        <td data-label="Phone Number"> {{ data.phone_number }}</td>
-                        <td data-label="Total Transactions"> {{ data.transaction_count }}</td>
-                        <td data-label="Total Funding"> VPoints: {{ data.total_wallet_funding|intcomma }}</td>
-                        <td data-label="Successful TRX"> VPoints: {{ data.successful_transaction_value|intcomma }}</td>
-                        <td data-label="Balance"> VPoints: {{ data.wallet_balances.balance|intcomma }}</td>
+                        <td data-label="Username">{{ funding.user.username }}</td>
+                        <td data-label="Method"> {{ funding.method }}</td>
+                        <td data-label="Session ID"> {{ funding.sessionId }}</td>
+                        <td data-label="Account No."> {{ funding.accountNumber }}</td>
+                        <td data-label="Source Acc. No."> {{ funding.sourceAccountNumber }}</td>
+                        <td data-label="Source Acc Name"> {{ funding.sourceAccountName }}</td>
+                        <td data-label="Amount"> VPoints: {{ funding.amount|intcomma }}</td>
+                        <td data-label="Bal. Before"> VPoints: {{ funding.balanceBefore|intcomma }}</td>
+                        <td data-label="Bal. After"> VPoints: {{ funding.balanceAfter|intcomma }}</td>
+                        <td data-label="Date"> {{ funding.created }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -78,24 +84,24 @@
             <!-- Paginator -->
             <div class="paginator">
                 <span>
-                    {% if allUsers.has_previous %}
-                    <a href="?page={{ allUsers.previous_page_number }}">Previous</a>
+                    {% if walletFundings.has_previous %}
+                    <a href="?{% if customer != ''%}filter={{customer}}&{% endif%}page={{ allUsers.previous_page_number }}">Previous</a>
                     {% else %}
                     <a>Previous</a>
                     {% endif %}
                     
-                    {% for i in allUsers.paginator.page_range %}
-                    {% if i <= allUsers.number|add:5 and i >= allUsers.number|add:-5 %}
-                    {% if allUsers.number == i %}
+                    {% for i in walletFundings.paginator.page_range %}
+                    {% if i <= walletFundings.number|add:5 and i >= walletFundings.number|add:-5 %}
+                    {% if walletFundings.number == i %}
                         <a href="#">{{ i }} </a>
                     {% else %}
-                        <a href="?page={{ i }}">{{ i }}</a>
+                        <a href="?{% if customer != ''%}filter={{customer}}&{% endif%}page={{ i }}">{{ i }}</a>
                     {% endif %}
                     {% endif %}
                     {% endfor %}
                     
-                    {% if allUsers.has_next %}
-                    <a href="?page={{ allUsers.next_page_number }}">Next</a>
+                    {% if walletFundings.has_next %}
+                    <a href="?{% if customer != ''%}filter={{customer}}&{% endif%}page={{ allUsers.next_page_number }}">Next</a>
                     {% else %}
                     <a>Next</a>
                     {% endif %}

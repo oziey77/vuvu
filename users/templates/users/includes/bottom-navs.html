@@ -1,5 +1,5 @@
 <div class="bottom-navs">
-    <a href="javascript:void(0)">
+    <a href="{% url 'dashboard' %}" onclick="">
         <div class="nav-link">
             <div class="icon-box">
                 <svg width="38px" height="38px" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +24,7 @@
         </div>
     </a> 
 
-    <a href="javascript:void(0)">
+    <a href="{% url 'transaction-history' %}" onclick="">
         <div class="nav-link ">
             <div class="icon-box">
                 <svg width="38px" height="38px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -40,7 +40,7 @@
         </div>
     </a> 
 
-    <a href="javascript:void(0)">
+    <a href="{% url 'settings' %}">
         <div class="nav-link">
             <div class="icon-box">
                 <svg width="38px" height="38px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

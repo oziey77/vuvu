@@ -29,6 +29,7 @@ class User(AbstractBaseUser):
     referral_code = models.CharField(max_length=15,null=True,blank=True,default='')
     referred_by = models.CharField(max_length=15,null=True,blank=True,default='')
     login_attempts_left = models.IntegerField(default=3)
+    last_transacted = models.DateField()
 
 
     USERNAME_FIELD = 'email'
@@ -78,7 +79,25 @@ class User(AbstractBaseUser):
     
     @property
     def transaction_count(self):
-        return 0
+        transactions = Transaction.objects.filter(user=self)           
+        return transactions.count()
+    
+    @property
+    def successful_transaction_value(self):
+        total = 0
+        transactions = Transaction.objects.filter(user=self,status='Success')
+        if transactions.count() > 0:
+            total = transactions.aggregate(TOTAL = Sum('amount'))['TOTAL']            
+        return total
+    
+    @property
+    def total_wallet_funding(self):
+        from payments.models import WalletFunding
+        deposits = WalletFunding.objects.filter(user=self)
+        total = 0
+        if deposits is not None:
+            total = deposits.aggregate(TOTAL = Sum('amount'))['TOTAL']
+        return total
     
     
     objects = CustomUserManager()
@@ -88,8 +107,6 @@ CONFIMATION_TYPE = (
     ("Email","Email"),
     ("OTP","OTP"),
 )
-    
-
 class UserConfirmation(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     confirmation_id = models.CharField(max_length=16)
@@ -97,6 +114,12 @@ class UserConfirmation(models.Model):
     confirmation_type = models.CharField(max_length=10,choices=CONFIMATION_TYPE,default='Email')
     created = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.user.username
+    
+class TransactionPIN(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    transaction_pin = models.CharField(max_length=200, null=True,blank=True)
     def __str__(self):
         return self.user.username
     
@@ -137,5 +160,53 @@ class WalletActivity(models.Model):
     def __str__(self):
         return self.user.username
 
+
+
+SERVICE_TYPE = (
+    ("Airtime","Airtime"),
+    ("Data","Data"),
+    ("Cable","Cable"),
+    ("Electricity","Electricity"),
+)
+TRANSACTION_STATUS = (
+    ("Processing","Processing"),
+    ("Success","Success"),
+    ("Refunded","Refunded"),
+)
+API_BACKEND=(
+    ("ATN","ATN"),
+    ("TWINS10","TWINS10"),
+    ("HONOURWORLD","HONOURWORLD"),
+    )
+class Transaction(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    message = models.CharField(max_length=500,default='No feedback')
+    operator = models.CharField(max_length=10,)
+    transaction_type = models.CharField(max_length=20,choices=SERVICE_TYPE)
+    recipient = models.CharField(max_length=20,)
+    APIBackend = models.CharField(max_length=15,choices=SERVICE_TYPE,default='-')
+    APIreference = models.CharField(max_length=50,default='-')
+    reference = models.CharField(max_length=26)
+    package = models.CharField(max_length=20)
+    amount = models.DecimalField(max_digits=10,decimal_places=2)
+    discount = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
+    balanceBefore = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
+    balanceAfter = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
+    created = models.DateTimeField(auto_now_add=True)
+    refunded = models.BooleanField(default=False)    
+    status = models.CharField(max_length=12,choices=TRANSACTION_STATUS,default='Processing')    
+
+    def __str__(self):
+        return self.user.username
     
+
+class Cashback(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    transaction_type = models.CharField(max_length=20,choices=SERVICE_TYPE)
+    amount = models.DecimalField(max_digits=10,decimal_places=2)
+    message = models.CharField(max_length=100,default='No feedback')
+    created = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.user.username
 

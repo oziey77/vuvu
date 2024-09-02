@@ -1,0 +1,125 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+
+        <!-- Main content -->
+        <div class="main-content">
+            <!-- Search -->
+            <form action="" method="GET">
+                <div class="input-group">
+                    <input type="text"  placeholder="Search transaction reference" class="input-element" name="reference">
+                    <button class="primary-button .search-btn">search</button>
+                </div>
+            </form>
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="feedback-messages {{message.tags}}">
+                        <p>{{message}}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <!-- Table -->
+            <div class="table-container">
+                <div class="filterButtonGroup">
+                    {% csrf_token %}
+                      <form method="GET">
+                        <button type="submit" class="primary-button" id="referred" name="filter" value="airtime">Airtime</button>
+                        <button type="submit" class="primary-button" id="referred" name="filter" value="data">Data</button>
+                        <button type="submit" class="primary-button" id="standard" name="filter" value="cable">Cable</button>
+                        <button type="submit" class="primary-button" id="standard" name="filter" value="electricity">Electricity</button>
+                      </form>                        
+                </div>
+                <p class="sub-info">Total Users: {{totalTransactions|intcomma}}</p>
+                <table>
+                    {% if transactionType == 'All' %}
+                    <caption>All Transactions</caption>
+                    {% else %}
+                    <caption>{{transactionType|capfirst}} Transactions</caption>
+                    {% endif %}
+                      <thead>
+                        <tr>
+                          <th scope="col">SN</th>
+                          <th scope="col">User</th>
+                          <th scope="col">Trx. Type</th>
+                          <th scope="col">Operator</th>  
+                          <th scope="col">Reference</th>                        
+                          <th scope="col">Recipient</th>                          
+                          <th scope="col">Amount</th>
+                          <th scope="col">Bal. Before</th>
+                          <th scope="col">Bal. After</th>
+                          <!-- <th scope="col">Package</th>
+                          <th scope="col">Package</th> -->
+                          <th scope="col">Date</th>
+                          <th scope="col">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for transaction in transactions %}
+                        <tr>
+                          <td data-label="SN">{{ forloop.counter }}</td>
+                          <td data-label="User"> {{ transaction.user }}</td>
+                          <td data-label="Trx. Type">{{ transaction.transaction_type }}</td>
+                          <td data-label="Operator">{{ transaction.operator }}</td>    
+                          <td data-label="Reference">{{ transaction.reference }}</td>                       
+                          <td data-label="Recipient"> {{ transaction.recipient }}</td>                          
+                          <td data-label="Amount"><span>&#8358;</span> {{ transaction.amount|intcomma }}</td>
+                          <td data-label="Bal. Before"><span>&#8358;</span> {{ transaction.balanceBefore|intcomma }}</td>
+                          <td data-label="Bal. After"><span>&#8358;</span> {{ transaction.balanceAfter|intcomma }}</td>
+                          <!-- <td data-label="Package"> {{ transaction.package }}</td>
+                          <td data-label="Package"> {{ transaction.package }}</td> -->
+                          <td data-label="Date"> {{ transaction.created }}</td>
+                          <td data-label="status"> {{ transaction.status }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                  </table>                
+            </div>
+            <!-- Paginator -->
+            <div class="paginator">
+                <span>
+                    {% if transactions.has_previous %}
+                    <a href="?{% if transactionType != 'All'%}filter={{transactionType}}&{% endif%}page={{ transactions.previous_page_number }}">Previous</a>
+                   {% else %}
+                     <a>Previous</a>
+                   {% endif %}
+                   
+                   {% for i in transactions.paginator.page_range %}
+                   {% if i <= transactions.number|add:5 and i >= transactions.number|add:-5 %}
+                     {% if transactions.number == i %}
+                       <a href="#">{{ i }} </a>
+                     {% else %}
+                       <a href="?{% if transactionType != 'All'%}filter={{transactionType}}&{% endif%}page={{ i }}">{{ i }}</a>
+                     {% endif %}
+                    {% endif %}
+                   {% endfor %}
+                   
+                   {% if transactions.has_next %}
+                     <a href="?{% if transactionType != 'All'%}filter={{transactionType}}&{% endif%}page={{ transactions.next_page_number }}">Next</a>
+                   {% else %}
+                     <a>Next</a>
+                   {% endif %}
+                </span>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

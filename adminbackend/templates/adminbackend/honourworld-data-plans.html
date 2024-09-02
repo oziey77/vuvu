@@ -1,0 +1,125 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honourworld data Plans</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+
+        <!-- Main content -->
+        <div class="main-content">
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="feedback-messages {{message.tags}}">
+                        <p>{{message}}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <!-- Table -->
+            <div class="table-container">
+                <div class="filterButtonGroup">
+                    {% csrf_token %}
+                      <form method="GET">
+                        <button type="submit" class="primary-button" id="MTN" name="filter" value="MTN">MTN</button>
+                        <button type="submit" class="primary-button" id="Glo" name="filter" value="Glo">Glo</button>
+                        <button type="submit" class="primary-button" id="9Mobile" name="filter" value="9Mobile">9Mobile</button>
+                        <button type="submit" class="primary-button" id="Airtel" name="filter" value="Airtel">Airtel</button>
+                      </form>                        
+                </div>
+                <table id="datalist">
+                    <caption>Honourworld Data Plans</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Network</th>
+                        <th scope="col">Plan</th>
+                        <th scope="col">Vendor Rate</th>
+                        <th scope="col">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for data in currentDataOperator %}
+                      <tr>
+                        <td data-label="Network">{{ data.network_operator }}</td>
+                        <td data-label="Plan">{{ data.plan }}</td>
+                        <td data-label="Vendor Rate"><span>&#8358;</span>{{ data.vendor_price|intcomma }}</td>
+                        <td data-label="Price"><span>&#8358;</span>{{ data.price|intcomma }}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>               
+            </div>
+            <!-- DATA DISCOUNT BULK UPDATE -->
+            <div class="update-form-container">
+                <p class="header">Bulk Data Discount Update</p>
+                <form method="POST" action="{% url 'bulk-update-honourworld' %}">
+                    {% csrf_token %}
+                    <div class="input-group-grid">
+                        <label for="networkOperator">Select Operator</label><br>
+                        <select name="networkOperator" id="">
+                            <option value="MTN" selected>MTN</option>
+                            <option value="Glo">Glo</option>
+                            <option value="9Mobile">9Mobile</option>
+                            <option value="Airtel">Airtel</option>
+                        </select>
+                    </div>
+                    <div class="input-group-grid">
+                        <label for="action">Action</label><br>
+                        <select name="action" id="">
+                            <option value="Add" selected>Add</option>
+                            <option value="Substract">Substract</option>
+                        </select>
+                    </div>  
+                    <div class="input-group-grid">
+                        <label for="amount">Amount</label><br>
+                        <input type="text" name="amount" placeholder="Amount">                                
+                    </div> 
+                    <div class="input-group recepient">
+                        <input type="submit" name="update" value="Update" class="primary-button">
+                    </div>
+                                            
+                </form>
+            </div>
+            <!-- Data DISCOUNT UPDATE FORM -->
+            <div class="update-form-container">
+                <p class="header"> Update Data Discount</p>
+                <form method="POST" action="{% url 'update-honourworld-plan' %}">
+                    {% csrf_token %}
+                    <div class="input-group-grid">
+                        <label for="networkOperator">Select Plan</label><br>
+                        <select name="plan" id="dataPlans">
+                            {% for data in currentDataOperator %}
+                            <option value="{{ data.id }}">{{ data.plan }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>  
+                    <div class="input-group-grid">
+                        <label for="price">Price</label><br>
+                        <input type="text" name="price">                                
+                    </div> 
+                    <div class="input-group-grid">
+                        <input type="submit" name="update" value="Update" class="primary-button">
+                    </div>
+                    <input type="text" id="currentNetwork" value="Glo" hidden>
+                    
+                                            
+                </form>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

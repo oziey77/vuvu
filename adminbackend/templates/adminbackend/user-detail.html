@@ -60,6 +60,8 @@
                         <th scope="col">Email</th>
                         <th scope="col">Phone Number</th>
                         <th scope="col">Total Transaction</th>
+                        <th scope="col">Total Funding</th>
+                        <th scope="col">Successful TRX</th>
                         <th scope="col">Balance</th>
                         <!-- <th scope="col">Transaction Value</th> -->
                         </tr>
@@ -71,6 +73,8 @@
                         <td data-label="Email"> {{ customer.email }}</td>
                         <td data-label="Phone Number"> {{ customer.phone_number }}</td>
                         <td data-label="Total Transactions"> {{ customer.transaction_count }}</td>
+                        <td data-label="Total Funding"> VPoints: {{ customer.total_wallet_funding|intcomma }}</td>
+                        <td data-label="Successful TRX"> VPoints: {{ customer.successful_transaction_value|intcomma }}</td>
                         <td data-label="Balance"> VPoints: {{ customer.wallet_balances.balance|intcomma }}</td>
                         <!-- <td data-label="Transaction Value"><span>&#8358;</span> {{ data.transaction_value|intcomma }}</td> -->
                         </tr>
@@ -78,7 +82,7 @@
                 </table> 
                 <div class="quick-links">
                     <a href="{% url 'user-wallet-funding' customer.username %}">Wallet Funding</a>
-                    <a href="javascript:void(0)">Wallet Activities</a>
+                    <a href="{% url 'user-wallet-activities' customer.username %}">Wallet Activities</a>
                 </div>             
             </div>
             

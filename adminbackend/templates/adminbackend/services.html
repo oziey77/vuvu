@@ -1,0 +1,82 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+
+        <!-- Main content -->
+        <div class="main-content">
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="feedback-messages {{message.tags}}">
+                        <p>{{message}}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <!-- Table -->
+            <div class="table-container services">
+                {% csrf_token %}
+                <p class="header">Manage Services</p>
+                <div class="service-group">        
+                    <h5>Airtime</h4>
+                      {% for service in airtimeServices %}
+                      <div class="service-item">
+                        <p>{{service.network_operator}}</p>
+                        {% if service.available == True %}
+                        <label class="switch">
+                          <input class="checkbox" type="checkbox" id="airtime-{{service.network_operator}}" checked>
+                          <span class="slider round"></span>
+                        </label>
+                        {% else %}
+                        <label class="switch">
+                          <input class="checkbox" type="checkbox" id="airtime-{{service.network_operator}}" >
+                          <span class="slider round"></span>
+                        </label>
+                        {% endif %}
+                        
+                      </div>
+                      {% endfor %}        
+                  </div>
+                  <div class="service-group">        
+                    <h5>Data</h4>
+                      {% for service in dataServices %}
+                      <div class="service-item">
+                        <p>{{service.network_operator}}</p>
+                        {% if service.available == True %}
+                        <label class="switch">
+                          <input class="checkbox" type="checkbox" id="data-{{service.network_operator}}" checked>
+                          <span class="slider round"></span>
+                        </label>
+                        {% elif service.available == False %}
+                        <label class="switch">
+                          <input class="checkbox" type="checkbox" id="data-{{service.network_operator}}" >
+                          <span class="slider round"></span>
+                        </label>
+                        {% endif %}
+                        
+                      </div>
+                      {% endfor %}        
+                  </div>                
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+    <script src="{% static 'adminbackend/js/service.js' %}"></script>
+</body>
+</html>

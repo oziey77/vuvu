@@ -1,0 +1,96 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Detail</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+        
+
+        <!-- Main content -->
+        <div class="main-content">
+            
+            <!-- Table -->
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="feedback-messages {{message.tags}}">
+                        <p>{{message}}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="table-container">
+                <table class="">
+                    <caption>Transaction Detail</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">User</th>
+                            <th scope="col">Trx. Type</th>
+                            <th scope="col">Operator</th>
+                            {% if transaction.transaction_type == 'Data' %} 
+                            <th scope="col">Package</th>
+                            {% endif %} 
+                            <th scope="col">Reference</th>  
+                            <th scope="col">API Backend</th>  
+                            <th scope="col">API Reference</th>                     
+                            <th scope="col">Recipient</th>                          
+                            <th scope="col">Amount</th>
+                            <th scope="col">Bal. Before</th>
+                            <th scope="col">Bal. After</th>
+                            <th scope="col">Cashback</th>
+                            <!-- <th scope="col">Package</th>
+                            <th scope="col">Package</th> -->
+                            <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                    </thead>
+                    <tbody>
+                        <tr>                            
+                            <td data-label="User"> {{ transaction.user.username }}</td>
+                            <td data-label="Trx. Type">{{ transaction.transaction_type }}</td>
+                            <td data-label="Operator">{{ transaction.operator }}</td> 
+                            {% if transaction.transaction_type == 'Data' %} 
+                            <td data-label="Package"> {{ transaction.package }}</td>
+                            {% endif %}    
+                            <td data-label="Reference">{{ transaction.reference }}</td> 
+                            <td data-label="API Backend">{{ transaction.APIBackend }}</td>  
+                            <td data-label="API Reference">{{ transaction.APIreference }}</td>                        
+                            <td data-label="Recipient"> {{ transaction.recipient }}</td>                          
+                            <td data-label="Amount"><span>&#8358;</span> {{ transaction.amount|intcomma }}</td>
+                            <td data-label="Bal. Before"><span>&#8358;</span> {{ transaction.balanceBefore|intcomma }}</td>
+                            <td data-label="Bal. After"><span>&#8358;</span> {{ transaction.balanceAfter|intcomma }}</td>
+                            <td data-label="Cashback"><span>&#8358;</span> {{ transaction.discount|intcomma }}</td>
+                            <!-- <td data-label="Package"> {{ transaction.package }}</td>
+                            <td data-label="Package"> {{ transaction.package }}</td> -->
+                            <td data-label="Date"> {{ transaction.created }}</td>
+                            <td data-label="status"> {{ transaction.status }}</td>
+                            <td data-label="Action" class="">
+                                {% if transaction.refunded == False %}
+                                <a href="{% url 'refund-transaction' transaction.id %}" class="primary-button" id="" style="padding: 6px 12px;border-radius: 4px;">Refund</a>                                
+                                {% else %}
+                                <p><strong>Refunded</strong></p>
+                                {% endif %}
+                              </td>
+                          </tr>
+                    </tbody>
+                </table>             
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

@@ -12,7 +12,18 @@ urlpatterns = [
     path('password-reset-successful/',views.passwordResetSuccessfulPage,name='password-reset-successful'),
     # 
     path('dashboard/',views.dashboardPage,name='dashboard'),
+    path('transaction-history/',views.transactionHistoryPage,name='transaction-history'),
+    path('settings/',views.settingsPage,name='settings'),
+    
 
     # Ajax Calls
     path('user-balance/',views.fetchWalletBalance),
+    path('logout',views.logoutUser,name='logout'),
+    path('trasnsaction-detail/<str:pk>',views.getTransactionDetails),
+    path('change-password/',views.changePassword),
+    path('send-otp/',views.sendOTP),
+    path('reset-password/',views.resetPassword),
+    path('save-pin/',views.saveTransactionPin),
+    path('update-pin/',views.updateTransactionPin),
+    
 ]

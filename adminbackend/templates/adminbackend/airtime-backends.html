@@ -1,0 +1,76 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airtime Backend</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+        
+
+        <!-- Main content -->
+        <div class="main-content">
+            
+            <!-- Table -->
+            <div class="table-container">
+                <!-- Feedback -->
+                {% if messages %}
+                {% for message in messages%}
+                <div class="feedback-messages {{message.tags}}">
+                <p>{{message}}</p>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <table class="">
+                    <caption>Airtime Backend</caption>
+                    <thead>
+                        <tr>
+                          <th scope="col">SN</th>
+                          <th scope="col">Network</th>
+                          <th scope="col">Current</th>
+                          <th scope="col">Update</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for backend in airtimeBackends %}
+                        <tr>
+                          <td data-label="SN">{{ forloop.counter }}</td>
+                          <td data-label="Network">{{ backend.operator}}</td>
+                          <td data-label="Current"> <strong id="{{backend.operator}}-backend">{{backend.active_backend}}</strong></td>
+                          <td data-label="Update"> 
+                            <form action="{% url 'update-airtime-backend' backend.operator %}" method="post">
+                              {% csrf_token %}
+                              <div class="" style="margin-right: 10px; margin-bottom: 10px;">
+                                <input type="text" name="operator" hidden>
+                                <select name="active_backend" id="">
+                                  <option value="ATN">ATN</option>
+                                  <option value="TWINS10">TWINS10</option>
+                                  <option value="HONOURWORLD">HONOURWORLD</option>
+                                </select>
+                                <input class="primary-button" type="submit" value="update">
+                              </div>
+                            </form> 
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                </table>                             
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

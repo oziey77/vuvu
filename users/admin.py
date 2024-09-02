@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from users.models import User, UserConfirmation, UserWallet, WalletActivity
+from users.models import Cashback, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
 
 # Register your models here.
 
@@ -24,3 +24,16 @@ class WalletActivityAdmin(admin.ModelAdmin):
     list_display = ['user','event_type','transaction_type','comment','amount','balanceBefore','balanceAfter',]
     search_fields = ['user__username']
 admin.site.register(WalletActivity,WalletActivityAdmin)
+
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ['user','transaction_type','operator','amount','balanceBefore','balanceAfter','created','status']
+    search_fields = ['user__username','reference']
+admin.site.register(Transaction,TransactionAdmin)
+
+
+class CashbackAdmin(admin.ModelAdmin):
+    list_display = ['user','transaction_type','amount','created']
+    search_fields = ['user__username',]
+admin.site.register(Cashback,CashbackAdmin)
+
+admin.site.register(TransactionPIN)
