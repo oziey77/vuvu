@@ -1,8 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm,SetPasswordForm
 from django.contrib.auth import password_validation
-from django.forms import forms
+from django import forms
 
-from users.models import User
+from users.models import KYCData, User
 
 
 class MyUserCreationForm(UserCreationForm):
@@ -27,3 +27,9 @@ class MyUserCreationForm(UserCreationForm):
             # Method inherited from BaseForm
             self.add_error('password1', error)
         return password1
+    
+class KYCDataForm(forms.ModelForm):
+    class Meta:
+        model = KYCData
+        fields = "__all__"
+        exclude = ["user","status","dob"]

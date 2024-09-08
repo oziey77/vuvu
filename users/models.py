@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models import Sum
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
+from datetime import datetime
+from django.utils import timezone
 
 from .managers import CustomUserManager
 
@@ -29,12 +31,22 @@ class User(AbstractBaseUser):
     referral_code = models.CharField(max_length=15,null=True,blank=True,default='')
     referred_by = models.CharField(max_length=15,null=True,blank=True,default='')
     login_attempts_left = models.IntegerField(default=3)
-    last_transacted = models.DateField()
+    last_transacted = models.DateField(default=timezone.now)
+    has_VPSAccount = models.BooleanField(default=False) # a superuser
+    has_safeHavenAccount = models.BooleanField(default=False) # a superuser
+    VPSAccount_reassigned = models.BooleanField(default=False)
+
+    bvn_verified = models.BooleanField(default=False)
+    nin_verified = models.BooleanField(default=False)
+
+    vps_account_number = models.CharField(max_length=10,default='',blank=True)
+    safeHavenAccount_account_number = models.CharField(max_length=10,default='',blank=True)
+    safeHavenAccount_account_id = models.CharField(max_length=30,default='',blank=True)
 
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
     # REQUIRED_FIELDS =[]
-    REQUIRED_FIELDS = ['username']
+    # REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.email
@@ -142,8 +154,8 @@ TRANSACTION_TYPE = (
     ("Data","Data"),
     ("Cable","Cable"),
     ("Electricity","Electricity"),
-    ("Transfer","Transfer"),
-    ("Admin Deposit","Admin Deposit"),
+    ("Top Up","Top Up"),
+    ("Admin Top Up","Admin Top Up"),
     ("Cashback Withdrwal","Cashback Withdrwal"),
     ("Referral Bonus","Referral Bonus"),
 )
@@ -209,4 +221,41 @@ class Cashback(models.Model):
     
     def __str__(self):
         return self.user.username
+    
+
+ID_TYPE = (
+    ("BVN","BVN"),
+    ("NIN","NIN")
+    )  
+KYC_STATUS = (
+    ("Pending","Pending"),
+    ("Completed","Completed")
+    )   
+class KYCData(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    id_type = models.CharField(max_length=3,choices=ID_TYPE)
+    id_num = models.CharField(max_length=15)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    dob = models.CharField(max_length=20)
+    status = models.CharField(max_length=20,choices=KYC_STATUS,default="Pending") 
+
+    def __str__(self):
+        return self.user.username
+    
+
+# SafeHaven Account
+class SafeHavenAccount(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    account_number = models.CharField(max_length=10)
+    account_name = models.CharField(max_length=100)
+    account_id = models.CharField(max_length=30)
+    bank_name = models.CharField(max_length=100,default='SafeHaven MFB')
+    external_Reference = models.CharField(max_length=16)     
+    created = models.DateTimeField(auto_now_add=True)
+    last_funded = models.DateTimeField(blank=True,null=True)
+
+    def __str__(self):
+        return self.user.username
+
 

@@ -8,22 +8,25 @@
 </head>
 <body>
     <div class="main-container">
-        <h2 class="auth-header">Login With Email</h2>
-        <p class="tagline">Please enter email and password to<br>login to your account</p>
-        <form action="" method="post">
+        <div class="brand-image">
+            <img src="{% static 'users/images/vuvu-logo-transperent.png' %}" alt="">
+        </div>
+        <!-- <h2 class="auth-header">Login to Vuvu</h2>
+        <p class="tagline">Please enter username and password <br>to login to your account</p> -->
+        <form action="" method="post" id="lognForm">
             {% csrf_token %}
             <div class="input-group">
-                <input type="email" name="email" id="email" placeholder="Enter your email" required>
+                <input type="text" name="username" id="username" placeholder="Enter username" required>
             </div>
             
             <div class="input-group right-float">
-                <input type="password" name="password" id="password" placeholder="Enter Password" required>
+                <input type="password" class="passwordInput" name="password" id="password" placeholder="Enter password" required>
                 <a class="password-reveal" href="javascript:void(0)">Show</a>
             </div>
             <p class="forgot-password"><a href="{% url 'forgot-password' %}" onclick="">Forgot Password?</a></p>
 
             <div class="login-group">
-                <p class="auth-prompt">Not yet a user? <a href="{% url 'signup' %}" onclick="">Create Account</a></p>
+                <p class="auth-prompt">New user? <a href="{% url 'signup' %}" onclick="">Create Account</a></p>
                 <!-- <input class="disabled" type="submit" value="Sign In"> -->
                 <button class="primary-btn" id="loginBTN" onclick="">Sign In</button>
             </div>  
@@ -36,12 +39,13 @@
             {% endif %}          
         
         </form>
+        <!-- Page Preloader -->
+        <div class="loader-overlay">
+            <div class="loader"></div>
+        </div>
     </div>
 
-    <!-- Page Preloader -->
-    <div class="loader-overlay">
-        <div class="loader"></div>
-    </div>
+    
 
     <script src="{% static 'users/js/login.js' %}"></script>
     

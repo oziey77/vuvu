@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from users.models import Cashback, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
+from users.models import Cashback, KYCData, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
 
 # Register your models here.
 
@@ -36,4 +36,10 @@ class CashbackAdmin(admin.ModelAdmin):
     search_fields = ['user__username',]
 admin.site.register(Cashback,CashbackAdmin)
 
+class SafeHavenAccountAdmin(admin.ModelAdmin):
+    list_display = ['user','bank_name','account_number','account_name','created','last_funded']
+    search_fields = ('account_name','account_number')
+admin.site.register(SafeHavenAccount,SafeHavenAccountAdmin)
+
 admin.site.register(TransactionPIN)
+admin.site.register(KYCData)

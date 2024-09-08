@@ -14,9 +14,12 @@ urlpatterns = [
     path('dashboard/',views.dashboardPage,name='dashboard'),
     path('transaction-history/',views.transactionHistoryPage,name='transaction-history'),
     path('settings/',views.settingsPage,name='settings'),
+    path('wallet/',views.walletPage,name='wallet'),
     
 
-    # Ajax Calls
+    # Ajax Calls    
+    path("resend-registration-code/",views.resendRegOTP),
+    path("verify-registration/",views.verifyRegistration),
     path('user-balance/',views.fetchWalletBalance),
     path('logout',views.logoutUser,name='logout'),
     path('trasnsaction-detail/<str:pk>',views.getTransactionDetails),
@@ -25,5 +28,8 @@ urlpatterns = [
     path('reset-password/',views.resetPassword),
     path('save-pin/',views.saveTransactionPin),
     path('update-pin/',views.updateTransactionPin),
+    path('onetime-topup/',views.dynamicAccountAmount),
+    path("submit-kyc/",views.submitKYC),
+    path("validate-kyc/",views.validateKYC),
     
 ]

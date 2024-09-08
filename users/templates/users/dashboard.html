@@ -7,7 +7,7 @@
     {% include 'users/includes/header.html' %}
 </head>
 <body>
-    <div class="main-content">
+    <div class="main-content transasction-page">
         <!-- Header -->
         <div class="dashboard-header">
             <div class="branding">
@@ -47,7 +47,7 @@
                 </svg>
             </div>
             <div class="wallet-action">
-                <a href="javascript:void(0)" onclick="">Buy VPoints</a>
+                <a href="{% url 'wallet' %}"  onclick="">Buy VPoints</a>
             </div>
         </div>
         <p class="wallet-note">1 VPoint = &#8358 1</p>            
@@ -202,7 +202,7 @@
                 <!-- Set PIN -->
                 <div class="row mt-2" id="setNewPIN">
                     <h6 class="header">Transaction PIN</h6>
-                    <p class="tag">To complete transactions, please <br> create transaction PIN&#x1F512;</p>
+                    <p class="tag">Create transaction PIN&#x1F512;</p>
                     <form method="POST" class="setPinForm" id="setPinForm">
                         <div class="pin-container">
                             <div id="setPinwrapper" ></div>
@@ -234,13 +234,16 @@
                 <!-- Pin set success -->
                  <div class="password-change-success" id="pinSetFeedback">
                     <div class="svg-container">
-                        <svg width="100px" height="100px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <!-- <svg width="100px" height="100px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg">
                             <path d="M905.92 237.76a32 32 0 0 0-52.48 36.48A416 416 0 1 1 96 512a418.56 418.56 0 0 1 297.28-398.72 32 32 0 1 0-18.24-61.44A480 480 0 1 0 992 512a477.12 477.12 0 0 0-86.08-274.24z" fill="green" />
                             <path d="M630.72 113.28A413.76 413.76 0 0 1 768 185.28a32 32 0 0 0 39.68-50.24 476.8 476.8 0 0 0-160-83.2 32 32 0 0 0-18.24 61.44zM489.28 86.72a36.8 36.8 0 0 0 10.56 6.72 30.08 30.08 0 0 0 24.32 0 37.12 37.12 0 0 0 10.56-6.72A32 32 0 0 0 544 64a33.6 33.6 0 0 0-9.28-22.72A32 32 0 0 0 505.6 32a20.8 20.8 0 0 0-5.76 1.92 23.68 23.68 0 0 0-5.76 2.88l-4.8 3.84a32 32 0 0 0-6.72 10.56A32 32 0 0 0 480 64a32 32 0 0 0 2.56 12.16 37.12 37.12 0 0 0 6.72 10.56zM230.08 467.84a36.48 36.48 0 0 0 0 51.84L413.12 704a36.48 36.48 0 0 0 51.84 0l328.96-330.56A36.48 36.48 0 0 0 742.08 320l-303.36 303.36-156.8-155.52a36.8 36.8 0 0 0-51.84 0z" fill="green" />
-                        </svg>
+                        </svg> -->
+                        <div class="feedback-image-container">
+                            <img src="{% static 'users/images/success.webp' %}" alt="">
+                        </div>
                     </div>
                     <div class="reset-feedback" id="">
-                        <p>You have transaction PIN was <br>saved successfully</p>
+                        <p>Your new transaction PIN was <br>saved successfully</p>
                         <!-- <small>Kindly check you email inbox or <br>spam for confirmation email.</small> -->
                     </div> 
                     <a href="{% url 'dashboard' %}" class="primary-btn" id="closePasswordChange"> Close</a>
@@ -255,14 +258,16 @@
         </div>
         <!-- Bottom Navs -->
         {% include 'users/includes/bottom-navs.html' %}
+        <!-- Page Preloader -->
+        <div class="loader-overlay">
+            <div class="loader"></div>
+        </div>
          
     </div>
+    
 
     
-    <!-- Page Preloader -->
-    <div class="loader-overlay">
-        <div class="loader"></div>
-    </div>
+    
 
     <script src="{% static 'users/js/dashboard.js' %}"></script>
     <script src="{% static 'users/js/main.js' %}"></script>

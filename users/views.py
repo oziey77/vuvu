@@ -6,20 +6,23 @@ from django.contrib.auth import authenticate, login, logout ,update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator,PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes,force_str
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
+import requests
 
 from adminbackend.models import DataBackend
+from payments.models import OneTimeDeposit
 from telecomms.models import ATNDataPlans, DataServices
 from telecomms.serializers import ATNDataPlanSerializer
-from users.forms import MyUserCreationForm
+from users.forms import KYCDataForm, MyUserCreationForm
 from users.serializers import TransactionSerializer
 from vuvu.custom_functions import is_ajax, isNum, reference
-from .models import Transaction, TransactionPIN, User, UserConfirmation, UserWallet
+from .models import KYCData, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
 
 import uuid
 import random
@@ -63,7 +66,8 @@ def signupPage(request):
                 user.referral_code = refCode
                 user.save()   
 
-            OTPCode = random.randrange(111111, 999999, 5)    
+            OTPCode = random.randrange(111111, 999999, 5) 
+            print(f"REG OTP is {OTPCode}")   
             confirmationID = reference(16)
             confirmationData = UserConfirmation.objects.create(
                 user = user,
@@ -119,9 +123,65 @@ def signupPage(request):
             })
     return render(request,'users/signup.html')
 
+def resendRegOTP(request):
+    if is_ajax(request) and request.method == "GET":
+        confirmationID = request.GET.get('confirmationID')
+        try:
+            confirmationData = UserConfirmation.objects.get(confirmation_id=confirmationID)
+            if confirmationData is not None:
+                OTPCode = random.randrange(111111, 999999, 5) 
+                confirmationData.otp = OTPCode
+                confirmationData.save()
+                return JsonResponse({
+                    "code":"00",
+                    "message":"OTP resent successfully"
+                }) 
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                "code":"09",
+                "message":"Invalid request"
+            })
+
+
 # Confirmation Email Sent page
 def confirmEmailSent(request,confirmationID):
-    return render(request,'users/confirmation-sent.html')
+    context = {
+        "confirmationID":confirmationID,
+    }
+    return render(request,'users/confirmation-sent.html',context)
+
+def verifyRegistration(request):
+    if is_ajax(request) and request.method == "GET":
+        confirmationID = request.GET.get('confirmationID')
+        OTPCode = request.GET.get('otp')
+        try:
+            confirmationData = UserConfirmation.objects.get(confirmation_id=confirmationID)
+            if confirmationData is not None:
+                if confirmationData.otp == OTPCode:
+                    user = confirmationData.user
+                    user.is_active = True
+                    user.save()
+                    login(request,user)
+                    confirmationData.delete()
+                    return JsonResponse({
+                        "code":"00",
+                        "message":"Registration successful"
+                    })
+                else:
+                   return JsonResponse({
+                        "code":"09",
+                        "message":"Invalid OTP Code"
+                    }) 
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                "code":"09",
+                "message":"Invalid request"
+            })
+    else :
+        return JsonResponse({
+            "code":"09",
+            "message":"Invalid request"
+        })
 
 def activate(request, uidb64, token):  
     # User = get_user_model()  
@@ -153,26 +213,28 @@ def loginPage(request):
             return redirect('dashboard')
     else:
         if request.method == 'POST':
-            email = request.POST['email'].lower().strip()
+            username = request.POST['username'].lower().strip()
             password = request.POST['password']
             # remember = request.POST.get('remember',None)
 
 
             try:
-                user = User.objects.get(email=email)
+                user = User.objects.get(username=username)
                 loginAttemptLeft = user.login_attempts_left
 
                 if loginAttemptLeft > 0:                
                     user.login_attempts_left -= 1
                     user.save()
-                    user = authenticate(request,email=email,password=password)               
+                    loginAttemptLeft = user.login_attempts_left
+                    user = authenticate(request,username=username,password=password)  
+                             
                 
                     if user is not None:
+                        print("Login user is {user}")
                         user.login_attempts_left = 3
                         user.save()
 
                         login(request,user)
-                        # loginMessage.delay(username=user.username)
                         # if remember == None:
                         #     request.session.set_expiry(0)
 
@@ -182,14 +244,15 @@ def loginPage(request):
                             return redirect('dashboard')
                     
                     else: 
-                        # messages.error(request,'Login input is incorrect 1')
+                        messages.error(request,'username/password is incorrect')
                         messages.error(request, f"{loginAttemptLeft} Login attempts remaining")
+                        return redirect('login')
                 else:
-                    pass
-                    # return redirect("otp")
+                    return redirect("forgot-password")
 
             except ObjectDoesNotExist:
-                messages.error(request,'email/password not correct')
+                messages.error(request,'username/password is incorrect')
+                return redirect('login')
     return render(request,'users/login.html')
 
 def logoutUser(request):
@@ -474,7 +537,6 @@ def changePassword(request):
     user = request.user
     if is_ajax(request) and request.method == "POST":
         form = PasswordChangeForm(user, request.POST)
-        form = PasswordChangeForm(user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
@@ -506,6 +568,440 @@ def changePassword(request):
                 'code':'09',
                 'data':"Invalid request",
             })
+    
+# Settings Page
+@login_required(login_url='login')
+def walletPage(request):
+    user = request.user
+    walletActivities = WalletActivity.objects.filter(user=user).order_by("-id")[:2]
+    context = {
+        "walletActivities":walletActivities,
+    }
+
+    
+    return render(request,'users/wallet.html',context)
+
+# One time payment amount
+@login_required(login_url='login')
+def dynamicAccountAmount(request):
+    user = request.user
+    if is_ajax(request) and request.method == "POST":
+        depositAmount = request.POST.get("amount")
+
+        clientID = settings.SAFEH_CLIENT_ID
+        clientAssertion = settings.SAFEH_CLIENT_ASSERTION
+        authToken = ''
+        ibsClientID = ''
+        sweepAccount = settings.SAFEH_ACCOUNT_NUM
+
+        transRef = reference(string_length=18)
+
+        # Generate Token
+        url ='https://api.safehavenmfb.com/oauth2/token'                                        
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+
+        payload = json.dumps({
+        "grant_type": "client_credentials",
+        "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+        "client_assertion": clientAssertion,
+        "client_id": clientID
+        })
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        data = json.loads(response.text)
+        print("DATA IS ",data)
+
+        if 'access_token' in data:
+            authToken = data['access_token']
+            # ibsClientID = data['ibs_client_id']
+            # VERIFY TRANSACTION
+            url = f"https://api.safehavenmfb.com/virtual-accounts"                                        
+            headers = {
+                # 'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization':f"Bearer {authToken}",
+                'ClientID':clientID
+            }
+
+            payload = {
+                "validFor": 900,
+                "settlementAccount": {
+                    "bankCode": "090286",
+                    "accountNumber": sweepAccount
+                },
+                "amountControl": "Fixed",
+                "accountName": user.username,
+                "callbackUrl": "https://d74b97cd7a7e7373e0b16bdad759a37e.serveo.net/safehaven-onetime-webhook",                
+                # "callbackUrl": "https://webhook.yagapay.io/safehaven-onetime-webhook.php",
+                "amount": int(depositAmount),
+                "externalReference": transRef
+            }
+            
+            
+            response = requests.request("POST", url, headers=headers, json=payload)
+            
+            responseData = json.loads(response.text)
+            print(f"account response is {responseData}")
+            if responseData['statusCode'] == 200:
+                accountDetails = responseData['data']
+                depositAccount = OneTimeDeposit.objects.create(
+                    user = user,
+                    accountNumber = accountDetails['accountNumber'],
+                    accountName = accountDetails['accountName'],
+                    transactionAmount = accountDetails['amount'],
+                    accountID = accountDetails['_id'],
+                    reference = accountDetails['externalReference'],
+                )
+                depositAccount.refresh_from_db()
+
+                return JsonResponse({
+                    "code":"00",
+                    "accountNumber":depositAccount.accountNumber,
+                    "accountID":depositAccount.accountID,
+                    "accountBackend":"SafeHaven"
+                })
+            else:
+                return JsonResponse({
+                    "code":"09",
+                    "message":"Error generating account",
+                })
+
+    return JsonResponse({
+        "code":"09",
+        "message":"Invalid request",
+    })
+
+
+@login_required(login_url='login')
+def submitKYC(request):
+    user = request.user
+    if is_ajax(request=request) and request.method == 'POST':
+        print(f"POST REQUEST IS {request.POST}")
+        form = KYCDataForm(request.POST)
+        if form.is_valid():
+            idType = request.POST.get("id_type")
+            idNum = request.POST.get("id_num")
+
+            # BVN DATA
+            if idType == "BVN" and user.bvn_verified == False:
+                try:
+                    idData = KYCData.objects.get(user=user,id_type=idType)
+                    if idData is not None:
+                        form = KYCDataForm(request.POST,instance=idData)
+                        idData = form.save(commit=False)
+                        
+                        idData.dob = f"{request.POST.get('date-day')}-{request.POST.get('date-month')}-{request.POST.get('date-year')}"
+                        idData.save()
+                except ObjectDoesNotExist:
+                    idData = form.save(commit=False)
+                    idData.user = user
+                    idData.dob = f"{request.POST.get('date-year')}-{request.POST.get('date-month')}-{request.POST.get('date-day')}"
+                    idData.save()
+           
+            # NIN DATA
+            if idType == "NIN" and user.nin_verified == False:
+                try:
+                    idData = KYCData.objects.get(id_type=idType)
+                    if idData is not None:
+                        form = KYCDataForm(request.POST,instance=idData)
+                        idData = form.save(commit=False)                        
+                        idData.dob = f"{request.POST.get('date-year')}-{request.POST.get('date-month')}-{request.POST.get('date-day')}"
+                        idData.save()
+                except ObjectDoesNotExist:
+                    idData = form.save(commit=False)
+                    idData.user = user
+                    idData.dob = f"{request.POST.get('date-year')}-{request.POST.get('date-month')}-{request.POST.get('date-day')}"
+                    idData.save()
+
+
+            # Initiate ID verification
+            clientID = settings.SAFEH_CLIENT_ID
+            clientAssertion = settings.SAFEH_CLIENT_ASSERTION
+            authToken = ''
+            debitAccount = settings.SAFEH_DEBIT_ACCOUNT
+
+            # Generate Token
+            url ='https://api.safehavenmfb.com/oauth2/token'                                        
+            headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }
+
+            payload = json.dumps({
+            "grant_type": "client_credentials",
+            "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+            "client_assertion": clientAssertion,
+            "client_id": clientID
+            })
+            response = requests.request("POST", url, headers=headers, data=payload)
+
+            data = json.loads(response.text)
+
+            if 'access_token' in data:
+                authToken = data['access_token']
+
+                # SafeHaven reassign Account number
+                url =f'https://api.safehavenmfb.com/identity/v2'                                        
+                headers = {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization':f"Bearer {authToken}",
+                    'ClientID':clientID
+                }
+
+                payload = json.dumps({
+                    "type": idType,
+                    "async": False,
+                    "number": idNum,
+                    "debitAccountNumber": debitAccount,
+                })
+                response = requests.request("POST", url, headers=headers, data=payload)
+                
+                responseData = json.loads(response.text)
+                # print(f"INITIATION RESPONSE IS: {responseData}")
+                if responseData['statusCode'] == 200: 
+                    details = responseData['data']
+                    return JsonResponse({
+                        "code":"00",
+                        "verificationID":details['_id']
+                    })
+                else:
+                    return JsonResponse({
+                        "code":"09",
+                        "message":"Internal server error"
+                    })
+            else:
+                    return JsonResponse({
+                        "code":"09",
+                        "message":"Internal server error"
+                    })
+        else:
+            return JsonResponse({
+                "code":"09"
+            })
+    else:
+        return JsonResponse({
+            "code":"09",
+            "message":"Invalid Request",
+        })
+    
+
+
+@login_required(login_url='login')
+def validateKYC(request):
+    user = request.user
+    if is_ajax(request=request) and request.method == 'POST':
+        verificationID = request.POST.get("verificationID")
+        otpCode = request.POST.get("otp")
+        idType = request.POST.get("identityType")
+
+        idData = ''
+        if idType == "BVN" and user.bvn_verified == False:
+            try:
+                kycInfo = KYCData.objects.get(user=user,id_type = idType)
+                if kycInfo is not None:
+                    idData = kycInfo
+            except ObjectDoesNotExist:
+                return JsonResponse({
+                    "code":"01"
+                })
+        elif idType == "NIN" and user.nin_verified == False:
+            try:
+                kycInfo = KYCData.objects.get(user=user,id_type = idType)
+                if kycInfo is not None:
+                    idData = kycInfo
+            except ObjectDoesNotExist:
+                return JsonResponse({
+                    "code":"01"
+                })
+            
+        # Initiate ID verification
+        clientID = settings.SAFEH_CLIENT_ID
+        clientAssertion = settings.SAFEH_CLIENT_ASSERTION
+        sweepAccount = settings.SAFEH_ACCOUNT_NUM
+        authToken = ''
+        # debitAccount = settings.SAFEH_DEBIT_ACCOUNT
+
+        # Generate Token
+        url ='https://api.safehavenmfb.com/oauth2/token'                                        
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+
+        payload = json.dumps({
+        "grant_type": "client_credentials",
+        "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+        "client_assertion": clientAssertion,
+        "client_id": clientID
+        })
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        data = json.loads(response.text)
+
+        if 'access_token' in data:
+            authToken = data['access_token']
+
+            # SafeHaven reassign Account number
+            url =f'https://api.safehavenmfb.com/identity/v2/validate'                                        
+            headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization':f"Bearer {authToken}",
+                'ClientID':clientID
+            }
+
+            payload = json.dumps({
+                "type": idType,
+                "identityId": verificationID,
+                "otp": otpCode,
+            })
+            response = requests.request("POST", url, headers=headers, data=payload)
+            
+            validationData = json.loads(response.text)
+            if validationData['statusCode'] == 200:
+                
+                details = validationData['data']
+                print(f"VALIDATION DATA IS: {details}")
+                providerData = details['providerResponse']
+                # id = providerData['firstName']
+                idFirstName = providerData['firstName'].strip()
+                idLastName = providerData['lastName'].strip()
+                idDOB = providerData['dateOfBirth'].strip()
+                identityId = details['_id']
+                otpID = details['otpId']
+
+                firstName = idData.first_name.upper().strip()
+                lastName = idData.last_name.upper().strip()
+                dob = idData.dob.strip()
+                print(f"Stored DOB is id {dob}")
+
+                if (lastName == idLastName) and (firstName == idFirstName) and (dob == idDOB):
+                    
+                    
+                    url ='https://api.safehavenmfb.com/accounts/v2/subaccount'
+        
+                    headers = {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization':f"Bearer {authToken}",
+                        'ClientID':clientID
+                    }
+
+                    payload = json.dumps({ 
+                        "phoneNumber": f"+234{user.phone_number}",
+                        "emailAddress": user.email,
+                        "identityType": "vID",
+                        "autoSweep": True, 
+                        "autoSweepDetails": {
+                            "schedule": "Instant",
+                            "accountNumber": sweepAccount
+                        },
+                        "externalReference": reference(string_length=16),
+                        # "identityNumber": idData.id_num,
+                        "identityId": identityId,
+                        # "otp": otpCode,
+
+
+                        # #######################
+                        
+                    })
+                    response = requests.request("POST", url, headers=headers, data=payload)
+                    
+                    response = json.loads(response.text)
+                    if response['statusCode'] == 200:
+                        details = response['data']
+                        # print(f"ACCOUNT CREATION DETAILS IS: {details}")
+
+                        if user.has_safeHavenAccount == False:
+
+                            SafeHavenAccount.objects.create(
+                                user = user,
+                                account_number = details['accountNumber'],
+                                account_name = details['accountName'],
+                                account_id = details['_id'],
+                                external_Reference = details['externalReference'],                        
+                                )
+                            user.bvn_verified = True
+                            user.has_safeHavenAccount = True
+                            user.safeHavenAccount_account_number = details['accountNumber'] 
+                            user.safeHavenAccount_account_id = details['_id'] 
+                            user.first_name = idData.first_name
+                            user.last_name = idData.last_name
+                            user.save()
+                            idData.status = "Completed"
+                            idData.save()
+                            return JsonResponse({
+                                'code':'00',
+                                'message':"Account created successfully",
+                                })
+                        # else:
+                        #     currentAccount = SafeHavenAccount.objects.get(user=user)
+                        #     TempSafeHavenAccount.objects.create(
+                        #         user = user,
+                        #         account_number = currentAccount.account_number,
+                        #         account_name = currentAccount.account_name,
+                        #         account_id = currentAccount.account_id
+                        #     )
+                        #     currentAccount.delete()
+                        #     # Create new account
+                        #     SafeHavenAccount.objects.create(
+                        #         user = user,
+                        #         account_number = details['accountNumber'],
+                        #         account_name = details['accountName'],
+                        #         account_id = details['_id'],
+                        #         external_Reference = details['externalReference'],                        
+                        #         )
+                        #     user.bvn_verified = True
+                        #     user.has_safeHavenAccount = True
+                        #     user.safeHavenAccount_account_number = details['accountNumber'] 
+                        #     user.safeHavenAccount_account_id = details['_id'] 
+                        #     user.save()
+                        #     idData.status = "Completed"
+                        #     idData.save()
+
+                        #     return JsonResponse({
+                        #         'code':'00',
+                        #         'message':"Account created successfully",
+                        #     })
+                    
+                    # Handle other endpoint errors
+                    else:
+                        # print(f"OTHER API RESPONSE IS: {response}")
+                        return JsonResponse({
+                            'code':'09',
+                            'message':f"ERR:{response['statusCode']} {response['message']}",
+                        })
+                
+                else:
+                    return JsonResponse({
+                        "code":"09",
+                        "message":"Identity data does not match"
+                    })
+                
+            # Handles wrong OTP
+            elif validationData['statusCode'] == 400:
+                return JsonResponse({
+                    "code":"09",
+                    "message":"Invalid OTP"
+                })
+            
+            else:
+                return JsonResponse({
+                    'code':'09',
+                    'message':f"ERR:{response['statusCode']} {response['message']}",
+                })
+        else:
+            return JsonResponse({
+                'code':'09',
+                'message':f"ERR:{data['statusCode']} account could not be created at the moment, please try again in few minutes",
+            })
+
+
+
         
 
 
