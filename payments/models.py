@@ -44,7 +44,7 @@ class OneTimeDeposit(models.Model):
     accountNumber = models.CharField(max_length=10)
     accountName = models.CharField(max_length=50)
     transactionAmount = models.IntegerField()  
-    settledAmount = models.IntegerField(default=0)  
+    settledAmount = models.DecimalField(max_digits=10,decimal_places=2,default=0)  
     accountID = models.CharField(max_length=28)
     reference = models.CharField(max_length=20)  
     bankName = models.CharField(max_length=20,choices=PARTNER_BANK,default="SafeHaven MFB")
@@ -75,3 +75,24 @@ class SafeHavenPaymentTransaction(models.Model):
 
     def __str__(self):
         return self.user.username
+
+SERVICE_STATUS = (
+        ("Active","Active"),
+        ("Disabled","Disabled"),
+    )    
+
+class PartnerBank(models.Model):
+    bank_name = models.CharField(max_length=20,choices=PARTNER_BANK,default="SafeHaven MFB")
+    deposit_charges = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
+    status = models.CharField(max_length=20,choices=SERVICE_STATUS,default="Active")
+    def __str__(self):
+        return self.bank_name
+
+
+class DynamicAccountBackend(models.Model):
+    name = models.CharField(max_length=10,default="Main")
+    active_backend = models.CharField(max_length=20,choices=PARTNER_BANK,default="SafeHaven MFB")
+    
+    def __str__(self):
+        return self.name
+

@@ -41,16 +41,16 @@
         <small class="header">Available Points</small>
         <div class="wallet-data">
             <div class="balance-group">
-                <p class="point-balance">VP<span id="mainBalance"></span></p>
+                <p class="point-balance">&#8358;<span id="mainBalance"></span></p>
                 <svg width="22px" height="22px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
                     <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5l16 16M11.148 9.123a3 3 0 013.722 3.752M8.41 6.878C12.674 4.762 17.267 6.47 21 12c-1.027 1.521-2.119 2.753-3.251 3.696m-2.509 1.59C11.076 19.142 6.631 17.38 3 12c1.01-1.496 2.083-2.713 3.196-3.65"/>
                 </svg>
             </div>
             <div class="wallet-action">
-                <a href="{% url 'wallet' %}"  onclick="">Buy VPoints</a>
+                <a href="{% url 'wallet' %}"  onclick="">Fund Wallet</a>
             </div>
         </div>
-        <p class="wallet-note">1 VPoint = &#8358 1</p>            
+        <!-- <p class="wallet-note">1 VPoint = &#8358 1</p>             -->
         </div>
         <!-- Dashboard Navigations -->
          {% if pinSet == True %}
@@ -196,16 +196,20 @@
         {% endif %}
 
         <!-- Set Transaction PIN -->
-        <div class="setting-modal" id="setTransactionPin">
-            {% csrf_token %}  
+        <div class="setting-modal" id="setTransactionPin" >
+            {% csrf_token %}
+            
             <div class="content">
+                <div class="modal-indicator">
+                    <!-- <hr> -->
+                </div>
                 <!-- Set PIN -->
                 <div class="row mt-2" id="setNewPIN">
                     <h6 class="header">Transaction PIN</h6>
                     <p class="tag">Create transaction PIN&#x1F512;</p>
                     <form method="POST" class="setPinForm" id="setPinForm">
                         <div class="pin-container">
-                            <div id="setPinwrapper" ></div>
+                            <div class="four-digits" id="setPinwrapper" ></div>
                         </div>
                     </form>
                     <!-- Feedback -->
@@ -218,7 +222,7 @@
                         <p class="tag">Kindly enter the PIN again to<br>confirm transaction PIN&#x1F512;</p>
                         <form role="form" method="POST" class="confirmSetPinForm" id="confirmSetPinForm">              
                             <div class="pin-container">
-                                <div id="confirmPinwrapper" ></div>
+                                <div class="four-digits" id="confirmPinwrapper" ></div>
                             </div>
                         </form>            
                         <p class="validationError" id="confirmSetpinvalidation"></p> 
@@ -243,7 +247,7 @@
                         </div>
                     </div>
                     <div class="reset-feedback" id="">
-                        <p>Your new transaction PIN was <br>saved successfully</p>
+                        <p>Your new transaction PIN<br>was created successfully</p>
                         <!-- <small>Kindly check you email inbox or <br>spam for confirmation email.</small> -->
                     </div> 
                     <a href="{% url 'dashboard' %}" class="primary-btn" id="closePasswordChange"> Close</a>

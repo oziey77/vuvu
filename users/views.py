@@ -1,3 +1,4 @@
+from decimal import Decimal
 import json
 import random
 from django.http import JsonResponse
@@ -16,7 +17,7 @@ from django.core.mail import send_mail, BadHeaderError
 import requests
 
 from adminbackend.models import DataBackend
-from payments.models import OneTimeDeposit
+from payments.models import DynamicAccountBackend, OneTimeDeposit, PartnerBank, WalletFunding
 from telecomms.models import ATNDataPlans, DataServices
 from telecomms.serializers import ATNDataPlanSerializer
 from users.forms import KYCDataForm, MyUserCreationForm
@@ -33,7 +34,7 @@ from django.contrib.auth.forms import PasswordResetForm,PasswordChangeForm,SetPa
 from django.utils import  six
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
-
+from django.db.models import Q
 # Account Activation Token
 class TokenGenerator(PasswordResetTokenGenerator):  
     def _make_hash_value(self, user, timestamp):  
@@ -397,6 +398,24 @@ def saveTransactionPin(request):
         })
     
 
+# Check Old PIN
+@login_required(login_url='login')
+def checkTransactionPin(request):
+    user = request.user
+    if is_ajax(request=request) and request.method == 'GET':
+        oldPin = request.GET['oldPIN']
+        transPin = TransactionPIN.objects.get(user=user)
+        if check_password(oldPin, transPin.transaction_pin):
+            return JsonResponse({
+                    'code':'00',
+                    'message':'Transaction pin updated'
+                })
+        else:
+            return JsonResponse({
+                    'code':'09',
+                    'message':'Old PIN is incorrect'
+                })
+
 @login_required(login_url='login')
 def updateTransactionPin(request):
     user = request.user
@@ -573,10 +592,22 @@ def changePassword(request):
 @login_required(login_url='login')
 def walletPage(request):
     user = request.user
-    walletActivities = WalletActivity.objects.filter(user=user).order_by("-id")[:2]
+    walletActivities = WalletFunding.objects.filter(user=user).order_by("-id")[:2]
     context = {
         "walletActivities":walletActivities,
     }
+
+    # Dynamic account partner
+    try:
+        safeHavenDynamic = PartnerBank.objects.get(bank_name="SafeHaven MFB",status='Active')
+        if safeHavenDynamic is not None:
+            context.update({
+                "dynamicAccount":safeHavenDynamic
+            })
+    except ObjectDoesNotExist:
+        pass
+
+
 
     
     return render(request,'users/wallet.html',context)
@@ -587,6 +618,8 @@ def dynamicAccountAmount(request):
     user = request.user
     if is_ajax(request) and request.method == "POST":
         depositAmount = request.POST.get("amount")
+        accountBackend = DynamicAccountBackend.objects.get(name="Main")
+
 
         clientID = settings.SAFEH_CLIENT_ID
         clientAssertion = settings.SAFEH_CLIENT_ASSERTION
@@ -596,79 +629,86 @@ def dynamicAccountAmount(request):
 
         transRef = reference(string_length=18)
 
-        # Generate Token
-        url ='https://api.safehavenmfb.com/oauth2/token'                                        
-        headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        }
-
-        payload = json.dumps({
-        "grant_type": "client_credentials",
-        "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-        "client_assertion": clientAssertion,
-        "client_id": clientID
-        })
-        response = requests.request("POST", url, headers=headers, data=payload)
-
-        data = json.loads(response.text)
-        print("DATA IS ",data)
-
-        if 'access_token' in data:
-            authToken = data['access_token']
-            # ibsClientID = data['ibs_client_id']
-            # VERIFY TRANSACTION
-            url = f"https://api.safehavenmfb.com/virtual-accounts"                                        
+        if accountBackend.active_backend == "SafeHaven MFB":
+            # Generate Token
+            url ='https://api.safehavenmfb.com/oauth2/token'                                        
             headers = {
-                # 'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization':f"Bearer {authToken}",
-                'ClientID':clientID
             }
 
-            payload = {
-                "validFor": 900,
-                "settlementAccount": {
-                    "bankCode": "090286",
-                    "accountNumber": sweepAccount
-                },
-                "amountControl": "Fixed",
-                "accountName": user.username,
-                "callbackUrl": "https://d74b97cd7a7e7373e0b16bdad759a37e.serveo.net/safehaven-onetime-webhook",                
-                # "callbackUrl": "https://webhook.yagapay.io/safehaven-onetime-webhook.php",
-                "amount": int(depositAmount),
-                "externalReference": transRef
-            }
-            
-            
-            response = requests.request("POST", url, headers=headers, json=payload)
-            
-            responseData = json.loads(response.text)
-            print(f"account response is {responseData}")
-            if responseData['statusCode'] == 200:
-                accountDetails = responseData['data']
-                depositAccount = OneTimeDeposit.objects.create(
-                    user = user,
-                    accountNumber = accountDetails['accountNumber'],
-                    accountName = accountDetails['accountName'],
-                    transactionAmount = accountDetails['amount'],
-                    accountID = accountDetails['_id'],
-                    reference = accountDetails['externalReference'],
-                )
-                depositAccount.refresh_from_db()
+            payload = json.dumps({
+            "grant_type": "client_credentials",
+            "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+            "client_assertion": clientAssertion,
+            "client_id": clientID
+            })
+            response = requests.request("POST", url, headers=headers, data=payload)
 
-                return JsonResponse({
-                    "code":"00",
-                    "accountNumber":depositAccount.accountNumber,
-                    "accountID":depositAccount.accountID,
-                    "accountBackend":"SafeHaven"
-                })
-            else:
-                return JsonResponse({
-                    "code":"09",
-                    "message":"Error generating account",
-                })
+            data = json.loads(response.text)
+            print("DATA IS ",data)
 
+            if 'access_token' in data:
+                authToken = data['access_token']
+                # ibsClientID = data['ibs_client_id']
+                # VERIFY TRANSACTION
+                url = f"https://api.safehavenmfb.com/virtual-accounts"                                        
+                headers = {
+                    # 'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization':f"Bearer {authToken}",
+                    'ClientID':clientID
+                }
+
+                payload = {
+                    "validFor": 900,
+                    "settlementAccount": {
+                        "bankCode": "090286",
+                        "accountNumber": sweepAccount
+                    },
+                    "amountControl": "Fixed",
+                    "accountName": user.username,
+                    "callbackUrl": "https://5ae56adb4b7df7096b9be617cb24d53a.serveo.net/safehaven-onetime-webhook",                
+                    # "callbackUrl": "https://webhook.yagapay.io/safehaven-onetime-webhook.php",
+                    "amount": int(depositAmount),
+                    "externalReference": transRef
+                }
+                
+                
+                response = requests.request("POST", url, headers=headers, json=payload)
+                
+                responseData = json.loads(response.text)
+                print(f"account response is {responseData}")
+                if responseData['statusCode'] == 200:
+                    accountDetails = responseData['data']
+                    depositAccount = OneTimeDeposit.objects.create(
+                        user = user,
+                        accountNumber = accountDetails['accountNumber'],
+                        accountName = accountDetails['accountName'],
+                        transactionAmount = accountDetails['amount'],
+                        accountID = accountDetails['_id'],
+                        reference = accountDetails['externalReference'],
+                    )
+                    depositAccount.refresh_from_db()
+
+                    bankData = PartnerBank.objects.get(bank_name="SafeHaven MFB")
+                    transferCharges = bankData.deposit_charges
+                    depositAmount = Decimal(depositAmount)
+                    creditAmount = (depositAmount - (depositAmount * (transferCharges/100)))
+
+                    return JsonResponse({
+                        "code":"00",
+                        "accountNumber":depositAccount.accountNumber,
+                        "accountID":depositAccount.accountID,
+                        "accountBackend":"SafeHaven",
+                        "creditAmount":creditAmount,
+                    })
+                else:
+                    return JsonResponse({
+                        "code":"09",
+                        "message":"Error generating account",
+                    })
+        
     return JsonResponse({
         "code":"09",
         "message":"Invalid request",
@@ -698,7 +738,7 @@ def submitKYC(request):
                 except ObjectDoesNotExist:
                     idData = form.save(commit=False)
                     idData.user = user
-                    idData.dob = f"{request.POST.get('date-year')}-{request.POST.get('date-month')}-{request.POST.get('date-day')}"
+                    idData.dob = f"{request.POST.get('date-day')}-{request.POST.get('date-month')}-{request.POST.get('date-year')}"
                     idData.save()
            
             # NIN DATA

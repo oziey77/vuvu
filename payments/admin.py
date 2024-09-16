@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from payments.models import OneTimeDeposit, WalletFunding
+from payments.models import DynamicAccountBackend, OneTimeDeposit, PartnerBank, WalletFunding
 
 # Register your models here.
 
@@ -14,3 +14,6 @@ class OneTimeDepositAdmin(admin.ModelAdmin):
     list_display = ['user','accountNumber','transactionAmount','reference','created','status']
     search_fields = ('user__username','accountNumber')
 admin.site.register(OneTimeDeposit,OneTimeDepositAdmin)
+
+admin.site.register(PartnerBank)
+admin.site.register(DynamicAccountBackend)

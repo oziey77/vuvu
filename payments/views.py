@@ -10,7 +10,7 @@ from datetime import date, datetime, timedelta,timezone
 import requests
 import json
 
-from payments.models import OneTimeDeposit, SafeHavenPaymentTransaction, WalletFunding
+from payments.models import OneTimeDeposit, PartnerBank, SafeHavenPaymentTransaction, WalletFunding
 from users.models import SafeHavenAccount, UserWallet, WalletActivity
 from vuvu.custom_functions import  is_ajax, reference
 
@@ -75,19 +75,22 @@ def safeHavenWebhook(request):
                 
                 responseData = json.loads(response.text)
                 if responseData['statusCode'] == 200 and responseData['responseCode'] == "00":
+                    partnerBank = PartnerBank.objects.get(bank_name='SafeHaven MFB')
+                    depositCharges = partnerBank.deposit_charges
                     transferData = responseData['data']
                     creditAccount = transferData['creditAccountNumber']
 
                     amount = Decimal(transferData['amount'])
 
-                    settledAmount = Decimal(0)
+                    settledAmount = amount - Decimal(amount * (depositCharges/100))
 
-                    if amount <= Decimal(1000):
-                        settledAmount = amount - Decimal(10) #Backend Settled amount
-                    elif amount > Decimal(1000) and amount <= Decimal(5000):
-                        settledAmount = amount - Decimal(25) #Backend Settled amount
-                    elif amount > Decimal(5000):
-                        settledAmount = amount - Decimal(50) #Backend Settled amount
+
+                    # if amount <= Decimal(1000):
+                    #     settledAmount = amount - Decimal(10) #Backend Settled amount
+                    # elif amount > Decimal(1000) and amount <= Decimal(5000):
+                    #     settledAmount = amount - Decimal(25) #Backend Settled amount
+                    # elif amount > Decimal(5000):
+                    #     settledAmount = amount - Decimal(50) #Backend Settled amount
 
                     # Get savehaven account 
                     account = ''
@@ -232,15 +235,17 @@ def safeHavenOneTimeWebhook(request):
                             oneAccountDetails = transferData['virtualAccount']
 
                             amount = Decimal(transferData['amount'])
+                            partnerBank = PartnerBank.objects.get(bank_name='SafeHaven MFB')
+                            depositCharges = partnerBank.deposit_charges
+                            settledAmount = amount - Decimal(amount * (depositCharges/Decimal(100)))
+                            
 
-                            settledAmount = Decimal(0)
-
-                            if amount <= Decimal(1000):
-                                settledAmount = amount - Decimal(10) #Backend Settled amount
-                            elif amount > Decimal(1000) and amount <= Decimal(5000):
-                                settledAmount = amount - Decimal(25) #Backend Settled amount
-                            elif amount > Decimal(5000):
-                                settledAmount = amount - Decimal(50) #Backend Settled amount
+                            # if amount <= Decimal(1000):
+                            #     settledAmount = amount - Decimal(10) #Backend Settled amount
+                            # elif amount > Decimal(1000) and amount <= Decimal(5000):
+                            #     settledAmount = amount - Decimal(25) #Backend Settled amount
+                            # elif amount > Decimal(5000):
+                            #     settledAmount = amount - Decimal(50) #Backend Settled amount
 
                             # Get savehaven account 
                             account = ''
@@ -324,7 +329,7 @@ def getTransactionStatus(request):
                 return JsonResponse({
                     'code':'00',
                     'transactionStatus':paymentDetails.status,
-                    'settledAmount':paymentDetails.settledAmount
+                    'settledAmount':str(paymentDetails.settledAmount)
                 })
 
         except ObjectDoesNotExist:

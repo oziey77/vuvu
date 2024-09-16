@@ -10,97 +10,168 @@
 <body>
     <!-- Transaction Form -->
      {% csrf_token %}
-    <div class="main-content transasction-page" id="transaction-form" style="display: block;">
+    <div class="main-content transasction-page" style="display: block;">
+        <!-- Top section -->
         <div class="top-section">
             <!-- Header -->
-            <div class="services-header">
-                {% csrf_token %}
-                <a href="{% url 'dashboard' %}">
-                    <div class="back-nav">
-                        <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7071 4.29289C12.0976 4.68342 12.0976 5.31658 11.7071 5.70711L6.41421 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H6.41421L11.7071 18.2929C12.0976 18.6834 12.0976 19.3166 11.7071 19.7071C11.3166 20.0976 10.6834 20.0976 10.2929 19.7071L3.29289 12.7071C3.10536 12.5196 3 12.2652 3 12C3 11.7348 3.10536 11.4804 3.29289 11.2929L10.2929 4.29289C10.6834 3.90237 11.3166 3.90237 11.7071 4.29289Z" fill="#000000"/>
-                        </svg>
-                        <p>Back</p>
-                    </div>
-                </a>                
+            <div class="services-header">               
                 <div class="service-info">
-                    <p>Wallet</p>
+                    <p >Wallet</p>
+                    <div class="icon-box">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g id="style=linear">
+                            <g id="email">
+                            <path id="vector" d="M17 20.5H7C4 20.5 2 19 2 15.5V8.5C2 5 4 3.5 7 3.5H17C20 3.5 22 5 22 8.5V15.5C22 19 20 20.5 17 20.5Z" stroke="" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path id="vector_2" d="M18.7698 7.7688L13.2228 12.0551C12.5025 12.6116 11.4973 12.6116 10.777 12.0551L5.22998 7.7688" stroke="" stroke-width="1.5" stroke-linecap="round"/>
+                            </g>
+                            </g>
+                        </svg>
+
+                    </div>
+                    <!-- <a href="javascript:void(0)" >Transaction History</a> -->
                 </div>            
             </div>
-            <div class="wallet-summary">
-                <p class="header">Available VPoints</p>
-                <p class="balance">{{user.wallet_balances.balance|intcomma}}</p>
+            <!-- Wallet Balance -->
+            <div class="wallet-group">
+                <a href="{% url 'dashboard' %}" onclick="">
+                    <div class="back-button">                        
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 19.9201L8.47997 13.4001C7.70997 12.6301 7.70997 11.3701 8.47997 10.6001L15 4.08008" stroke="#292D32" stroke-width="2.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </a>                
+                <div class="wallet-summary">
+                    <p class="balance"> <span class="gray-text">&#8358; </span><span style="font-stretch: narrower;">{{user.wallet_balances.balance|intcomma}}</span></p>
+                    <p class="header">Available Balance</p>                
+                </div>
+            </div> 
+            <!-- Generate Account  -->
+            <div class="bank-section" id="bankSection">
+                <div class="funding-option">
+                    <p>Fund your wallet with a TEMPORARY account <br>Account number valid for ONLY <strong>15 minutes</strong>!</p>            
+                    <button class="primary-btn outline" onclick="" id="oneTimeBTN">Get Temporary Account</button>
+                </div>
+                <hr>
+                <div class="funding-option">
+                    <p>Fund your wallet with a PERMANENT account <br>BVN needed to create account number</p>            
+                    <button class="secondary-btn " onclick="" id="virtualAccBTN">Generate Permanent Account</button>
+                </div>
+            </div>            
+        </div>
+        <!-- Recent Activities -->
+        <p class="section-header" style="font-size: .8em; margin-top: 540px;">Recent Activities</p>
+        <div class="recent-activity-container">
+            {% for activity in walletActivities%}
+            <div class="activity-container credit" >
+                <div class="left">
+                    <div class="icon-box">
+                        <svg width="18" height="18"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.0005 15.9995L15.0005 11.9995M15.0005 11.9995L11.0005 7.99951M15.0005 11.9995H3.00049M11.0005 2.99951H17.7997C18.9198 2.99951 19.4799 2.99951 19.9077 3.2175C20.284 3.40925 20.59 3.71521 20.7817 4.09153C20.9997 4.51935 20.9997 5.07941 20.9997 6.19951V17.7995C20.9997 18.9196 20.9997 19.4797 20.7817 19.9075C20.59 20.2838 20.284 20.5898 19.9077 20.7815C19.4799 20.9995 18.9198 20.9995 17.7997 20.9995H11.0005" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>                
+                    </div>
+                    <div class="info">
+                        <p class="header">Transfer</p>
+                        <p class="tag">{{activity.created}}</p>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="info">
+                        <p class="header">&#8358;{{activity.amount|intcomma}}</p>
+                        <p class="tag">Settled</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="history-link">
+                <a href="javascript:void(0)">View Full History</a>
             </div>
         </div>
-        <p class="section-header">Top Up Wallet</p>
-        <div class="funding-option">
-            <p>Use a temporary account number to top up your VPoints balance. Generated account should <strong>only be used once</strong> and are only valid for <strong>15 minutes</strong> </p>            
-            <button class="primary-btn" onclick="" id="oneTimeBTN">Top Up</button>
-        </div>
-        <div class="funding-option">
-            <p>Top up your VPoints balance using a permernent virtual account atteched to your profile. You will need to provide <strong>BVN or NIN</strong> to generate virtual accounts</p>            
-            <button class="primary-btn" onclick="" id="virtualAccBTN">Top Up</button>
-        </div>
-        <p class="section-header">Recent Wallet Activities</p>
-        {% for activity in walletActivities%}
-        <div class="activity-container {{activity.event_type|lower}}" >
-            <div class="left">
-                <div class="icon-box">
-                    <svg width="32px" height="32px"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M11.0005 15.9995L15.0005 11.9995M15.0005 11.9995L11.0005 7.99951M15.0005 11.9995H3.00049M11.0005 2.99951H17.7997C18.9198 2.99951 19.4799 2.99951 19.9077 3.2175C20.284 3.40925 20.59 3.71521 20.7817 4.09153C20.9997 4.51935 20.9997 5.07941 20.9997 6.19951V17.7995C20.9997 18.9196 20.9997 19.4797 20.7817 19.9075C20.59 20.2838 20.284 20.5898 19.9077 20.7815C19.4799 20.9995 18.9198 20.9995 17.7997 20.9995H11.0005" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>                
+        <!-- <div class="bank-section" id="bankSection">
+            <p class="section-header">Top Up Wallet</p>
+            <div class="funding-option">
+                <p>Fund wallet with temporary account <br>Account number valid for ONLY <strong>15 minutes</strong>!</p>            
+                <button class="primary-btn" onclick="" id="oneTimeBTN">Top Up</button>
+            </div>
+            <div class="funding-option">
+                <p>Fund wallet with permanent account <br><strong>BVN</strong> is required to generate this</p>            
+                <button class="primary-btn" onclick="" id="virtualAccBTN">Top Up</button>
+            </div>
+            <p class="section-header" style="font-size: .8em; margin-top: 50px;">Recent Activities</p>
+            <div class="recent-activity-container">
+                {% for activity in walletActivities%}
+                <div class="activity-container credit" >
+                    <div class="left">
+                        <div class="icon-box">
+                            <svg width="18" height="18"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11.0005 15.9995L15.0005 11.9995M15.0005 11.9995L11.0005 7.99951M15.0005 11.9995H3.00049M11.0005 2.99951H17.7997C18.9198 2.99951 19.4799 2.99951 19.9077 3.2175C20.284 3.40925 20.59 3.71521 20.7817 4.09153C20.9997 4.51935 20.9997 5.07941 20.9997 6.19951V17.7995C20.9997 18.9196 20.9997 19.4797 20.7817 19.9075C20.59 20.2838 20.284 20.5898 19.9077 20.7815C19.4799 20.9995 18.9198 20.9995 17.7997 20.9995H11.0005" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>                
+                        </div>
+                        <div class="info">
+                            <p class="header">Transfer</p>
+                            <p class="tag">{{activity.created}}</p>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="info">
+                            <p class="header">&#8358;{{activity.amount|intcomma}}</p>
+                            <p class="tag">Settled</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="info">
-                    <p class="header">{{activity.transaction_type}}</p>
-                    <p class="tag">{{activity.created}}</p>
+                {% endfor %}
+                <div class="history-link">
+                    <a href="javascript:void(0)">View Full History</a>
                 </div>
             </div>
-            <div class="right">
-                <div class="info">
-                    <p class="header">VP{{activity.amount|intcomma}}</p>
-                    <p class="tag">Settled</p>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        <div class="history-link">
-            <a href="javascript:void(0)">View Full History</a>
-        </div>
+            
+
+        </div> -->
+
+        
         
         
          <!-- Bottom Nav -->
-        {% include 'users/includes/bottom-navs.html' %}   
+        <!-- {% include 'users/includes/bottom-navs.html' %}    -->
         
         <!-- One Time Topup -->
-        <div class="setting-modal" id="oneTimeTopup">
+        <div class="setting-modal" id="oneTimeTopup" style="display: none;">
             {% csrf_token %}  
             <div class="content">
+                <input type="text" id="oneTimeTopupCharges" value="{{dynamicAccount.deposit_charges}}" hidden>
+                <div class="modal-indicator">
+                    <!-- <hr> -->
+                </div>
                 <!-- Top up amount -->
                 <div class="form-container" id="topUpAmount" style="display: block;">
-                    <p class="header">Top Up Points</p>
+                    <p class="header">Fund Wallet</p>
                     <form action="">
                         <div class="input-group">
                             <input type="text" id="amount" inputmode="numeric" placeholder="How much?">
-                            <p class="note">1VPoint = &#8358;1 </p>
                         </div>
                         <button class="primary-btn disabled" id="proceedOneTime" disabled>Proceed</button>
                     </form>
                 </div>
                 <!-- Step 2 Account details -->
                 <div class="account-container" id="oneTimeAccountDetails" style="display: none;">
-                    <p class="header">Top Up Points</p>
-                    <p class="tag">You will  be charged 10VP for this top up</p>
+                    <p class="header">Account Details</p>
+                    <p class="tag">Valid for only 15 minutes ⚠️</p>
+                    <!-- <p class="tag">You will  be charged &#8358;<span>10</span> for this top up</p> -->
                     <div class="account-info">
                         <div class="left">
-                            <p class="title">Account Number</p>
-                            <P class="account-number" id="oneTimeAccNo"></P>
+                            <div class="icon-box">
+                                <img src="{% static 'users/images/safehaven.jpg' %}" alt="">
+                            </div>                            
                         </div>
-                        <div class="right">
-                            <button id="copyOneTimeAcc">Copy</button>
-                            <p class="copy-indicator" id="oneTimeCopyIndicator">Copied</p>
+                        <div class="right">                            
+                            <P class="account-number" id="oneTimeAccNo"></P>
+                            <p class="bank-name">SafeHaven Microfinance Bank</p>
+                            <p class="account-name">VUVU Checkout</p>
+                            <!-- <button id="copyOneTimeAcc">Copy</button>
+                            <p class="copy-indicator" id="oneTimeCopyIndicator">Copied</p> -->
                         </div>
                     </div>
-                    <div class="bank-details" id="sfbBankDetals" >
+                    <p class="main-note">Send exactly <span id="depositAmount" style="text-decoration: underline;"></span> to this account to topup your <br>Vuvu wallet. Use this account only ONCE!</p>
+                    <!-- <div class="bank-details" id="sfbBankDetals" >
                         <div class="item">
                             <div class="icon-box">
                                 <img src="{% static 'users/images/safehaven.jpg' %}" alt="">
@@ -119,8 +190,18 @@
                                 <p class="data">Vuvu Checkout</p>
                             </div>
                         </div>
+                    </div> -->
+                    <p class="charges-note">A fee of <span style="text-decoration: underline;">1.5%</span> applies on all deposit.</p>                    
+                    <p class="receive-amount"><strong class="success">&#8358;<span  id="creditAmount">500</span></strong> will be credited to your wallet</p>
+                    
+                    <div class="copy-container">
+                        <p>Copy Account Number</p>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyOneTimeAcc" onclick="">
+                            <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
+                            <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                        </svg>
                     </div>
-                    <button class="primary-btn" id="confirmTopUp" onclick="">Confirm Payment</button>
+                    <button class="primary-btn" id="confirmTopUp" onclick="" style="margin-top: 8px;">I Have Made Transfer</button>
                 </div>
                 <!-- Step 3 awaiting payment -->
                 <div class="feedback-container" id="oneTimeTopupConfirmation" style="display: none;">
@@ -140,7 +221,7 @@
                     <!-- Payment not receieved -->
                     <div class="reset-feedback payment-pending" id="oneTimeTopupExpired" style="display: none;">
                         <p>Top Up Pending</p>
-                        <small>Ooops! your funds did not get to us on time.<br>If we receive it before account expiry <br>you will be credited with your VPoints .</small>
+                        <small>Ooops! your funds did not get to us on time.<br>If we receive it before account expiry <br>you will be credited accordingly .</small>
                         <div id="ten-countdown" class="timer-div"></div>
                         <input type="text" value="{{accountDetails.accountID}}" id="accountID" hidden>
                     </div>  
@@ -148,39 +229,41 @@
                  </div>
                 
                  <!-- Step 4 payment Successful -->
-                <div class="feedback-container" id="oneTimeTopupSuccess" style="display: none;">
-                    <div class="svg-container">
-                        <svg width="100px" height="100px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M905.92 237.76a32 32 0 0 0-52.48 36.48A416 416 0 1 1 96 512a418.56 418.56 0 0 1 297.28-398.72 32 32 0 1 0-18.24-61.44A480 480 0 1 0 992 512a477.12 477.12 0 0 0-86.08-274.24z" fill="green" />
-                            <path d="M630.72 113.28A413.76 413.76 0 0 1 768 185.28a32 32 0 0 0 39.68-50.24 476.8 476.8 0 0 0-160-83.2 32 32 0 0 0-18.24 61.44zM489.28 86.72a36.8 36.8 0 0 0 10.56 6.72 30.08 30.08 0 0 0 24.32 0 37.12 37.12 0 0 0 10.56-6.72A32 32 0 0 0 544 64a33.6 33.6 0 0 0-9.28-22.72A32 32 0 0 0 505.6 32a20.8 20.8 0 0 0-5.76 1.92 23.68 23.68 0 0 0-5.76 2.88l-4.8 3.84a32 32 0 0 0-6.72 10.56A32 32 0 0 0 480 64a32 32 0 0 0 2.56 12.16 37.12 37.12 0 0 0 6.72 10.56zM230.08 467.84a36.48 36.48 0 0 0 0 51.84L413.12 704a36.48 36.48 0 0 0 51.84 0l328.96-330.56A36.48 36.48 0 0 0 742.08 320l-303.36 303.36-156.8-155.52a36.8 36.8 0 0 0-51.84 0z" fill="green" />
-                        </svg>
+                <div class="feedback-container deposit-feedback" id="oneTimeTopupSuccess" style="display: none;">
+                    <div class="feedback-image-container">
+                        <img src="{% static 'users/images/success.webp' %}" alt="">
                     </div>
                     <div class="feedback" id="">
-                        <p>Your VPoints top up was successful <br><strong id="pointsAdded"></strong>VPoints was added to your wallet.</p>
+                        <p>Your wallet top up was successful <br>&#8358;<strong id="pointsAdded"></strong> was added to your wallet.</p>
                     </div> 
-                    <a href="{% url 'dashboard' %}" class="primary-btn" id="closePasswordChange"> Close</a>
+                    <a href="{% url 'dashboard' %}" class="primary-btn" id="closePasswordChange"> Go To Dashboard</a>
                  </div>
                 
             </div>
         
         </div>
         <!-- Virtual Account -->
-        <div class="setting-modal" id="virtuaAccModal" style="display: block;">
+        <div class="setting-modal" id="virtuaAccModal" style="display: none;">
             {% csrf_token %}  
-            <div class="content">
-                <div class="form-container" id="" style="display: block;">                    
-                    <div class="virtual-account-container">
-                        <div class="nav-tabs">
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <p class="header">Permanent Account Details</p> 
+                <p class="tag">Kindly choose any of the banks below.</p> 
+                <div class="form-container" id="" style="display: block;">                                      
+                    <div class="virtual-account-container">                         
+                        <div class="nav-tabs">                            
+                            <button class="vacc-nav " onclick="">9Payment SB</button>
                             <button class="vacc-nav active" onclick="">SafeHaven MFB</button>
-                            <button class="vacc-nav" onclick="">9Payment SB</button>
                         </div>
                         <div class="sfb-container">
                             <!-- Generate Account -->
                             <div class="generate-account" id="generateAccount" style="display: block;">
                                 <div class="note">
-                                    <p class="stamp-duty">Deposits below &#8358;1,000: &#8358;10 stamp duty</p>
+                                    <p class="stamp-duty">Stamp duty of &#8358;50 applies on all deposits</p>
+                                    <!-- A fee of <span style="text-decoration: underline;">1.1%</span> applies on all deposit. -->
+                                    <!-- <p class="stamp-duty">Deposits below &#8358;1,000: &#8358;10 stamp duty</p>
                                     <p class="stamp-duty">Deposits between &#8358;1,000 - 5000: &#8358;25 stamp duty</p>
-                                    <p class="stamp-duty">Deposits &#8358;5,000 above : &#8358;50 stamp duty</p>
+                                    <p class="stamp-duty">Deposits &#8358;5,000 above : &#8358;50 stamp duty</p> -->
                                 </div>
                                 {% if user.has_safeHavenAccount == False %}
                                 <button class="primary-btn" id="generate-sfb">Proceed</button>
@@ -209,11 +292,11 @@
                                         </div>
                                         <div class="item">
                                             <div class="icon-box">
-                                                <img src="{% static 'users/images/vuvu-logo.png' %}" alt="">vuvu-logo
+                                                <img src="{% static 'users/images/vuvu-logo.png' %}" alt="">
                                             </div>
                                             <div class="details">
                                                 <p class="title">Account Name</p>
-                                                <p class="data">Vuvu Checkout</p>
+                                                <p class="data">VUVU Checkout</p>
                                             </div>
                                         </div>
                                     </div>
@@ -227,20 +310,24 @@
                             <!-- KYC Form-->
                             <div class="form-container" id="KYCForm" style="display: none;">
                                 <p class="header" style="text-align: left;">Identity Verification</p>
-                                <p class="kyc-note">Please provide some information about yourself. We <br>we use this information to protect your account and for <br>compliance purpose.</p>
-                                <p class="kyc-note" style="margin-top: 10px;">The Full name and DOB must be as shown on your BVN</p>
+                                <!-- <p class="kyc-note">Please provide some information about yourself. We <br>we use this information to protect your account and for <br>compliance purpose.</p> -->
+                                <p class="kyc-note" style="margin-top: 10px;">The Full name and DOB must be <br>as shown on your BVN</p>
                                 <form action="" id="kyc-form" method="post">
                                     {% csrf_token%}
                                     <div class="input-group">
-                                        <select name="id_type" id="id_type">
-                                            <option value="" disabled selected>Identity Type</option>  
-                                            <option value="BVN">BVN</option>  
-                                            <!-- <option value="NIN">NIN</option>             -->
-                                        </select>
+                                        <div class="custom-select">
+                                            <select name="id_type" id="id_type">
+                                                <option value="" disabled selected>Identity Type</option>  
+                                                <option value="BVN">BVN</option>  
+                                                <!-- <option value="NIN">NIN</option>             -->
+                                            </select>
+                                            <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg> 
+                                        </div>
                                         <div class="validation-container" id="idTypeValidation" >
                                             <p class="input-validation" id="idTypeError"></p> 
                                         </div>
-                                          
                                     </div>
                                                          
                                     <!-- ID Number -->
@@ -270,13 +357,16 @@
                                     <!-- Date of birth -->
                                     <div class="input-group " id="">
                                         <div class="date-of-birth">
-                                            <div class="input-group">
+                                            <div class="input-group custom-select">
                                                 <select name="date-day" id="date-day">
                                                     <option value="" selected >Day</option>  
                                                     <option value="01" >01</option><option value="02" >02</option><option value="03" >03</option><option value="04" >04</option><option value="05" >05</option><option value="06" >06</option><option value="07" >07</option><option value="08" >08</option><option value="09" >09</option><option value="10" >10</option><option value="11" >11</option><option value="12" >12</option><option value="13" >13</option><option value="14" >14</option><option value="15" >15</option><option value="16" >16</option><option value="17" >17</option><option value="18" >18</option><option value="19" >19</option><option value="20" >20</option><option value="21" >21</option><option value="22" >22</option><option value="23" >23</option><option value="24" >24</option><option value="25" >25</option><option value="26" >26</option><option value="27" >27</option><option value="28" >28</option><option value="29" >29</option><option value="30" >30</option><option value="31" >31</option>
                                                 </select>
+                                                <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg> 
                                             </div>
-                                            <div class="input-group">
+                                            <div class="input-group custom-select">
                                                 <select name="date-month" id="date-month">
                                                     <option value="" selected >Month</option>
                                                     <option value="Jan" >January</option>
@@ -287,16 +377,22 @@
                                                     <option value="Jun" >June</option>
                                                     <option value="Jul" >July</option>
                                                     <option value="Aug" >August</option>
-                                                    <option value="Sept" >September</option>
+                                                    <option value="Sep" >September</option>
                                                     <option value="Oct" >October</option>
                                                     <option value="Nov" >November</option>
                                                     <option value="Dec" >December</option>         
                                                 </select>
+                                                <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
                                             </div>
-                                            <div class="input-group">
+                                            <div class="input-group custom-select">
                                                 <select name="date-year" id="date-year">
                                                     <option value="" selected >Year</option>            
                                                 </select>
+                                                <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
                                             </div>
                                         </div>
                                         <div class="validation-container" id="dobValidation" >
@@ -325,14 +421,14 @@
                                     </div>                                   
                                     
                                     <!-- Button -->
-                                    <button class="primary-btn" id="submit-kyc" onclick="">Verify KYC</button>                                                          
+                                    <button class="primary-btn" id="submit-kyc" onclick="">Verify Identity</button>                                                          
                                </form>
                                
                             </div>
                             <!-- OTP VRTIFICATION-->
                             <div class="form-container" id="OTPVerification" style="display: none;">
                                 <p class="header" style="text-align: left;">OTP Verification</p>
-                                <p class="kyc-note">Please enter the OTP code sent to the phone number <br>registered on your BVN </p>
+                                <p class="kyc-note">Please enter the OTP code sent to the phone<br>number registered on your BVN </p>
                                 <!-- <p class="kyc-note" style="margin-top: 10px;">The Full name and DOB must be as shown on your BVN</p> -->
                                 <div class="pin-container">
                                     <div id="PINWrapper" ></div>
@@ -351,11 +447,8 @@
                             
                         </div>
 
-                    </div>
-                    
+                    </div>                    
                 </div>
-                
-                
             </div>
         
         </div>
@@ -372,8 +465,8 @@
 
     
 
-    <script src="{% static 'users/js/wallet.js' %}"></script>
-    <script src="{% static 'users/js/virtual-account.js' %}"></script>
+    <script src="{% static 'users/js/wallet.js' %}?v=1.0005"></script>
+    <script src="{% static 'users/js/virtual-account.js' %}?v=1.0005"></script>
     
 </body>
 </html>

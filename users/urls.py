@@ -27,6 +27,7 @@ urlpatterns = [
     path('send-otp/',views.sendOTP),
     path('reset-password/',views.resetPassword),
     path('save-pin/',views.saveTransactionPin),
+    path('check-pin/',views.checkTransactionPin),
     path('update-pin/',views.updateTransactionPin),
     path('onetime-topup/',views.dynamicAccountAmount),
     path("submit-kyc/",views.submitKYC),
