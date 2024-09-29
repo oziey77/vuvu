@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vuvu - Settings</title>
+    <title>Vuvu - Notifications</title>
     {% include 'users/includes/header.html' %}
 </head>
 <body>
@@ -13,116 +13,42 @@
     <div class="main-content transasction-page"  style="display: block;">
         <div class="top-section">
             <!-- Header -->
-            <div class="services-header" >
-                {% csrf_token %}               
+            <div class="services-header flex">    
                 <div class="service-info">
-                    <p>Profile</p>
-                </div>            
-            </div>
-            <div class="settings-header" style="margin-top: 10px;">
-                <div class="image-box">
-                    <svg width="50px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path opacity="0.5" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" fill="#FFF2F1"/>
-                        <path d="M16.807 19.0112C15.4398 19.9504 13.7841 20.5 12 20.5C10.2159 20.5 8.56023 19.9503 7.193 19.0111C6.58915 18.5963 6.33109 17.8062 6.68219 17.1632C7.41001 15.8302 8.90973 15 12 15C15.0903 15 16.59 15.8303 17.3178 17.1632C17.6689 17.8062 17.4108 18.5964 16.807 19.0112Z" fill="#FC846B"/>
-                        <path d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3432 6 9.00004 7.34315 9.00004 9C9.00004 10.6569 10.3432 12 12 12Z" fill="#FC846B"/>
-                    </svg>
-                </div>
-                <div class="details">
-                    <p>{{user.username}}</p>
-                    <p>{{user.email}}</p>
-                </div>
-            </div>
-        </div>
-        <div class="nav-container settings">            
-            <a href="javascript:void(0)" class="setting-nav-link"></a>
-                <div class="settings-nav">
-                    <div class="icon-box">
-                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 18h18a1 1 0 0 0 .894-1.447L20 12.763V10a8 8 0 1 0-16 0v2.764l-1.894 3.789A1 1 0 0 0 3 18Z" fill="none" fill-opacity=".16" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4Z" fill="#FFFFF" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>                    
                     <p>Notifications</p>
-                </div>
-            </a>
-            {% if pinSet == True %}
-            <a href="javascript:void(0)" class="setting-nav-link updatePIN" id="changeTransactionPIN">
-                <div class="settings-nav">
-                    <div class="icon-box">
-                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 10V14M10.2676 11L13.7317 13M13.7314 11L10.2673 13" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M6.73241 10V14M4.99999 11L8.46409 13M8.46386 11L4.99976 13" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M17.2681 10V14M15.5356 11L18.9997 13M18.9995 11L15.5354 13" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C21.4816 5.82475 21.7706 6.69989 21.8985 8" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
-                    </div>                    
-                    <p>Change Transaction PIN</p>
-                </div>
-            </a>
-            {% else %}            
-            <a href="javascript:void(0)" class="setting-nav-link setPIN" id="changeTransactionPIN">
-                <div class="settings-nav">
-                    <div class="icon-box">
-                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 10V14M10.2676 11L13.7317 13M13.7314 11L10.2673 13" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M6.73241 10V14M4.99999 11L8.46409 13M8.46386 11L4.99976 13" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M17.2681 10V14M15.5356 11L18.9997 13M18.9995 11L15.5354 13" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C21.4816 5.82475 21.7706 6.69989 21.8985 8" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
-                    </div>                    
-                    <p>Set Transaction PIN</p>
-                </div>
-            </a>
-            {% endif %}
-            <a href="javascript:void(0)" class="setting-nav-link" id="changePassword" onclick="">
-                <div class="settings-nav">
-                    <div class="icon-box">                        
-                        <svg width="20px" height="20px" viewBox="-1.44 -1.44 26.88 26.88" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)" stroke="#000000" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.048"></g><g id="SVGRepo_iconCarrier"> <path d="M9 16C9 16.5523 8.55229 17 8 17C7.44772 17 7 16.5523 7 16C7 15.4477 7.44772 15 8 15C8.55229 15 9 15.4477 9 16Z" fill="#373737"></path> <path d="M13 16C13 16.5523 12.5523 17 12 17C11.4477 17 11 16.5523 11 16C11 15.4477 11.4477 15 12 15C12.5523 15 13 15.4477 13 16Z" fill="#373737"></path> <path d="M16 17C16.5523 17 17 16.5523 17 16C17 15.4477 16.5523 15 16 15C15.4477 15 15 15.4477 15 16C15 16.5523 15.4477 17 16 17Z" fill="#373737"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M5.25 8V9.30277C5.02317 9.31872 4.80938 9.33948 4.60825 9.36652C3.70814 9.48754 2.95027 9.74643 2.34835 10.3483C1.74643 10.9503 1.48754 11.7081 1.36652 12.6082C1.24996 13.4752 1.24998 14.5775 1.25 15.9451V16.0549C1.24998 17.4225 1.24996 18.5248 1.36652 19.3918C1.48754 20.2919 1.74643 21.0497 2.34835 21.6516C2.95027 22.2536 3.70814 22.5125 4.60825 22.6335C5.47522 22.75 6.57754 22.75 7.94513 22.75H16.0549C17.4225 22.75 18.5248 22.75 19.3918 22.6335C20.2919 22.5125 21.0497 22.2536 21.6517 21.6516C22.2536 21.0497 22.5125 20.2919 22.6335 19.3918C22.75 18.5248 22.75 17.4225 22.75 16.0549V15.9451C22.75 14.5775 22.75 13.4752 22.6335 12.6082C22.5125 11.7081 22.2536 10.9503 21.6517 10.3483C21.0497 9.74643 20.2919 9.48754 19.3918 9.36652C19.1906 9.33948 18.9768 9.31872 18.75 9.30277V8C18.75 4.27208 15.7279 1.25 12 1.25C8.27208 1.25 5.25 4.27208 5.25 8ZM12 2.75C9.10051 2.75 6.75 5.10051 6.75 8V9.25344C7.12349 9.24999 7.52152 9.24999 7.94499 9.25H16.0549C16.4783 9.24999 16.8765 9.24999 17.25 9.25344V8C17.25 5.10051 14.8995 2.75 12 2.75ZM4.80812 10.8531C4.07435 10.9518 3.68577 11.1322 3.40901 11.409C3.13225 11.6858 2.9518 12.0743 2.85315 12.8081C2.75159 13.5635 2.75 14.5646 2.75 16C2.75 17.4354 2.75159 18.4365 2.85315 19.1919C2.9518 19.9257 3.13225 20.3142 3.40901 20.591C3.68577 20.8678 4.07435 21.0482 4.80812 21.1469C5.56347 21.2484 6.56459 21.25 8 21.25H16C17.4354 21.25 18.4365 21.2484 19.1919 21.1469C19.9257 21.0482 20.3142 20.8678 20.591 20.591C20.8678 20.3142 21.0482 19.9257 21.1469 19.1919C21.2484 18.4365 21.25 17.4354 21.25 16C21.25 14.5646 21.2484 13.5635 21.1469 12.8081C21.0482 12.0743 20.8678 11.6858 20.591 11.409C20.3142 11.1322 19.9257 10.9518 19.1919 10.8531C18.4365 10.7516 17.4354 10.75 16 10.75H8C6.56459 10.75 5.56347 10.7516 4.80812 10.8531Z" fill="#373737"></path> </g></svg>
-                    </div>                    
-                    <p>Change Password</p>
-                </div>
-            </a>
-            <a href="javascript:void(0)" class="setting-nav-link">
-                <div class="settings-nav">
-                    <div class="icon-box">
-                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8 2V5" stroke="#373737" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M16 2V5" stroke="#373737" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="#373737" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 11H16" stroke="#373737" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 16H12" stroke="#373737" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>                    
-                    <p>Legal</p>
-                </div>
-            </a>
-            <a href="javascript:void(0)" class="setting-nav-link">
-                <div class="settings-nav">
-                    <div class="icon-box">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                </div>   
+                <a href="{% url 'delete-notifications' %}" onclick="">
+                    <div class="clear-btn">
+                        <svg width="14px" height="14px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M21 5.97998C17.67 5.64998 14.32 5.47998 10.98 5.47998C9 5.47998 7.02 5.57998 5.04 5.77998L3 5.97998" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M8.5 4.97L8.72 3.66C8.88 2.71 9 2 10.69 2H13.31C15 2 15.13 2.75 15.28 3.67L15.5 4.97" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M18.85 9.14001L18.2 19.21C18.09 20.78 18 22 15.21 22H8.79002C6.00002 22 5.91002 20.78 5.80002 19.21L5.15002 9.14001" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M10.33 16.5H13.66" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M9.5 12.5H14.5" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                    </div>                    
-                    <p>Delete Account</p>
-                </div>
-            </a>
-            <a href="{% url 'logout' %}" class="setting-nav-link">
-                <div class="settings-nav">
-                    <div class="icon-box">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M15.5 12H9.5" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M11.5 9L8.5 12L11.5 15" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>                    
-                    <p>Logout</p>
-                </div>
-            </a>
+                        <p>Clear All</p>
+                    </div>
+                </a> 
+                        
+            </div>
+        </div>
 
+        <div class="notifications-container">
+            {% if totalNotifications > 0 %}
+                {% for notification in notifications %}
+                    <div class="notification-box">
+                        <p class="date-time">{{notification.created|time:"H:ia"}}</p>
+                        <p class="date-time">{{notification.created|date:"F d, Y"}}</p>
+                        <h5 class="title">{{notification.title}}</h5>
+                        <p class="body">{{notification.body}}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+            <div class="notification-box">
+                <p class="body">Nothing to find here</p>
+            </div>
+            {% endif %}
+            
         </div>
         
         

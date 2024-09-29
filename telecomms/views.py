@@ -420,7 +420,7 @@ def fetchDataPlans(request):
             })
         else:
             if activebackend == "ATN":
-                dataplans = ATNDataPlans.objects.filter(network_operator=operator).order_by("id")
+                dataplans = ATNDataPlans.objects.filter(network_operator=operator).order_by("list_order")
                 serializer = ATNDataPlanSerializer(dataplans,many=True)
                 return JsonResponse({
                     "code":"00",
@@ -430,18 +430,36 @@ def fetchDataPlans(request):
             elif activebackend == "HONOURWORLD":
                 dataplans = HonouworldDataPlans.objects.filter(network_operator=operator).order_by("id")
                 serializer = HonouworldDataPlanSerializer(dataplans,many=True)
+                extraPlans = None
+                # Fetch extra ATN Data Plans
+                # if operator == "MTN":
+                extraData = ATNDataPlans.objects.filter(network_operator=operator,plan_type="Extra").order_by("list_order")
+                if extraData.count() > 0:
+                    extraDataSerializer = ATNDataPlanSerializer(extraData,many=True)
+                    extraPlans = extraDataSerializer.data
+                    
+
                 return JsonResponse({
                     "code":"00",
                     "activeBackend":activebackend,
                     "plans":serializer.data,
+                    "extraPlans":extraPlans,
                 })
             elif activebackend == "TWINS10":
                 dataplans = Twins10DataPlans.objects.filter(network_operator=operator).order_by("id")
                 serializer = Twins10DataPlanSerializer(dataplans,many=True)
+                extraPlans = None
+                # Fetch extra ATN Data Plans
+                # if operator == "MTN":
+                extraData = ATNDataPlans.objects.filter(network_operator=operator,plan_type="Extra").order_by("list_order")
+                if extraData.count() > 0:
+                    extraDataSerializer = ATNDataPlanSerializer(extraData,many=True)
+                    extraPlans = extraDataSerializer.data
                 return JsonResponse({
                     "code":"00",
                     "activeBackend":activebackend,
                     "plans":serializer.data,
+                    "extraPlans":extraPlans,
                 })
             
 
@@ -474,17 +492,8 @@ def buyData(request):
             else:
                 dataBackend = DataBackend.objects.get(operator=operator)
                 activeBackend = dataBackend.active_backend
-                selectedPlan = '' 
-                if activeBackend == "ATN":
-                    try:
-                        plan = ATNDataPlans.objects.get(package_id=planID)
-                        if plan is not None:
-                            selectedPlan = plan
-                    except ObjectDoesNotExist:
-                        return JsonResponse({
-                        'code':'09', 
-                        'message':'selected plan is not valid'       
-                    })
+                selectedPlan = ''
+                dataType = "Normal"
                 if activeBackend == "ATN":
                     try:
                         plan = ATNDataPlans.objects.get(package_id=planID)
@@ -496,25 +505,59 @@ def buyData(request):
                         'message':'selected plan is not valid'       
                     })
                 elif activeBackend == "HONOURWORLD":
-                    try:
-                        plan = HonouworldDataPlans.objects.get(package_id=planID)
-                        if plan is not None:
-                            selectedPlan = plan
-                    except ObjectDoesNotExist:
-                        return JsonResponse({
-                        'code':'09', 
-                        'message':'selected plan is not valid'       
-                    })
+                    if operator == "MTN":
+                        try:
+                            plan = ATNDataPlans.objects.get(package_id=planID)
+                            if plan is not None:
+                                selectedPlan = plan
+                                dataType = "Extra"
+                        except ObjectDoesNotExist:
+                            try:
+                                plan = HonouworldDataPlans.objects.get(package_id=planID)
+                                if plan is not None:
+                                    selectedPlan = plan
+                            except ObjectDoesNotExist:
+                                return JsonResponse({
+                                'code':'09', 
+                                'message':'selected plan is not valid'       
+                            })
+                    else:
+                        try:
+                            plan = HonouworldDataPlans.objects.get(package_id=planID)
+                            if plan is not None:
+                                selectedPlan = plan
+                        except ObjectDoesNotExist:
+                            return JsonResponse({
+                            'code':'09', 
+                            'message':'selected plan is not valid'       
+                        })
                 elif activeBackend == "TWINS10":
-                    try:
-                        plan = Twins10DataPlans.objects.get(package_id=planID)
-                        if plan is not None:
-                            selectedPlan = plan
-                    except ObjectDoesNotExist:
-                        return JsonResponse({
-                        'code':'09', 
-                        'message':'selected plan is not valid'       
-                    })
+                    if operator == "MTN":
+                        try:
+                            plan = ATNDataPlans.objects.get(package_id=planID)
+                            if plan is not None:
+                                selectedPlan = plan
+                                dataType = "Extra"
+                        except ObjectDoesNotExist:
+                            try:
+                                plan = Twins10DataPlans.objects.get(package_id=planID)
+                                if plan is not None:
+                                    selectedPlan = plan
+                            except ObjectDoesNotExist:
+                                return JsonResponse({
+                                'code':'09', 
+                                'message':'selected plan is not valid'       
+                            })
+                    else:
+                        try:
+                            plan = Twins10DataPlans.objects.get(package_id=planID)
+                            if plan is not None:
+                                selectedPlan = plan
+                        except ObjectDoesNotExist:
+                            return JsonResponse({
+                            'code':'09', 
+                            'message':'selected plan is not valid'       
+                        })
 
                 existingTran = Transaction.objects.filter(user=user,operator=operator,recipient=recipient,package=selectedPlan.plan,created__gte=datetime.now() - timedelta(seconds=45))
                 if existingTran.count() > 0:
@@ -565,7 +608,7 @@ def buyData(request):
                             "message":"Duplicate transaction wait 1 minute"
                         })
 
-                    if activeBackend == "ATN":
+                    if activeBackend == "ATN" or dataType == "Extra":
                         transaction.APIBackend = 'ATN'
                         transaction.save()
                         # callBackUrl = "https://webhook.yagapay.io/atn-webhook.php"
@@ -632,7 +675,7 @@ def buyData(request):
                                 "code":"09",
                                 "message":data['message']
                             })
-                    elif activeBackend == "HONOURWORLD": 
+                    elif activeBackend == "HONOURWORLD" and dataType == "Normal": 
                         transaction.APIBackend = 'HONOURWORLD'
                         transaction.save()
                         url = 'https://vtuapi.honourworld.com/api/v2/data/buy'
@@ -699,7 +742,7 @@ def buyData(request):
                                 "code":"09",
                                 "message":error["msg"]
                             })
-                    elif activeBackend == "TWINS10":
+                    elif activeBackend == "TWINS10" and dataType == "Normal":
                         transaction.APIBackend = 'TWINS10'
                         transaction.save() 
                         if operator == "MTN":

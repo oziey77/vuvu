@@ -8,12 +8,12 @@ from django.contrib import messages
 from django.conf import settings
 import requests
 import json
-from adminbackend.forms import AirtimeDiscountForm
+from adminbackend.forms import AirtimeDiscountForm, NotificationForm
 from adminbackend.models import AirtimeBackend, AirtimeDiscount, DataBackend
 from payments.models import WalletFunding
 from telecomms.forms import ATNDataPlanForm, HonourworldDataPlanForm, Twins10DataPlanForm
 from telecomms.models import ATNDataPlans, AirtimeServices, DataServices, HonouworldDataPlans, Twins10DataPlans
-from users.models import Transaction, User, UserWallet, WalletActivity
+from users.models import Notifications, Transaction, User, UserWallet, WalletActivity
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from datetime import datetime
 
@@ -832,6 +832,38 @@ def updateHonourworldDataPlan(request):
                 pass
         return redirect('honourworld-data-management')
     return redirect('login')
+
+# Notification Management
+@login_required(login_url='login')
+def notificationsSetup(request):
+    user = request.user    
+    if user.is_staff: # only staff user(main admin can login)
+        return render(request,'adminbackend/notification-setup.html')
+    return redirect('login') 
+
+# Send General Notification
+@login_required(login_url='login')
+def sendGeneralNotification(request):
+    user = request.user    
+    if user.is_staff and request.method == "POST": # only staff user(main admin can login)
+        form = NotificationForm(request.POST)
+        if form.is_valid():
+            notificationData = form.save(commit=False)
+            customers = User.objects.all().exclude(admin=True)
+            print(f"Total users are {customers.count()}")
+            for customer in customers:
+                Notifications.objects.create(
+                    user = customer,
+                    title = notificationData.title,
+                    body = notificationData.body
+                )
+            messages.success(request,"notifications sent successfully")
+        else:
+            print(form.errors)
+            messages.error(request,"notifications failed to send")
+        
+        return redirect("notifications-management")
+    return redirect('login') 
 
 
 

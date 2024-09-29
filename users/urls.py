@@ -15,6 +15,9 @@ urlpatterns = [
     path('transaction-history/',views.transactionHistoryPage,name='transaction-history'),
     path('settings/',views.settingsPage,name='settings'),
     path('wallet/',views.walletPage,name='wallet'),
+    path('support/',views.supportPage,name='support'),
+    path('notifications/',views.notificationsPage,name='notifications'),
+    path('delete-notifications/',views.deleteNotifications,name='delete-notifications'),
     
 
     # Ajax Calls    
@@ -32,5 +35,6 @@ urlpatterns = [
     path('onetime-topup/',views.dynamicAccountAmount),
     path("submit-kyc/",views.submitKYC),
     path("validate-kyc/",views.validateKYC),
+    path("redeem-cashback/",views.redeemCashback),
     
 ]

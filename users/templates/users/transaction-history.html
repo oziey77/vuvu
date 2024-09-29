@@ -16,7 +16,7 @@
             <div class="services-header">               
                 <div class="service-info">
                     <p >Transactions</p>
-                    <div class="icon-box">
+                    <!-- <div class="icon-box">
                         <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="style=linear">
                             <g id="email">
@@ -25,13 +25,12 @@
                             </g>
                             </g>
                         </svg>
-
-                    </div>
+                    </div> -->
                     <!-- <a href="javascript:void(0)" >Transaction History</a> -->
                 </div>            
             </div>
             <!-- Wallet Balance -->
-            <div class="wallet-group">
+            <!-- <div class="wallet-group">
                 <a href="{% url 'dashboard' %}" onclick="">
                     <div class="back-button">                        
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,8 +42,11 @@
                     <p class="balance"> <span class="gray-text">&#8358; </span><span style="font-stretch: narrower;">{{user.wallet_balances.balance|intcomma}}</span></p>
                     <p class="header">Available Balance</p>                
                 </div>
-            </div>   
+            </div>    -->
 
+        </div>
+        <!-- Transactions -->
+         <div class="transactions-container">
             <!-- Filter -->
             <div class="transaction-filter-container">
                 <p>Filter by:</p>
@@ -65,47 +67,46 @@
                     
                 </form>
             </div>
-        </div>
-        <!-- Transactions -->
-        <div class="transaction-records">
-        {% if totalTransactions > 0 %}
-        {% for transaction in transactions %}
-        <a href="javascript:void(0)" class="transInfo" transID="{{transaction.id}}">
-            <div class="transaction">
-                <div class="left">
-                    <div class="icon-box">
-                        {% if transaction.operator == 'MTN' %}
-                            <img src="{% static 'telecomms/images/mtnlogo.png' %}" alt=""> 
-                        {% elif transaction.operator == 'Glo' %}  
-                            <img src="{% static 'telecomms/images/glologo.png' %}" alt=""> 
-                        {% elif transaction.operator == '9Mobile' %}  
-                            <img src="{% static 'telecomms/images/9mobilelogo.png' %}" alt=""> 
-                        {% elif transaction.operator == 'Airtel' %}  
-                            <img src="{% static 'telecomms/images/airtellogo.png' %}" alt=""> 
-                        {% endif %} 
+            <div class="transaction-records">
+                {% if totalTransactions > 0 %}
+                {% for transaction in transactions %}
+                <a href="javascript:void(0)" class="transInfo" transID="{{transaction.id}}">
+                    <div class="transaction">
+                        <div class="left">
+                            <div class="icon-box">
+                                {% if transaction.operator == 'MTN' %}
+                                    <img src="{% static 'telecomms/images/mtnlogo.png' %}" alt=""> 
+                                {% elif transaction.operator == 'Glo' %}  
+                                    <img src="{% static 'telecomms/images/glologo.png' %}" alt=""> 
+                                {% elif transaction.operator == '9Mobile' %}  
+                                    <img src="{% static 'telecomms/images/9mobilelogo.png' %}" alt=""> 
+                                {% elif transaction.operator == 'Airtel' %}  
+                                    <img src="{% static 'telecomms/images/airtellogo.png' %}" alt=""> 
+                                {% endif %} 
+                            </div>
+                            <div class="data">
+                                <p class="header">{{transaction.transaction_type}}</p>
+                                <p class="tag">{{transaction.created}}</p>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="data">
+                                <p class="header">&#8358;{{transaction.amount|intcomma}}</p>
+                                <p class="tag {{transaction.status|lower}}">{{transaction.status}}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="data">
-                        <p class="header">{{transaction.transaction_type}}</p>
-                        <p class="tag">{{transaction.created}}</p>
-                    </div>
+                </a>
+                {% endfor %}
+                {% else %}
+                <div class="history-note">
+                    <p>No transaction record found</p>
                 </div>
-                <div class="right">
-                    <div class="data">
-                        <p class="header">&#8358;{{transaction.amount|intcomma}}</p>
-                        <p class="tag {{transaction.status|lower}}">{{transaction.status}}</p>
-                    </div>
-                </div>
+                {% endif %}
             </div>
-        </a>
-        {% endfor %}
-        {% else %}
-        <div class="history-note">
-            <p>No transaction record found</p>
-        </div>
-        {% endif %}
-        
 
-        </div>
+         </div>
+        
 
 
         <!-- Feeback modal -->
@@ -212,13 +213,15 @@
             </div>
         
         </div>
+
+        <!-- Bottom Navs -->
+        {% include 'users/includes/bottom-navs.html' %}
                 
     </div>
 
     
 
-    <!-- Bottom Navs -->
-    {% include 'users/includes/bottom-navs.html' %}
+    
 
 
     <!-- Page Preloader -->

@@ -12,7 +12,7 @@ admin.site.register(AirtimeServices, DataServicesAdmin)
 
 
 class DataPlansAdmin(admin.ModelAdmin):
-    list_display = ("network_operator","plan","package_id","vendor_price", "price","validity")
+    list_display = ("network_operator","plan","package_id","list_order","vendor_price", "price","validity")
     search_fields = ('network_perator',)
 admin.site.register(ATNDataPlans, DataPlansAdmin)
 admin.site.register(HonouworldDataPlans, DataPlansAdmin)

@@ -258,4 +258,18 @@ class SafeHavenAccount(models.Model):
     def __str__(self):
         return self.user.username
 
+NOTIFICATION_STATUS = (
+    ("Read","Read"),
+    ("Unread","Unread")
+    )        
+class Notifications(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    title = models.CharField(max_length=40)
+    body = models.CharField(max_length=200)
+    status = models.CharField(max_length=6,choices=NOTIFICATION_STATUS,default="Unread")
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
+
 

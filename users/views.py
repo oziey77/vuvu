@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 import json
 import random
@@ -23,7 +24,7 @@ from telecomms.serializers import ATNDataPlanSerializer
 from users.forms import KYCDataForm, MyUserCreationForm
 from users.serializers import TransactionSerializer
 from vuvu.custom_functions import is_ajax, isNum, reference
-from .models import KYCData, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
+from .models import KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
 
 import uuid
 import random
@@ -453,6 +454,30 @@ def updateTransactionPin(request):
 @login_required(login_url='login')
 def dashboardPage(request):
     user = request.user
+    page = "dashboard"
+
+    
+    period = "Morning"
+    hourOfDay= datetime.now().time().hour
+    if hourOfDay < 12:
+        period = "Morning"
+    elif hourOfDay >= 12 and hourOfDay < 17:
+        period = "Afternoon"
+    elif hourOfDay >= 17:
+        period = "Evening"
+
+    
+    # Unread Notifications 
+    unreadNotifications = Notifications.objects.filter(user=user,status="Unread").count()
+
+    # Get Data transaction for progress
+    transYear = datetime.now().date().year
+    totalDataTrans = Transaction.objects.filter(user=user,transaction_type="Data",created__year=transYear).count()
+    giveAwayProgress = 0
+    if totalDataTrans < 10:
+        giveAwayProgress = 20 + ((totalDataTrans/10) * 100)
+    if totalDataTrans >= 10:
+        giveAwayProgress = 100
 
     pinSet = False
     try:
@@ -462,7 +487,11 @@ def dashboardPage(request):
     except ObjectDoesNotExist:
         pass
     context = {
-        "pinSet":pinSet
+        "pinSet":pinSet,
+        "period":period,
+        "giveAwayProgress":giveAwayProgress,
+        "page":page,
+        "unreadNotifications":unreadNotifications,
     }
     return render(request,'users/dashboard.html',context)
 
@@ -588,7 +617,7 @@ def changePassword(request):
                 'data':"Invalid request",
             })
     
-# Settings Page
+# Wallet Page
 @login_required(login_url='login')
 def walletPage(request):
     user = request.user
@@ -1039,6 +1068,92 @@ def validateKYC(request):
                 'code':'09',
                 'message':f"ERR:{data['statusCode']} account could not be created at the moment, please try again in few minutes",
             })
+        
+
+@login_required(login_url='login')
+def redeemCashback(request):
+    user = request.user
+    if is_ajax(request=request) and request.method == 'GET':
+        bonusType = request.GET.get('type')
+        wallet = UserWallet.objects.get(user=user)
+        amount = wallet.cashback
+        balanceBefore = wallet.balance
+        totalFunded = user.total_wallet_funding
+        if bonusType == 'cashback' and amount > 0:
+            wallet.balance += amount
+            wallet.cashback = 0
+            wallet.save()
+            # Create wallet Activity
+            WalletActivity.objects.create(
+                user = user,
+                event_type = "Credit",
+                transaction_type = "Cashback Withdrwal",
+                comment = "Cashback",
+                amount = amount,
+                balanceBefore = balanceBefore,
+                balanceAfter = wallet.balance,
+            )
+
+            # Create wallet 
+            WalletFunding.objects.create(
+                user = user,
+                method = "Cashback",
+                amount = amount,
+                balanceBefore = balanceBefore,
+                balanceAfter = wallet.balance,
+                sessionId = "Cashback Withdrawal",
+                accountNumber = "0000",
+                sourceAccountNumber = "Vuvu",
+                sourceAccountName = "Vuvu Cashback",
+            )
+            return JsonResponse({
+                'code':'00',
+                'balance':wallet.balance,
+                'bonusBalance':wallet.cashback,               
+            })
+        else:
+           return JsonResponse({
+                'code':'09',               
+            }) 
+    else:
+        return JsonResponse({
+                'code':'09',               
+            })
+    
+
+# Settings Page
+@login_required(login_url='login')
+def supportPage(request):
+    user = request.user
+
+    
+    # context = {
+    #     "pinSet":pinSet
+    # }
+    return render(request,'users/support.html')
+
+# Notifications Page
+@login_required(login_url='login')
+def notificationsPage(request):
+    user = request.user
+    userNotificationsRaw = Notifications.objects.filter(user=user).order_by("-id")
+    userNotificationsRaw.update(status="Read")
+    context = {
+        "totalNotifications":userNotificationsRaw.count(),
+        "notifications":userNotificationsRaw
+    }
+    return render(request,'users/notifications.html',context)
+
+# Notifications Page
+@login_required(login_url='login')
+def deleteNotifications(request):
+    user = request.user
+    userNotifications = Notifications.objects.filter(user=user)
+    userNotifications.delete()
+    return redirect("notifications")
+
+
+
 
 
 

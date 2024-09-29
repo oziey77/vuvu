@@ -28,6 +28,9 @@ urlpatterns=[
     path("honourworld-data-management/",views.honourworldDataManagement,name='honourworld-data-management'), 
     path("bulk-update-honourworld",views.bulkHonourworldPlansUpdate,name="bulk-update-honourworld"), 
     path("update-honourworld-plan/",views.updateHonourworldDataPlan,name="update-honourworld-plan"),
+
+    path("notifications-management/",views.notificationsSetup,name="notifications-management"),
+    path("send-general-notification/",views.sendGeneralNotification,name="send-general-notification"),
     
     # Ajax
     path("update-services/",views.updateService),

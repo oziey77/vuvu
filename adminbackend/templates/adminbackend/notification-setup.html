@@ -1,0 +1,55 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+
+        <!-- Main content -->
+        <div class="main-content">
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="feedback-messages {{message.tags}}">
+                        <p>{{message}}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <!-- DATA DISCOUNT BULK UPDATE -->
+            <div class="update-form-container">
+                <p class="header">Send General Notification</p>
+                <form method="POST" action="{% url 'send-general-notification' %}">
+                    {% csrf_token %}
+                    <div class="input-group-grid">
+                        <label for="title">Title</label><br>
+                        <input type="text" name="title" placeholder="Notification title" maxlength="40" required>                                
+                    </div> 
+                    <div class="input-group-grid">
+                        <label for="message">Message</label><br>
+                        <textarea name="body" id="" placeholder="Notification message" rows="4" maxlength="200" required></textarea>                        
+                    </div>
+                    <div class="input-group recepient">
+                        <input type="submit" name="update" value="Send Notification" class="primary-button">
+                    </div>
+                                            
+                </form>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

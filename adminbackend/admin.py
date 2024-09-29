@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from adminbackend.models import AirtimeBackend, AirtimeDiscount, DataBackend
+from users.models import Notifications
 
 # Register your models here.
 class AirtimeBackendAdmin(admin.ModelAdmin):
@@ -14,3 +15,5 @@ admin.site.register(AirtimeDiscount, AirtimeDiscountAdmin)
 class DataBackendAdmin(admin.ModelAdmin):
     list_display = ["operator","active_backend"]
 admin.site.register(DataBackend,DataBackendAdmin)
+
+admin.site.register(Notifications)

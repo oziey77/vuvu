@@ -29,7 +29,11 @@ class DataServices(models.Model):
 
     def __str__(self):
         return self.network_operator
-    
+
+PLAN_TYPE = (
+    ("Normal","Normal"),
+    ("Extra","Extra"),
+)    
 
 class ATNDataPlans(models.Model):
     network_operator = models.CharField(max_length=10,choices=NETWORK_OPERATORS)
@@ -38,7 +42,9 @@ class ATNDataPlans(models.Model):
     vendor_price = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
     price = models.DecimalField(max_digits=10,decimal_places=2)
     validity = models.CharField(max_length=10)
-    # available = models.BooleanField(default=True)
+    available = models.BooleanField(default=True)
+    list_order = models.IntegerField(default=0)
+    plan_type = models.CharField(max_length=10,choices=PLAN_TYPE,default="Normal")
     
     def __str__(self):
         return self.network_operator
@@ -50,7 +56,8 @@ class HonouworldDataPlans(models.Model):
     vendor_price = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
     price = models.DecimalField(max_digits=10,decimal_places=2)
     validity = models.CharField(max_length=10)
-    # available = models.BooleanField(default=True)
+    available = models.BooleanField(default=True)
+    list_order = models.IntegerField(default=0)
     
     def __str__(self):
         return self.network_operator
@@ -62,7 +69,8 @@ class Twins10DataPlans(models.Model):
     vendor_price = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
     price = models.DecimalField(max_digits=10,decimal_places=2)
     validity = models.CharField(max_length=10)
-    # available = models.BooleanField(default=True)
+    available = models.BooleanField(default=True)
+    list_order = models.IntegerField(default=0)
     
     def __str__(self):
         return self.network_operator

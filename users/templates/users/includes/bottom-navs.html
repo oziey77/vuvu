@@ -2,9 +2,22 @@
     <a href="{% url 'dashboard' %}" onclick="">
         <div class="nav-link">
             <div class="icon-box">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M15 18H9" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+                <!-- Normal -->
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="dashboardNormal">
+                    <path d="M22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M15 18H9" stroke="#FC846B" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>                    
+                <!-- dashboard Active -->
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;" id="dashboardActive">
+
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <g id="SVGRepo_iconCarrier"> 
+                        <path opacity="0.5" d="M2 12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274C22 8.77128 22 9.91549 22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039Z" fill="#FC846B"/> 
+                        <path d="M9 17.25C8.58579 17.25 8.25 17.5858 8.25 18C8.25 18.4142 8.58579 18.75 9 18.75H15C15.4142 18.75 15.75 18.4142 15.75 18C15.75 17.5858 15.4142 17.25 15 17.25H9Z" fill="#373737"/> 
+                    </g>                    
                 </svg>
             </div>
             <p>Home</p>
@@ -14,59 +27,112 @@
     <a href="{% url 'transaction-history' %}" onclick="">
         <div class="nav-link ">
             <div class="icon-box">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6.72827 19.7C7.54827 18.82 8.79828 18.89 9.51828 19.85L10.5283 21.2C11.3383 22.27 12.6483 22.27 13.4583 21.2L14.4683 19.85C15.1883 18.89 16.4383 18.82 17.2583 19.7C19.0383 21.6 20.4883 20.97 20.4883 18.31V7.04C20.4883 3.01 19.5483 2 15.7683 2H8.20828C4.42828 2 3.48828 3.01 3.48828 7.04V18.3C3.49828 20.97 4.95827 21.59 6.72827 19.7Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9.25 10H14.75" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="transactionsNormal" >
+                    <path d="M6.72827 19.7C7.54827 18.82 8.79828 18.89 9.51828 19.85L10.5283 21.2C11.3383 22.27 12.6483 22.27 13.4583 21.2L14.4683 19.85C15.1883 18.89 16.4383 18.82 17.2583 19.7C19.0383 21.6 20.4883 20.97 20.4883 18.31V7.04C20.4883 3.01 19.5483 2 15.7683 2H8.20828C4.42828 2 3.48828 3.01 3.48828 7.04V18.3C3.49828 20.97 4.95827 21.59 6.72827 19.7Z" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9.25 10H14.75" stroke="#FC846B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <!-- Active -->
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="transactionsActive" style="display: none;">
+
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <g id="SVGRepo_iconCarrier"> 
+                        <path opacity="0.4" d="M6.73022 19.7C7.55022 18.82 8.80023 18.89 9.52023 19.85L10.5302 21.2C11.3402 22.27 12.6502 22.27 13.4602 21.2L14.4702 19.85C15.1902 18.89 16.4402 18.82 17.2602 19.7C19.0402 21.6 20.4902 20.97 20.4902 18.31V7.04C20.4902 3.01 19.5502 2 15.7702 2H8.21024C4.43024 2 3.49023 3.01 3.49023 7.04V18.3C3.50023 20.97 4.96022 21.59 6.73022 19.7Z" fill="#FC846B"/> 
+                        <path d="M14.75 10.75H9.25C8.84 10.75 8.5 10.41 8.5 10C8.5 9.59 8.84 9.25 9.25 9.25H14.75C15.16 9.25 15.5 9.59 15.5 10C15.5 10.41 15.16 10.75 14.75 10.75Z" fill="#373737"/> </g>
+                    
                 </svg>
             </div>
             <p>Transactions</p>
         </div>
     </a> 
+     
+    <a href="{% url 'support' %}" onclick="">
+        <div class="nav-link">
+            <div class="icon-box">
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="#FC846B" xmlns="http://www.w3.org/2000/svg" id="supportNormal" >
 
-    <a href="javascript:void(0)">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <g id="SVGRepo_iconCarrier"> 
+                        <path d="M17 3.33782C15.5291 2.48697 13.8214 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22C17.5228 22 22 17.5228 22 12C22 10.1786 21.513 8.47087 20.6622 7" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/> 
+                        <path d="M8 12H8.009M11.991 12H12M15.991 12H16" stroke="#FC846B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </g>
+                    
+                </svg>
+                <!-- Active -->
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="supportActive" style="display: none;">
+
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <g id="SVGRepo_iconCarrier"> 
+                        <path opacity="0.5" d="M12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1C5.92487 1 1 5.92487 1 12C1 13.7596 1.41318 15.4228 2.14781 16.8977C2.34303 17.2897 2.40801 17.7377 2.29483 18.1607L1.63966 20.6093C1.35525 21.6723 2.32772 22.6447 3.39068 22.3603L5.83932 21.7052C6.26233 21.592 6.71033 21.657 7.10228 21.8522C8.5772 22.5868 10.2404 23 12 23Z" fill="#FC846B"/> 
+                        <path d="M10.9 12.0004C10.9 12.6079 11.3925 13.1004 12 13.1004C12.6075 13.1004 13.1 12.6079 13.1 12.0004C13.1 11.3929 12.6075 10.9004 12 10.9004C11.3925 10.9004 10.9 11.3929 10.9 12.0004Z" fill="#373737"/> 
+                        <path d="M6.5 12.0004C6.5 12.6079 6.99249 13.1004 7.6 13.1004C8.20751 13.1004 8.7 12.6079 8.7 12.0004C8.7 11.3929 8.20751 10.9004 7.6 10.9004C6.99249 10.9004 6.5 11.3929 6.5 12.0004Z" fill="#373737"/> 
+                        <path d="M15.3 12.0004C15.3 12.6079 15.7925 13.1004 16.4 13.1004C17.0075 13.1004 17.5 12.6079 17.5 12.0004C17.5 11.3929 17.0075 10.9004 16.4 10.9004C15.7925 10.9004 15.3 11.3929 15.3 12.0004Z" fill="#373737"/> </g>
+                    
+                </svg>
+            </div>
+            <p>Support</p>
+        </div>
+    </a>
+
+    <a href="javascript:void(0)" onclick="">
         <div class="nav-link ">
             <div class="icon-box">
-                <svg height="24" width="24" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-                        viewBox="0 0 512 512" xml:space="preserve">
-                    <path style="fill:#FF3131" d="M464.254,477.404H47.747c-26.326,0-47.743-21.418-47.743-47.743V82.339
-                        c0-26.326,21.418-47.743,47.743-47.743h416.507c26.326,0,47.743,21.418,47.743,47.743c0,7.641-6.195,13.837-13.837,13.837
-                        s-13.837-6.196-13.837-13.837c0-11.066-9.003-20.068-20.068-20.068H47.747c-11.066,0-20.068,9.003-20.068,20.068v347.322
-                        c0,11.066,9.003,20.068,20.068,20.068h416.507c11.066,0,20.068-9.003,20.068-20.068V244.01c0-7.641,6.195-13.837,13.837-13.837
-                        s13.837,6.196,13.837,13.837v185.65C511.997,455.987,490.579,477.404,464.254,477.404z"/>
-                    <path style="fill:#FFEAEA;" d="M13.843,82.338v69.882h484.318V82.338c0-18.726-15.18-33.906-33.906-33.906H47.748
-                        C29.024,48.432,13.843,63.613,13.843,82.338z"/>
-                    <g>
-                        <path style="fill:#FF3131;" d="M498.162,166.057H13.844c-7.642,0-13.837-6.196-13.837-13.837v-69.88
-                            c0-26.326,21.418-47.743,47.743-47.743h416.507c26.326,0,47.743,21.418,47.743,47.743v69.882
-                            C512,159.862,505.805,166.057,498.162,166.057z M27.681,138.382h456.643V82.339c0-11.066-9.003-20.068-20.068-20.068H47.75
-                            c-11.066,0-20.068,9.003-20.068,20.068L27.681,138.382L27.681,138.382z"/>
-                        <path style="fill:#FF3131;" d="M13.837,166.001c-3.541,0-7.083-1.352-9.784-4.053c-5.404-5.404-5.404-14.165,0-19.57
-                            L107.778,38.652c5.404-5.402,14.165-5.402,19.57,0c5.404,5.404,5.404,14.165,0,19.57L23.623,161.948
-                            C20.92,164.65,17.378,166.001,13.837,166.001z"/>
-                        <path style="fill:#FF3131;" d="M205.195,166.056c-3.541,0-7.082-1.351-9.784-4.053c-5.404-5.402-5.405-14.164,0-19.569
-                            L299.177,38.653c5.402-5.405,14.164-5.406,19.569-0.001c5.404,5.402,5.405,14.164,0,19.569L214.979,162.001
-                            C212.278,164.705,208.736,166.056,205.195,166.056z"/>
-                        <path style="fill:#FF3131;" d="M396.58,166.056c-3.542,0-7.082-1.352-9.784-4.053c-5.404-5.404-5.404-14.165,0-19.57l92.726-92.725
-                            c5.404-5.402,14.164-5.401,19.569,0c5.404,5.404,5.404,14.165,0,19.57l-92.725,92.725
-                            C403.664,164.705,400.121,166.056,396.58,166.056z"/>
-                    </g>
-                    <polygon style="fill:#FFEAEA;" points="202.73,225.886 336.948,305.518 202.73,385.148 "/>
-                    <path style="fill:#FF3131;" d="M202.73,398.987c-2.362,0-4.724-0.605-6.847-1.814c-4.321-2.46-6.991-7.052-6.991-12.023V225.886
-                        c0-4.973,2.669-9.563,6.991-12.023c4.319-2.462,9.629-2.416,13.908,0.123l134.217,79.632c4.201,2.493,6.776,7.016,6.776,11.902
-                        s-2.575,9.408-6.776,11.902l-134.217,79.632C207.615,398.341,205.173,398.987,202.73,398.987z M216.568,250.185v110.665
-                        l93.262-55.332L216.568,250.185z"/>
-                    </svg>                  
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="storiesNormal" >
+
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <g id="SVGRepo_iconCarrier"> 
+                        <path d="M10.28 8.03994C9.19003 8.42994 9 10.5199 9 12.0399C9 13.5599 9.19003 15.5999 10.28 16.0399C11.37 16.4799 16 13.7499 16 12.0399C16 10.3299 11.44 7.61994 10.28 8.03994Z" stroke="#FC846B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> 
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#373737" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </g>
+                    
+                </svg>    
+                <!-- Active  -->
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="storiesActive" style="display: none;">
+
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <g id="SVGRepo_iconCarrier"> 
+                        <path opacity="0.4" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#FC846B"/> 
+                        <path d="M9.09961 12V10.52C9.09961 8.60999 10.4496 7.83999 12.0996 8.78999L13.3796 9.52999L14.6596 10.27C16.3096 11.22 16.3096 12.78 14.6596 13.73L13.3796 14.47L12.0996 15.21C10.4496 16.16 9.09961 15.38 9.09961 13.48V12Z" fill="#373737"/> </g>                    
+                </svg>
             </div>
             <p>Stories</p>
         </div>
-    </a> 
+    </a>
 
-    <a href="{% url 'settings' %}">
+    <a href="{% url 'settings' %}" onclick="">
         <div class="nav-link">
             <div class="icon-box">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7.84308 20.1979C9.8718 21.3993 10.8862 22 12 22C13.1138 22 14.1282 21.3993 16.1569 20.1979L16.8431 19.7915C18.8718 18.5901 19.8862 17.9894 20.4431 17C21 16.0106 21 14.8092 21 12.4063M20.8147 8C20.7326 7.62759 20.6141 7.3038 20.4431 7C19.8862 6.01057 18.8718 5.40987 16.8431 4.20846L16.1569 3.80211C14.1282 2.6007 13.1138 2 12 2C10.8862 2 9.8718 2.6007 7.84308 3.80211L7.15692 4.20846C5.1282 5.40987 4.11384 6.01057 3.55692 7C3 7.98943 3 9.19084 3 11.5937V12.4063C3 14.8092 3 16.0106 3.55692 17C3.78326 17.4021 4.08516 17.74 4.5 18.0802" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
-                    <circle cx="12" cy="12" r="3" stroke="#FF3131" stroke-width="1.5"/>
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="settingsNormal" >
+
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <g id="SVGRepo_iconCarrier"> <circle cx="12" cy="6" r="4" stroke="#FC846B" stroke-width="1.5"/> 
+                        <path d="M19.9975 18C20 17.8358 20 17.669 20 17.5C20 15.0147 16.4183 13 12 13C7.58172 13 4 15.0147 4 17.5C4 19.9853 4 22 12 22C14.231 22 15.8398 21.8433 17 21.5634" stroke="#373737" stroke-width="1.5" stroke-linecap="round"/> </g>                    
+                </svg>
+                <!-- Active -->
+                <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="settingsActive" style="display: none;">
+
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <g id="SVGRepo_iconCarrier"> <circle cx="12" cy="6" r="4" fill="#373737"/> 
+                        <path opacity="0.5" d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z" fill="#FC846B"/> </g>
+                    
                 </svg>
             </div>
             <p>Profile</p>
