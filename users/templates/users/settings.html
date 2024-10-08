@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="nav-container settings">            
-            <a href="javascript:void(0)" class="setting-nav-link"></a>
+            <a href="{% url 'notifications' %}" class="setting-nav-link" onclick="">
                 <div class="settings-nav">
                     <div class="icon-box">
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +96,7 @@
                     <p>Legal</p>
                 </div>
             </a>
-            <a href="javascript:void(0)" class="setting-nav-link">
+            <a href="{% url 'delete-account' %}" class="setting-nav-link" onclick="">
                 <div class="settings-nav">
                     <div class="icon-box">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -324,7 +324,7 @@
     </div>
 
     <!-- <script src="{% static 'users/js/transaction-history.js' %}"></script> -->
-    <script src="{% static 'users/js/settings.js' %}?v=1.001"></script>
+    <script src="{% static 'users/js/settings.js' %}?v=1.003"></script>
     <script src="{% static 'users/js/main.js' %}"></script>
     
 </body>

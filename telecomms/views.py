@@ -1,4 +1,5 @@
 from decimal import Decimal
+import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -9,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from adminbackend.models import AirtimeBackend, AirtimeDiscount, DataBackend
 from telecomms.models import ATNDataPlans, AirtimeServices, DataServices, HonouworldDataPlans, Twins10DataPlans
 from telecomms.serializers import ATNDataPlanSerializer, AirtimeDiscountSerializer, HonouworldDataPlanSerializer, Twins10DataPlanSerializer
-from users.models import Cashback, Transaction, TransactionPIN, UserWallet, WalletActivity
+from users.models import Beneficiary, Cashback, Transaction, TransactionPIN, UserWallet, WalletActivity
 from vuvu.custom_functions import is_ajax, reference
 from django.contrib.auth.hashers import check_password
 
@@ -31,8 +32,17 @@ apiToken = settings.TWINS10_TOKEN
 def airtimePage(request):
     user = request.user
     wallet = UserWallet.objects.get(user=user)
+    # Telecomms Beneficiary
+    telecommsBeneficiaries = None
+    try:
+        userBeneficiaries = Beneficiary.objects.get(user=user)
+        if userBeneficiaries is not None:
+            telecommsBeneficiaries = userBeneficiaries.telecomms
+    except ObjectDoesNotExist:
+        pass
     context = {
-        'mainBalance':wallet.balance
+        'mainBalance':wallet.balance,
+        'telecommsBeneficiaries':telecommsBeneficiaries,
     }
     return render(request,'telecomms/airtime.html',context)
 
@@ -61,10 +71,52 @@ def buyAirtime(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
+            print(request.POST)
             operator = request.POST.get('operator')
             recipient = request.POST.get('recipient')
             amount = Decimal(request.POST.get('amount'))
-            wallet = UserWallet.objects.get(user=user)  
+            wallet = UserWallet.objects.get(user=user)
+            safeBeneficiary = request.POST.get('safeBeneficiary')
+
+            # Safe Beneficiary Logic
+            if safeBeneficiary == "on":
+                try:
+                    userBeneficiaries = Beneficiary.objects.get(user=user)
+                    if userBeneficiaries is not None:
+                        telecommsBeneficiary = userBeneficiaries.telecomms 
+                        # Search of record already exist
+                        alreadySaved = False
+                        for entry in telecommsBeneficiary:
+                            # print(entry)
+                            # alreadySaved = True
+                            if entry['recipient'] == recipient:
+                                alreadySaved = True
+                                print("Record already saved")
+                                break
+                        # If rececipient has not been saved before
+                        if alreadySaved == False:
+                            telecommsBeneficiary.append(
+                                {
+                                    "operator":operator,
+                                    "recipient":recipient,
+                                }
+                            ) 
+                            userBeneficiaries.telecomms = telecommsBeneficiary 
+                            userBeneficiaries.save() 
+                            print("New beneficary added")               
+                        print(f"these are the current telecomms beneficiaries 2 {telecommsBeneficiary}")
+                        
+                except ObjectDoesNotExist:
+                    newBeneficiary = [{
+                        "operator":operator,
+                        "recipient":recipient,
+                        }]
+                    # Create Beficiaryobject
+                    Beneficiary.objects.create(
+                        user = user,
+                        telecomms = newBeneficiary
+                    )
+
 
             airtimeServices = AirtimeServices.objects.get(network_operator=operator)
             if airtimeServices.available == False:
@@ -93,7 +145,7 @@ def buyAirtime(request):
                 try:
                     existing = Transaction.objects.get(reference=transRef)
                     while existing is not None:
-                        transRef = reference(6)
+                        transRef = reference(26)
                         existing = Transaction.objects.get(reference=transRef)
                 except ObjectDoesNotExist:
                     # Set user referral  codes and create wallet
@@ -399,8 +451,17 @@ def buyAirtime(request):
 def dataPage(request):
     user = request.user
     wallet = UserWallet.objects.get(user=user)
+    # Telecomms Beneficiary
+    telecommsBeneficiaries = None
+    try:
+        userBeneficiaries = Beneficiary.objects.get(user=user)
+        if userBeneficiaries is not None:
+            telecommsBeneficiaries = userBeneficiaries.telecomms
+    except ObjectDoesNotExist:
+        pass
     context = {
-        'mainBalance':wallet.balance
+        'mainBalance':wallet.balance,
+        'telecommsBeneficiaries':telecommsBeneficiaries
     }
     return render(request,'telecomms/data.html',context)
 

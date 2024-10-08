@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from adminbackend.models import AirtimeBackend, AirtimeDiscount, DataBackend
+from adminbackend.models import AirtimeBackend, AirtimeDiscount, CableBackend, DataBackend, ElectricityBackend
 from users.models import Notifications
 
 # Register your models here.
@@ -17,3 +17,5 @@ class DataBackendAdmin(admin.ModelAdmin):
 admin.site.register(DataBackend,DataBackendAdmin)
 
 admin.site.register(Notifications)
+admin.site.register(ElectricityBackend)
+admin.site.register(CableBackend)

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vuvu - Buy Airtime</title>
+    <title>Vuvu - Bet Funding</title>
     {% include 'users/includes/header.html' %}
 </head>
 <body>
@@ -16,7 +16,7 @@
                 <!-- Header -->
                 <div class="services-header">               
                     <div class="service-info">
-                        <p >Airtime</p>
+                        <p >Bet Funding</p>
                         <!-- <div class="icon-box">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="style=linear">
@@ -53,73 +53,170 @@
                 <p class="tag">Abeg, fill the details below <span style="font-family: Noto Emoji, sans-serif;">😉</span></p>
                 <form action="">
                     <input type="text" name="network" hidden>
+                    <!-- Operator -->
                     <div class="operator-container">
-                        <a href="javascript:void(0)" onclick="" id="network-selector">
+                        <a href="javascript:void(0)" onclick="" id="operator-selector">
                             <div class="network-selector">
                                 <div class="network-group">
                                     <div class="icon-box" id="selectedOperatorImg">
                                         <img src="" alt="">    
                                     </div>
-                                    <p class="operator-text">Select a network</p>
+                                    <p class="operator-text">Select betting company</p>
                                 </div>                    
                                 <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>                        
                             </div>
                         </a>                    
-                        <div class="dropdown" id="network-dropdown">
-                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/mtnlogo.png' %}" network-data="MTN" >
+                        <div class="dropdown bills" id="operator-dropdown" >
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/bet9ja.webp' %}" disco="BET9JA" network-data="CW-B01T" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'telecomms/images/mtnlogo.png' %}" alt="">
+                                        <img src="{% static 'billpayments/images/bet9ja.webp' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>MTN</p>
-                                        <small>MTN Airtime</small>
+                                        <p>Bet9JA</p>
+                                        <small>A betting company</small>
                                     </div>
                                 </div>
                             </a>
-                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/glologo.png' %}" network-data="Glo" >
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/bangbet.jpg' %}" disco="BANGBET" network-data="CW-B02T" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'telecomms/images/glologo.png' %}" alt="">
+                                        <img src="{% static 'billpayments/images/bangbet.jpg' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>Glo</p>
-                                        <small>Glo Airtime</small>
+                                        <p>BangBet</p>
+                                        <small>Another betting Company</small>
                                     </div>
                                 </div>
                             </a>
-                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/airtellogo.png' %}" network-data="Airtel" >
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/nairabet.png' %}" disco="NAIRABET" network-data="CW-B03T" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'telecomms/images/airtellogo.png' %}" alt="">
-    
+                                        <img src="{% static 'billpayments/images/nairabet.png' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>Airtel</p>
-                                        <small>Airtel Airtime</small>
+                                        <p>Nairabet</p>
+                                        <small>A completely different betting Company</small>
                                     </div>
                                 </div>
                             </a>
-                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/9mobilelogo.png' %}" network-data="9Mobile" >
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/supabets.webp' %}" disco="SUPABET" network-data="CW-B04T" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'telecomms/images/9mobilelogo.png' %}" alt="">
-    
+                                        <img src="{% static 'billpayments/images/supabets.webp' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>9Mobile</p>
-                                        <small>9Mobile Airtime</small>
+                                        <p>Supabet</p>
+                                        <small>Another betting Company</small>
                                     </div>
                                 </div>
                             </a>
-    
-    
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/cloudbet.jpg' %}" disco="CLOUDBET" network-data="CW-B05T" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/cloudbet.jpg' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>Cloudbet</p>
+                                        <small>Another betting Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/betlion.png' %}" disco="BETLION" network-data="CW-B06T" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/betlion.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>Betlion</p>
+                                        <small>Another betting Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/1xbet.png' %}" disco="1XBET" network-data="CW-B07T" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/1xbet.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>1xbet</p>
+                                        <small>Another betting Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/merrybet.jpg' %}" disco="MERRYBET" network-data="CW-B08T" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/merrybet.jpg' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>Merrybet</p>
+                                        <small>Another betting Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/betway.png' %}" disco="BETWAY" network-data="CW-B09T" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/betway.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>Betway</p>
+                                        <small>Another betting Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/imagesbetland.jpg' %}" disco="BETLAND" network-data="CW-B10T" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/betland.jpg' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>Betland</p>
+                                        <small>Another betting Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/betking.jpg' %}" disco="BETKING" network-data="CW-B11T" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/betking.jpg' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>Betking</p>
+                                        <small>Another betting Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/livescorebet.png' %}" disco="LIVESCOREBET" network-data="CW-B12T" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/livescorebet.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>Livescorebet</p>
+                                        <small>Another betting Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/naijabet.jpg' %}" disco="NAIJABET" network-data="CW-B13T" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/naijabet.jpg' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>Naijabet</p>
+                                        <small>Another betting Company</small>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
+                    <!-- Betting ID -->
                     <div class="input-group right-float">
-                        <input type="text" name="phone_number" id="phone_number" placeholder="Enter phone number" maxlength="11" inputmode="numeric"> 
+                        <input type="text" name="" id="bettingId" placeholder="Enter account ID" inputmode="numeric"> 
                         <svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                                 viewBox="0 0 330 330" xml:space="preserve" class="open-beneficiary">
                             <g id="XMLID_12_">
@@ -132,22 +229,10 @@
                         </svg>                        
                     </div>
                     
-                    <input type="text" class="" name="amount" id="amount" placeholder="How much?" inputmode="numeric">
+                    <input type="text" class="" name="amount" id="amount" placeholder="How much?" inputmode="numeric" >
                     <div class="discount-container">
                         <p>Cashback:&#8358; <Span class="calculatedDiscount"></Span></p>
-                    </div>
-                    <div class="details beneficiary">
-                        <div class="data">
-                            <p class="info">Number is ported</p>
-                            <!-- <p class="value" id="">Airtime</p> -->
-                            <div class="service-item">
-                                <label class="switch">
-                                <input class="checkbox" type="checkbox" id="is_ported">
-                                <span class="slider round"></span>
-                                </label>                        
-                            </div>
-                        </div>
-                    </div>
+                    </div>                    
 
                     <div class="error-feedback">
                         <div class="transaction-error">
@@ -160,36 +245,15 @@
                     </div>
                     
     
-                    <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="buyAirtime">Proceed</button>
+                    <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="fundBetting" disabled>Proceed</button>
                 </form>
              </div> 
         </div>
         
 
-        <!--Transaction PIN Validation -->
-        <div class="setting-modal" id="PINValidation">
-            {% csrf_token %}  
-            <div class="content">
-                <div class="modal-indicator">
-                    <!-- <hr> -->
-                </div>
-                <!-- Old PIN -->
-                <div class="" id="transactionPIN">
-                    <h6 class="header">Enter  4-Digit Transaction Pin</h6>
-                    <p class="tag">We just want to make sure it is you&#x1F512;</p>
-                    <form method="POST" class="setPinForm" id="setPinForm">
-                        <div class="pin-container">
-                            <div id="PINWrapper" ></div>
-                        </div>
-                    </form>
-                    <!-- Feedback -->
-                    <p class="text-center validationError" id="PINValidationError"></p>  
-                    <div class="spacer"></div>                            
-                </div>
-            </div>
-        </div>
+        
 
-        <!-- Sumamry modal -->
+        <!-- Summary modal -->
         <div class="setting-modal billSummary" id="billSummary" style="display: none;">
             {% csrf_token %}  
             <div class="content vacc">   
@@ -200,19 +264,27 @@
                     <div class="details">
                         <div class="data">
                             <p class="info">Bill Type</p>
-                            <p class="value" id="">Airtime</p>
+                            <p class="value" id="">Bet Funding</p>
                         </div>
                         <div class="data">
-                            <p class="info">Network Provider</p>
-                            <p class="value" id="networOperator">MTN</p>
+                            <p class="info">Operator</p>
+                            <p class="value discoOperator" id="discoOperator"></p>
                         </div>
                         <div class="data">
-                            <p class="info">Phone Number</p>
-                            <p class="value" id="recipient">08156325478</p>
+                            <p class="info">Wallet ID</p>
+                            <p class="value recipientMeterNum" id="recipientMeterNum"></p>
                         </div>
+                        <div class="data">
+                            <p class="info">Name</p>
+                            <p class="value recipientMeterName" id="recipientMeterName"></p>
+                        </div>
+                        <!-- <div class="data">
+                            <p class="info">Address</p>
+                            <p class="value recipientMeterAddress" id="recipientMeterAddress"></p>
+                        </div> -->
                         <div class="data">
                             <p class="info">Amount</p>
-                            <p class="value">&#8358;<span id="airtimeAmount">100</span></p>
+                            <p class="value billAmount">&#8358;<span id="billAmount"></span></p>
                         </div>
                         <div class="data">
                             <p class="info">Cashback</p>
@@ -230,7 +302,7 @@
                             <!-- <p class="value" id="">Airtime</p> -->
                             <div class="service-item">
                                 <label class="switch">
-                                  <input class="checkbox" type="checkbox" id="saveBeneficiary" >
+                                  <input class="checkbox" type="checkbox" id="safeBeneficiary" >
                                   <span class="slider round"></span>
                                 </label>                        
                             </div>
@@ -248,33 +320,14 @@
         
                     <div class="button-group">
                         <button href="javascript:void(0)" class="secondary-btn  cancelTrans" id="cancelAirtime" onclick="">Cancel</button>
-                        <button href="javascript:void(0)" class="primary-btn"  id="purchaseAirtime" onclick="">Purchase</button>
+                        <button href="javascript:void(0)" class="primary-btn"  id="fundBetWallet" onclick="">Purchase</button>
                     </div>
                 </div>
             </div>
         
         </div>
 
-        <!-- Offer modal -->
-        <div class="setting-modal billSummary" id="offerModal" style="display: block;">
-            {% csrf_token %}  
-            <div class="content vacc">   
-                <div class="modal-indicator"></div>
-                <!-- -->
-                <div class="offer-details">
-                    <p class="offer-header">Congrats<span style="font-family: Noto Emoji, sans-serif;">🎉</span>!</p>
-                    <p class="offer-note">Yov've been made an offer to pay 
-                        <br>#140 for this transaction. kindly rate us 
-                        <br>on Playstore to claim this offer.!
-                    </p>
-                    <div class="button-group">                        
-                        <a class="primary-btn " href="javascript:void(0)" onclick="">Rate us on Playstore</a>
-                        <a class="secondary-btn " href="javascript:void(0)" onclick="">Miss out on Offer</a>
-                    </div> 
-                </div>
-            </div>        
-        </div>
-
+        
         <!-- Feeback modal -->
         <div class="setting-modal" id="transactionFeedback" style="display: none;">
             <div class="content vacc">   
@@ -284,12 +337,12 @@
                     <lottie-player src="https://lottie.host/a4b16f7e-e9e7-4cc1-8f34-54f435ea80c5/FmzCUPyAsk.json" background="transparent" speed="1" style="width: 180px; height: 180px" loop autoplay direction="1" mode="normal"></lottie-player>
                 </div>
                 <div class="feedback">
-                    <p>Your <span>Airtime Purchase</span> <br>Was Successful</p>
-                    <small>Your airtime should be received<br>within a few seconds.</small>
+                    <p>Your <span>Cable Subscription</span> <br>Was Successful</p>
+                    <small>Your subscription should be renewed<br>within a few seconds.</small>
                 </div>
                 
                 <div class="button-group">
-                    <a class="secondary-btn " href="{% url 'buy-airtime' %}" onclick="">Buy Again</a>
+                    <a class="secondary-btn " href="{% url 'bet-funding' %}" onclick="">Fund Again</a>
                     <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
                 </div> 
             </div>
@@ -333,8 +386,31 @@
         
         </div>
 
+        <!--Transaction PIN Validation -->
+        <div class="setting-modal" id="PINValidation">
+            {% csrf_token %}  
+            <div class="content">
+                <div class="modal-indicator">
+                    <!-- <hr> -->
+                </div>
+                <!-- Old PIN -->
+                <div class="" id="transactionPIN">
+                    <h6 class="header">Enter  4-Digit Transaction Pin</h6>
+                    <p class="tag">We just want to make sure it is you&#x1F512;</p>
+                    <form method="POST" class="setPinForm" id="setPinForm">
+                        <div class="pin-container">
+                            <div id="PINWrapper" ></div>
+                        </div>
+                    </form>
+                    <!-- Feedback -->
+                    <p class="text-center validationError" id="PINValidationError"></p>  
+                    <div class="spacer"></div>                            
+                </div>
+            </div>
+        </div>
+
         <!-- Page Preloader -->
-        <div class="loader-overlay">
+        <div class="loader-overlay" id="mainLoader">
             <div class="loader"></div>
         </div>
         
@@ -350,11 +426,10 @@
     </div>
     
 
-    <script src="{% static 'telecomms/js/airtime.js' %}?v=1.025"></script>
-    <script src="{% static 'telecomms/js/simple.money.format.js' %}"></script>
-    <script type="text/javascript">
+    <script src="{% static 'billpayments/js/bet-funding.js' %}?v=1.025"></script>
+    <!-- <script type="text/javascript">
 		$('.money').simpleMoneyFormat();
-	</script>
+	</script> -->
     
 </body>
 </html>

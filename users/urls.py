@@ -18,6 +18,9 @@ urlpatterns = [
     path('support/',views.supportPage,name='support'),
     path('notifications/',views.notificationsPage,name='notifications'),
     path('delete-notifications/',views.deleteNotifications,name='delete-notifications'),
+    path('delete-account/',views.deleteAccountPage,name='delete-account'),
+    path('request-account-delete/',views.deleteAccount,name='request-account-delete'),
+    path("cancel-account-delete/",views.cancelAccountDelete,name="cancel-account-delete"),
     
 
     # Ajax Calls    

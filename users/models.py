@@ -115,6 +115,31 @@ class User(AbstractBaseUser):
     objects = CustomUserManager()
 
 
+class Beneficiary(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    telecomms = models.JSONField(default=list)
+    cable = models.JSONField(default=list)
+    electricity = models.JSONField(default=list)
+    bet_funding = models.JSONField(default=list)
+
+    def __str__(self):
+        return self.user.username
+
+
+class AccountDeleteQueue(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    event_date = models.DateTimeField()
+
+    def daysTillDelete(self):
+        today = datetime.today()
+        daysLeft = self.event_date - today
+        return daysLeft.days
+
+
+    def __str__(self):
+        return self.user.username
+
+
 CONFIMATION_TYPE = (
     ("Email","Email"),
     ("OTP","OTP"),
@@ -154,6 +179,7 @@ TRANSACTION_TYPE = (
     ("Data","Data"),
     ("Cable","Cable"),
     ("Electricity","Electricity"),
+    ("Bet Funding","Bet Funding"),
     ("Top Up","Top Up"),
     ("Admin Top Up","Admin Top Up"),
     ("Cashback Withdrwal","Cashback Withdrwal"),
@@ -179,6 +205,7 @@ SERVICE_TYPE = (
     ("Data","Data"),
     ("Cable","Cable"),
     ("Electricity","Electricity"),
+    ("Bet Funding","Bet Funding"),
 )
 TRANSACTION_STATUS = (
     ("Processing","Processing"),
@@ -189,6 +216,7 @@ API_BACKEND=(
     ("ATN","ATN"),
     ("TWINS10","TWINS10"),
     ("HONOURWORLD","HONOURWORLD"),
+    ("9Payment","9Payment"),
     )
 class Transaction(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -196,17 +224,21 @@ class Transaction(models.Model):
     operator = models.CharField(max_length=10,)
     transaction_type = models.CharField(max_length=20,choices=SERVICE_TYPE)
     recipient = models.CharField(max_length=20,)
-    APIBackend = models.CharField(max_length=15,choices=SERVICE_TYPE,default='-')
+    APIBackend = models.CharField(max_length=15,choices=API_BACKEND,default='-')
     APIreference = models.CharField(max_length=50,default='-')
     reference = models.CharField(max_length=26)
-    package = models.CharField(max_length=20)
+    package = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10,decimal_places=2)
     discount = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
     balanceBefore = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
     balanceAfter = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
     created = models.DateTimeField(auto_now_add=True)
     refunded = models.BooleanField(default=False)    
-    status = models.CharField(max_length=12,choices=TRANSACTION_STATUS,default='Processing')    
+    status = models.CharField(max_length=12,choices=TRANSACTION_STATUS,default='Processing') 
+    token = models.CharField(max_length=100,default='-')   
+    electricity_units = models.CharField(max_length=25,default='-') 
+    customerName = models.CharField(max_length=50,default='-',)
+    customerAddress = models.CharField(max_length=200,default='-',)
 
     def __str__(self):
         return self.user.username

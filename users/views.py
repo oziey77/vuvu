@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,timedelta
 from decimal import Decimal
 import json
 import random
@@ -24,7 +24,7 @@ from telecomms.serializers import ATNDataPlanSerializer
 from users.forms import KYCDataForm, MyUserCreationForm
 from users.serializers import TransactionSerializer
 from vuvu.custom_functions import is_ajax, isNum, reference
-from .models import KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
+from .models import AccountDeleteQueue, KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
 
 import uuid
 import random
@@ -1121,7 +1121,7 @@ def redeemCashback(request):
             })
     
 
-# Settings Page
+# Support Page
 @login_required(login_url='login')
 def supportPage(request):
     user = request.user
@@ -1151,6 +1151,59 @@ def deleteNotifications(request):
     userNotifications = Notifications.objects.filter(user=user)
     userNotifications.delete()
     return redirect("notifications")
+
+# Delete Account Page
+@login_required(login_url='login')
+def deleteAccountPage(request):
+    user = request.user
+    deleteQueue = None
+    try:
+        deleting = AccountDeleteQueue.objects.get(user=user)
+        if deleting is not None:
+            deleteQueue = deleting
+    except ObjectDoesNotExist:
+        pass
+    context = {
+        "deleteQueue":deleteQueue
+    }
+
+    
+    # context = {
+    #     "pinSet":pinSet
+    # }
+    return render(request,'users/delete-account.html',context)
+
+# Delete User Account request
+@login_required(login_url='login')
+def deleteAccount(request):
+    user = request.user
+    # account = User.objects.get(id=user.id)
+    # Delete Date
+    today = datetime.today()
+    deleteDate = today + timedelta(days=2)
+    try:
+        deleteQueue = AccountDeleteQueue.objects.get(user=user)
+        if deleteQueue is not None:
+            return redirect('delete-account')
+    except ObjectDoesNotExist:        
+        AccountDeleteQueue.objects.create(
+            user = user,
+            event_date = deleteDate
+        )
+    return redirect ('delete-account')
+
+# Cancel account delete
+@login_required(login_url='login')
+def cancelAccountDelete(request):
+    user = request.user
+    try:
+        deleteRequest = AccountDeleteQueue.objects.get(user=user)
+        if deleteRequest is not None:
+            deleteRequest.delete()
+    except:
+        pass
+
+    return redirect('delete-account')
 
 
 

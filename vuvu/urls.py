@@ -26,5 +26,6 @@ urlpatterns = [
     path('',include('telecomms.urls')),
     path('',include('adminbackend.urls')),
     path('',include('payments.urls')),
+    path('',include('billpayments.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

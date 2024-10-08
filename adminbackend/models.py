@@ -36,3 +36,24 @@ class DataBackend(models.Model):
 
     def __str__(self):
         return self.operator
+    
+
+ELECTRICITY_BACKEND=(
+    ("9Payment","9Payment"),
+    )
+class ElectricityBackend(models.Model):
+    name = models.CharField(max_length=10,default="Main")
+    active_backend = models.CharField(max_length=15,choices=ELECTRICITY_BACKEND,default="9Payment")
+
+    def __str__(self):
+        return self.name
+    
+CABLE_BACKEND=(
+    ("9Payment","9Payment"),
+    )
+class CableBackend(models.Model):
+    name = models.CharField(max_length=10,default="Main")
+    active_backend = models.CharField(max_length=15,choices=CABLE_BACKEND,default="9Payment")
+
+    def __str__(self):
+        return self.name

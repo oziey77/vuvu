@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vuvu - Buy Data</title>
+    <title>Vuvu - Pay Cable Sub</title>
     {% include 'users/includes/header.html' %}
 </head>
 <body>
     <!-- Transaction Form -->
      {% csrf_token %}
     <div class="main-content transasction-page"  >
-        <div class="random" id="transaction-form"  style="display: block;">
+        <div class="random" id="transaction-form" style="display: block;">
             <div class="top-section">
                 <!-- Header -->
                 <div class="services-header">               
                     <div class="service-info">
-                        <p >Data</p>
+                        <p >Cable</p>
                         <!-- <div class="icon-box">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="style=linear">
@@ -25,13 +25,14 @@
                                 <path id="vector_2" d="M18.7698 7.7688L13.2228 12.0551C12.5025 12.6116 11.4973 12.6116 10.777 12.0551L5.22998 7.7688" stroke="" stroke-width="1.5" stroke-linecap="round"/>
                                 </g>
                                 </g>
-                            </svg>    
+                            </svg>
+    
                         </div> -->
                         <!-- <a href="javascript:void(0)" >Transaction History</a> -->
                     </div>            
                 </div>
                 <!-- Wallet Balance -->
-                <div class="wallet-group">
+                 <div class="wallet-group">
                     <a href="{% url 'dashboard' %}" onclick="">
                         <div class="back-button">                        
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,92 +42,91 @@
                     </a>                
                     <div class="wallet-summary">
                         <p class="balance"> <span class="gray-text">&#8358; </span><span style="font-stretch: narrower;">{{mainBalance|intcomma}}</span></p>
-                        <p class="header">Available Balance</p>                
+                        <p class="header gray-text">Available Balance</p>                
                     </div>
-                </div>                
+                 </div>
+                
             </div>
             
             <!-- Transaction Form -->
-            <div class="transaction-form" >
-                <p class="tag">Fill out the required details below</p>
+             <div class="transaction-form" >
+                <p class="tag">Abeg, fill the details below <span style="font-family: Noto Emoji, sans-serif;">😉</span></p>
                 <form action="">
                     <input type="text" name="network" hidden>
+                    <!-- Operator -->
                     <div class="operator-container">
-                        <a href="javascript:void(0)" onclick="" id="network-selector">
+                        <a href="javascript:void(0)" onclick="" id="operator-selector">
                             <div class="network-selector">
                                 <div class="network-group">
                                     <div class="icon-box" id="selectedOperatorImg">
                                         <img src="" alt="">    
                                     </div>
-                                    <p class="operator-text">Select a network</p>
+                                    <p class="operator-text">Select your cable company</p>
                                 </div>                    
                                 <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>                        
                             </div>
                         </a>                    
-                        <div class="dropdown" id="network-dropdown">
-                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/mtnlogo.png' %}" network-data="MTN" >
+                        <div class="dropdown bills" id="operator-dropdown" style="height: fit-content !important;">
+                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/dstv-logo.png' %}" disco="DSTV" network-data="CW-DSTV" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'telecomms/images/mtnlogo.png' %}" alt="">
+                                        <img src="{% static 'billpayments/images/dstv-logo.png' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>MTN</p>
-                                        <small>MTN Data</small>
+                                        <p>DStv</p>
+                                        <small>A cable company</small>
                                     </div>
                                 </div>
                             </a>
-                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/glologo.png' %}" network-data="Glo" >
+                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/gotv-logo.png' %}" disco="GOTV" network-data="CW-GOTV" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'telecomms/images/glologo.png' %}" alt="">
+                                        <img src="{% static 'billpayments/images/gotv-logo.png' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>Glo</p>
-                                        <small>Glo Data</small>
+                                        <p>GOtv</p>
+                                        <small>Another cable Company</small>
                                     </div>
                                 </div>
                             </a>
-                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/airtellogo.png' %}" network-data="Airtel" >
+                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/startimes-logo.png' %}" disco="STARTIMES" network-data="CW-STARTIMES" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'telecomms/images/airtellogo.png' %}" alt="">
-
+                                        <img src="{% static 'billpayments/images/startimes-logo.png' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>Airtel</p>
-                                        <small>Airtel Data</small>
+                                        <p>Startimes</p>
+                                        <small>A completely different cable Company</small>
                                     </div>
                                 </div>
                             </a>
-                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/9mobilelogo.png' %}" network-data="9Mobile" >
+                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/showmax-logo.png' %}" disco="SHOWMAX" network-data="CW-SOMX" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'telecomms/images/9mobilelogo.png' %}" alt="">
-
+                                        <img src="{% static 'billpayments/images/showmax-logo.png' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>9Mobile</p>
-                                        <small>9Mobile Data</small>
+                                        <p>Showmax</p>
+                                        <small>Another cable Company</small>
                                     </div>
                                 </div>
                             </a>
-
-
                         </div>
                     </div>
+                    <!-- Bouquet List -->
                     <div class="custom-select">
-                        <select name="plan" id="dataPlans" >
-                            <option value="" >Select Plan</option>
+                        <select name="cable-package" id="cablePackage" >
+                            <option value="" disabled selected>Select a bouquet</option>
                         </select>
                         <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg> 
                     </div>
-
+                    <!-- Smartcard number -->
                     <div class="input-group right-float">
-                        <input type="text" name="phone_number" id="phone_number" placeholder="Enter phone number" maxlength="11" inputmode="numeric"> 
+                        <input type="text" name="" id="smartcardNumber" placeholder="Enter meter number" inputmode="numeric"> 
                         <svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                                 viewBox="0 0 330 330" xml:space="preserve" class="open-beneficiary">
                             <g id="XMLID_12_">
@@ -139,24 +139,10 @@
                         </svg>                        
                     </div>
                     
-                    
-                    <!-- <input type="text" name="phone_number" id="phone_number" placeholder="Enter phone number" maxlength="11" inputmode="numeric"> -->
-                    <!-- <input type="text" class="" name="amount" id="amount" placeholder="Price" inputmode="numeric" readonly style="color: green;"> -->
-                    <!-- <div class="discount-container">
-                        <p>Cashback:VP <Span class="calculatedDiscount"></Span></p>
-                    </div> -->
-                    <div class="details beneficiary">
-                        <div class="data">
-                            <p class="info">Number is ported</p>
-                            <!-- <p class="value" id="">Airtime</p> -->
-                            <div class="service-item">
-                                <label class="switch">
-                                <input class="checkbox " type="checkbox" id="is_ported">
-                                <span class="slider round"></span>
-                                </label>                        
-                            </div>
-                        </div>
-                    </div>
+                    <input type="text" class="" name="amount" id="bouquetCost" placeholder="Package cost" inputmode="numeric" disabled>
+                    <div class="discount-container">
+                        <p>Cashback:&#8358; <Span class="calculatedDiscount"></Span></p>
+                    </div>                    
 
                     <div class="error-feedback">
                         <div class="transaction-error">
@@ -167,15 +153,39 @@
                             <p class="error-message" id="error-message"></p>
                         </div>
                     </div>
-
-                    <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="buyData">Proceed</button>
+                    
+    
+                    <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="buyCable" disabled>Proceed</button>
                 </form>
-            </div> 
+             </div> 
+        </div>
+        
+
+        <!--Transaction PIN Validation -->
+        <div class="setting-modal" id="PINValidation">
+            {% csrf_token %}  
+            <div class="content">
+                <div class="modal-indicator">
+                    <!-- <hr> -->
+                </div>
+                <!-- Old PIN -->
+                <div class="" id="transactionPIN">
+                    <h6 class="header">Enter  4-Digit Transaction Pin</h6>
+                    <p class="tag">We just want to make sure it is you&#x1F512;</p>
+                    <form method="POST" class="setPinForm" id="setPinForm">
+                        <div class="pin-container">
+                            <div id="PINWrapper" ></div>
+                        </div>
+                    </form>
+                    <!-- Feedback -->
+                    <p class="text-center validationError" id="PINValidationError"></p>  
+                    <div class="spacer"></div>                            
+                </div>
+            </div>
         </div>
 
-      
-        <!-- Sumamry modal -->
-        <div class="setting-modal" id="billSummary" style="display: none;">
+        <!-- Summary modal -->
+        <div class="setting-modal billSummary" id="billSummary" style="display: none;">
             {% csrf_token %}  
             <div class="content vacc">   
                 <div class="modal-indicator"></div>
@@ -185,23 +195,31 @@
                     <div class="details">
                         <div class="data">
                             <p class="info">Bill Type</p>
-                            <p class="value" id="">Data</p>
+                            <p class="value" id="">Cable Subscription</p>
                         </div>
                         <div class="data">
-                            <p class="info">Network Provider</p>
-                            <p class="value" id="networOperator"></p>
+                            <p class="info">Operator</p>
+                            <p class="value discoOperator" id="discoOperator"></p>
                         </div>
                         <div class="data">
-                            <p class="info">Phone Number</p>
-                            <p class="value" id="recipient"></p>
+                            <p class="info">Smartcard Number</p>
+                            <p class="value recipientMeterNum" id="recipientMeterNum"></p>
                         </div>
                         <div class="data">
-                            <p class="info">Plan</p>
-                            <p class="value" id="plan"></p>
+                            <p class="info">Package</p>
+                            <p class="value recipientMeterType" id="recipientMeterType"></p>
                         </div>
+                        <div class="data">
+                            <p class="info">Name</p>
+                            <p class="value recipientMeterName" id="recipientMeterName"></p>
+                        </div>
+                        <!-- <div class="data">
+                            <p class="info">Address</p>
+                            <p class="value recipientMeterAddress" id="recipientMeterAddress"></p>
+                        </div> -->
                         <div class="data">
                             <p class="info">Amount</p>
-                            <p class="value">&#8358;<span id="dataAmount"></span></p>
+                            <p class="value billAmount">&#8358;<span id="billAmount"></span></p>
                         </div>
                         <div class="data">
                             <p class="info">Cashback</p>
@@ -210,7 +228,7 @@
                         <hr>
                         <div class="data">
                             <p class="info">Total</p>
-                            <p class="value total" >&#8358;<span id="total">0</span></p>
+                            <p class="value total" >&#8358;<span id="total">1,200</span></p>
                         </div>
                     </div>
                     <div class="details beneficiary">
@@ -219,31 +237,32 @@
                             <!-- <p class="value" id="">Airtime</p> -->
                             <div class="service-item">
                                 <label class="switch">
-                                  <input class="checkbox" type="checkbox" id="data-{{service.network_operator}}" >
+                                  <input class="checkbox" type="checkbox" id="safeBeneficiary" >
                                   <span class="slider round"></span>
                                 </label>                        
                             </div>
                         </div>
                     </div>
-                    <div class="error-feedback">
+                    <div class="error-feedback" style="display: none;">
                         <div class="transaction-error">
                             <svg fill="#FFF" width="32px" height="32px" viewBox="0 0 24 24" id="caution-sign-circle" xmlns="http://www.w3.org/2000/svg" class="icon line">
                                 <line id="primary-upstroke" x1="11.95" y1="16.5" x2="12.05" y2="16.5" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.95;"></line>
                                 <path id="primary" d="M3,12a9,9,0,0,1,9-9h0a9,9,0,0,1,9,9h0a9,9,0,0,1-9,9h0a9,9,0,0,1-9-9Zm9,0V7" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
                             </svg>
-                            <p class="error-message" id="error-message"></p>
+                            <p class="error-message" id="error-message">Hello worlds</p>
                         </div>
-                    </div>
+                    </div> 
         
                     <div class="button-group">
-                        <button href="javascript:void(0)" class="secondary-btn cancelTrans" id="cancelData" onclick="">Cancel</button>
-                        <button href="javascript:void(0)" class="primary-btn"  id="purchaseData" onclick="">Purchase</button>
-                    </div>     
+                        <button href="javascript:void(0)" class="secondary-btn  cancelTrans" id="cancelAirtime" onclick="">Cancel</button>
+                        <button href="javascript:void(0)" class="primary-btn"  id="purchaseCable" onclick="">Purchase</button>
+                    </div>
                 </div>
             </div>
         
         </div>
 
+        
         <!-- Feeback modal -->
         <div class="setting-modal" id="transactionFeedback" style="display: none;">
             <div class="content vacc">   
@@ -253,14 +272,14 @@
                     <lottie-player src="https://lottie.host/a4b16f7e-e9e7-4cc1-8f34-54f435ea80c5/FmzCUPyAsk.json" background="transparent" speed="1" style="width: 180px; height: 180px" loop autoplay direction="1" mode="normal"></lottie-player>
                 </div>
                 <div class="feedback">
-                    <p>Your Data Purchase<br>Was Successful</p>
-                    <small>Your data bundle should be received<br>within a few seconds.</small>
+                    <p>Your <span>Cable Subscription</span> <br>Was Successful</p>
+                    <small>Your subscription should be renewed<br>within a few seconds.</small>
                 </div>
-    
+                
                 <div class="button-group">
-                    <a class="secondary-btn" href="{% url 'buy-data' %}" onclick="">Buy Again</a>
+                    <a class="secondary-btn " href="{% url 'cable-page' %}" onclick="">Buy Again</a>
                     <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
-                </div>
+                </div> 
             </div>
         
         </div>
@@ -302,57 +321,27 @@
         
         </div>
 
-        <!-- preloader -->
-        <div class="loader-overlay">
+        <!-- Page Preloader -->
+        <div class="loader-overlay" id="mainLoader">
             <div class="loader"></div>
         </div>
-          
-
         
-        
+        <!-- Offer Preloader -->
+        <div class="loader-overlay" id="offer-loader" style="display: none;">
+            <div class="loading-progress">
+                <div class="loader"></div>
+                <p class="discount" id="discountLoader">Generating discount</p>
+                <p class="offers" id="offerLoader">Looking for offers</p>
+            </div>
+            
+        </div>
     </div>
     
 
-    
-
-    <!--Transaction PIN Validation -->
-    <div class="setting-modal" id="PINValidation">
-        {% csrf_token %}  
-        <div class="content">
-            <div class="modal-indicator">
-                <!-- <hr> -->
-            </div>
-            <!-- Old PIN -->
-            <div class="" id="transactionPIN">
-                <h6 class="header">Enter  4-Digit Transaction Pin</h6>
-                <p class="tag">We just want to make sure it is you&#x1F512;</p>
-                <form method="POST" class="setPinForm" id="setPinForm">
-                    <div class="pin-container">
-                        <div id="PINWrapper" ></div>
-                    </div>
-                </form>
-                <!-- Feedback -->
-                <p class="text-center validationError" id="PINValidationError"></p>  
-                <div class="spacer"></div>                            
-            </div>
-        </div>
-    </div>
-
-    <!-- <div class="main-content transasction-page">
-        <div class="loader-overlay">
-            <div class="loader"></div>
-        </div>
-
-    </div> -->
-
-
-    
-
-    <script src="{% static 'telecomms/js/data.js' %}?v=1.022"></script>
-    <script src="{% static 'telecomms/js/simple.money.format.js' %}"></script>
-    <script type="text/javascript">
+    <script src="{% static 'billpayments/js/cable.js' %}?v=1.025"></script>
+    <!-- <script type="text/javascript">
 		$('.money').simpleMoneyFormat();
-	</script>
+	</script> -->
     
 </body>
 </html>

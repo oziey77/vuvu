@@ -1,0 +1,511 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuvu - Buy Electricity Token</title>
+    {% include 'users/includes/header.html' %}
+</head>
+<body>
+    <!-- Transaction Form -->
+     {% csrf_token %}
+    <div class="main-content transasction-page"  >
+        <div class="random" id="transaction-form" style="display: block;">
+            <div class="top-section">
+                <!-- Header -->
+                <div class="services-header">               
+                    <div class="service-info">
+                        <p >Electricity</p>
+                        <!-- <div class="icon-box">
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g id="style=linear">
+                                <g id="email">
+                                <path id="vector" d="M17 20.5H7C4 20.5 2 19 2 15.5V8.5C2 5 4 3.5 7 3.5H17C20 3.5 22 5 22 8.5V15.5C22 19 20 20.5 17 20.5Z" stroke="" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path id="vector_2" d="M18.7698 7.7688L13.2228 12.0551C12.5025 12.6116 11.4973 12.6116 10.777 12.0551L5.22998 7.7688" stroke="" stroke-width="1.5" stroke-linecap="round"/>
+                                </g>
+                                </g>
+                            </svg>
+    
+                        </div> -->
+                        <!-- <a href="javascript:void(0)" >Transaction History</a> -->
+                    </div>            
+                </div>
+                <!-- Wallet Balance -->
+                 <div class="wallet-group">
+                    <a href="{% url 'dashboard' %}" onclick="">
+                        <div class="back-button">                        
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 19.9201L8.47997 13.4001C7.70997 12.6301 7.70997 11.3701 8.47997 10.6001L15 4.08008" stroke="#292D32" stroke-width="2.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </a>                
+                    <div class="wallet-summary">
+                        <p class="balance"> <span class="gray-text">&#8358; </span><span style="font-stretch: narrower;">{{mainBalance|intcomma}}</span></p>
+                        <p class="header gray-text">Available Balance</p>                
+                    </div>
+                 </div>
+                
+            </div>
+            
+            <!-- Transaction Form -->
+             <div class="transaction-form" >
+                <p class="tag">Abeg, fill the details below <span style="font-family: Noto Emoji, sans-serif;">😉</span></p>
+                <form action="">
+                    <input type="text" name="network" hidden>
+                    <!-- Operator -->
+                    <div class="operator-container">
+                        <a href="javascript:void(0)" onclick="" id="operator-selector">
+                            <div class="network-selector">
+                                <div class="network-group">
+                                    <div class="icon-box" id="selectedOperatorImg">
+                                        <img src="" alt="">    
+                                    </div>
+                                    <p class="operator-text">Select your electricity company</p>
+                                </div>                    
+                                <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>                        
+                            </div>
+                        </a>                    
+                        <div class="dropdown bills" id="operator-dropdown">
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/aedc.png' %}" disco="AEDC" network-data="BP-ABUJA" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/aedc.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>AEDC</p>
+                                        <small>Abuja Electricity Distribution PLC</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/bedc.png' %}" disco="BEDC" network-data="BP-BENIN" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/bedc.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>BEDC</p>
+                                        <small>Benin Electricity Distribution Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/eedc.png' %}" disco="EEDC" network-data="BP-ENUGU" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/eedc.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>Enugu</p>
+                                        <small>Enugu Electricity Distribution Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ekedc.png' %}" disco="EKEDC" network-data="BP-EKO" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/ekedc.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>EKEDC</p>
+                                        <small>Eko Electricity Distribution Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ibedc.png' %}" disco="IBEDC" network-data="BP-IBADAN" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/ibedc.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>IBEDC</p>
+                                        <small>Ibadan Electricity Distribution Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ikedc.png' %}" disco="IKEDC" network-data="BP-IKEJA" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/ikedc.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>IKEDC</p>
+                                        <small>Ikeja Electricity Distribution Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/jedc.png' %}" disco="JEDC" network-data="BP-JOS" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/jedc.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>JEDC</p>
+                                        <small>Jos Electricity Distribution Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/kaedc.png' %}" disco="KEDC" network-data="BP-KADUNA" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/kaedc.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>KEDC</p>
+                                        <small>Kaduna Electricity Distribution Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/kedco.png' %}" disco="KEDCO" network-data="BP-KANO" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/kedco.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>KEDCO</p>
+                                        <small>Kano Electricity Distribution Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/phed.png' %}" disco="PHED" network-data="BP-PH" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/phed.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>PHED</p>
+                                        <small>Port Harcourt Electricity Distribution Company</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/yedc.png' %}" disco="YEDC" network-data="BP-YOLA" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'billpayments/images/yedc.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>YEDC</p>
+                                        <small>Yola Electricity Distribution Company</small>
+                                    </div>
+                                </div>
+                            </a> 
+                        </div>
+                    </div>
+                    <!-- Meter Type -->
+                    <div class="custom-select">
+                        <select name="meter_type" id="meterType" >
+                            <option value="" disabled selected>Select meter type</option>
+                            <option value="VT01">Prepaid</option>
+                            <option value="VT02">Postpaid</option>
+                        </select>
+                        <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg> 
+                    </div>
+                    <!-- meter number -->
+                    <div class="input-group right-float">
+                        <input type="text" name="meter_number" id="meterNumber" placeholder="Enter meter number" inputmode="numeric"> 
+                        <svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                viewBox="0 0 330 330" xml:space="preserve" class="open-beneficiary">
+                            <g id="XMLID_12_">
+                                <path id="XMLID_13_" d="M305,0H105C69.159,0,40,29.159,40,65v15H25c-8.284,0-15,6.716-15,15s6.716,15,15,15h15v40H25
+                                    c-8.284,0-15,6.716-15,15s6.716,15,15,15h15v40H25c-8.284,0-15,6.716-15,15s6.716,15,15,15h15v15c0,35.841,29.159,65,65,65h200
+                                    c8.284,0,15-6.716,15-15V15C320,6.716,313.284,0,305,0z M214.213,199.212c-28.342,28.342-63.587,39.049-78.718,23.918
+                                    c-0.296-0.295-20.494-20.494-20.494-20.494l30.67-30.67l20.526,20.525l41.283-41.282l-20.526-20.526l30.683-30.682
+                                    c0,0,20.199,20.198,20.494,20.494C253.263,135.626,242.556,170.87,214.213,199.212z"/>
+                            </g>
+                        </svg>                        
+                    </div>
+                    
+                    <input type="text" class="" name="amount" id="amount" placeholder="How much (min:#1,000)?" inputmode="numeric">
+                    <div class="discount-container">
+                        <p>Cashback:&#8358; <Span class="calculatedDiscount"></Span></p>
+                    </div>                    
+
+                    <div class="error-feedback">
+                        <div class="transaction-error">
+                            <svg fill="#FFF" width="32px" height="32px" viewBox="0 0 24 24" id="caution-sign-circle" xmlns="http://www.w3.org/2000/svg" class="icon line">
+                                <line id="primary-upstroke" x1="11.95" y1="16.5" x2="12.05" y2="16.5" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.95;"></line>
+                                <path id="primary" d="M3,12a9,9,0,0,1,9-9h0a9,9,0,0,1,9,9h0a9,9,0,0,1-9,9h0a9,9,0,0,1-9-9Zm9,0V7" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
+                            </svg>
+                            <p class="error-message" id="error-message"></p>
+                        </div>
+                    </div>
+                    
+    
+                    <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="buyElectricity">Proceed</button>
+                </form>
+             </div> 
+        </div>
+        
+
+        <!--Transaction PIN Validation -->
+        <div class="setting-modal" id="PINValidation">
+            {% csrf_token %}  
+            <div class="content">
+                <div class="modal-indicator">
+                    <!-- <hr> -->
+                </div>
+                <!-- Old PIN -->
+                <div class="" id="transactionPIN">
+                    <h6 class="header">Enter  4-Digit Transaction Pin</h6>
+                    <p class="tag">We just want to make sure it is you&#x1F512;</p>
+                    <form method="POST" class="setPinForm" id="setPinForm">
+                        <div class="pin-container">
+                            <div id="PINWrapper" ></div>
+                        </div>
+                    </form>
+                    <!-- Feedback -->
+                    <p class="text-center validationError" id="PINValidationError"></p>  
+                    <div class="spacer"></div>                            
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary modal -->
+        <div class="setting-modal billSummary" id="billSummary" style="display: none;">
+            {% csrf_token %}  
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <!-- Bill Summary -->
+                <div  id="" style="display: block;">
+                    <p class="header">Bill Summary</p>                      
+                    <div class="details">
+                        <div class="data">
+                            <p class="info">Bill Type</p>
+                            <p class="value" id="">Eletricity</p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Disco</p>
+                            <p class="value discoOperator" id="discoOperator"></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Meter Number</p>
+                            <p class="value recipientMeterNum" id="recipientMeterNum"></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Meter Type</p>
+                            <p class="value recipientMeterType" id="recipientMeterType"></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Name</p>
+                            <p class="value recipientMeterName" id="recipientMeterName"></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Address</p>
+                            <p class="value recipientMeterAddress" id="recipientMeterAddress"></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Amount</p>
+                            <p class="value billAmount">&#8358;<span id="billAmount"></span></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Cashback</p>
+                            <p class="value">&#8358;<span id="cashback"></span></p>
+                        </div>
+                        <hr>
+                        <div class="data">
+                            <p class="info">Total</p>
+                            <p class="value total" >&#8358;<span id="total">1,200</span></p>
+                        </div>
+                    </div>
+                    <div class="details beneficiary">
+                        <div class="data">
+                            <p class="info">Save Beneficiary</p>
+                            <!-- <p class="value" id="">Airtime</p> -->
+                            <div class="service-item">
+                                <label class="switch">
+                                  <input class="checkbox" type="checkbox" id="safeBeneficiary" >
+                                  <span class="slider round"></span>
+                                </label>                        
+                            </div>
+                        </div>
+                    </div>
+                    <div class="error-feedback" style="display: none;">
+                        <div class="transaction-error">
+                            <svg fill="#FFF" width="32px" height="32px" viewBox="0 0 24 24" id="caution-sign-circle" xmlns="http://www.w3.org/2000/svg" class="icon line">
+                                <line id="primary-upstroke" x1="11.95" y1="16.5" x2="12.05" y2="16.5" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.95;"></line>
+                                <path id="primary" d="M3,12a9,9,0,0,1,9-9h0a9,9,0,0,1,9,9h0a9,9,0,0,1-9,9h0a9,9,0,0,1-9-9Zm9,0V7" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
+                            </svg>
+                            <p class="error-message" id="error-message">Hello worlds</p>
+                        </div>
+                    </div> 
+        
+                    <div class="button-group">
+                        <button href="javascript:void(0)" class="secondary-btn  cancelTrans" id="cancelAirtime" onclick="">Cancel</button>
+                        <button href="javascript:void(0)" class="primary-btn"  id="purchaseElectricity" onclick="">Purchase</button>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+        <!-- Transaction Receipt modal -->
+        <div class="setting-modal billSummary feedback" id="billsFeedback" style="display: none;">
+            {% csrf_token %}  
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <!-- Transaction Summary -->
+                <div  id="" style="display: block;">
+                    <div class="details transaction-header">
+                        <div class="icon-container">
+                            <div class="icon-box">
+                                <img src="" id="paymentDiscoImage" alt="">
+                            </div>
+                        </div>                        
+                        <p class="disco discoOperator" id="paymentDisco">IBEDC</p>
+                        <p class="transaction-amount">#<span class="billAmount" id="paymentAmount"></span></p>
+                        <div class="transaction-status">
+                            <svg width="16px" height="16px" viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path fill="var(--success1)" d="M512 64a448 448 0 110 896 448 448 0 010-896zm-55.808 536.384l-99.52-99.584a38.4 38.4 0 10-54.336 54.336l126.72 126.72a38.272 38.272 0 0054.336 0l262.4-262.464a38.4 38.4 0 10-54.272-54.336L456.192 600.384z"></path>
+                                </g>
+                            </svg>
+                            <p>Successful</p>
+                        </div>
+                    </div>
+                    <div class="details token">
+                        <div class="data">
+                            <p class="info">Token</p>
+                            <div class="flex-container">
+                                <p class="value" id="paymentToken"></p>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyOneTimeAcc" onclick="">
+                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
+                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                                </svg>
+                            </div>
+                            
+                        </div>
+                        <div class="data">
+                            <p class="info">Reference</p>
+                            <div class="flex-container">
+                                <p class="value"><span id="paymentReference"></span></p>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyOneTimeAcc" onclick="">
+                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
+                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                                </svg>
+                            </div>
+                            
+                        </div>
+                        <div class="data">
+                            <p class="info">Units</p>
+                            <p class="value"><span id="paymentUnits"></span> kWh</p>
+                        </div>
+                    </div>                     
+                    <div class="details">
+                        <div class="data">
+                            <p class="info">Meter Number</p>
+                            <p class="value recipientMeterNum" id=""></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Meter Type</p>
+                            <p class="value recipientMeterType" id=""></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Name</p>
+                            <p class="value recipientMeterName" id=""></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Address</p>
+                            <p class="value recipientMeterAddress" id=""></p>
+                        </div>                        
+                        <div class="data">
+                            <p class="info">Date</p>
+                            <p class="value"><span id="paymentDate"></span></p>
+                        </div>
+                    </div>
+        
+                    <div class="button-group">
+                        <a class="secondary-btn " href="{% url 'buy-electricity' %}" onclick="">Buy Again</a>
+                        <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+        <!-- Feeback modal -->
+        <div class="setting-modal" id="transactionFeedback" style="display: none;">
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <!-- Feedback -->
+                <div class="feedback-image-container">
+                    <lottie-player src="https://lottie.host/a4b16f7e-e9e7-4cc1-8f34-54f435ea80c5/FmzCUPyAsk.json" background="transparent" speed="1" style="width: 180px; height: 180px" loop autoplay direction="1" mode="normal"></lottie-player>
+                </div>
+                <div class="feedback">
+                    <p>Your <span>Airtime Purchase</span> <br>Was Successful</p>
+                    <small>Your airtime should be received<br>within a few seconds.</small>
+                </div>
+                
+                <div class="button-group">
+                    <a class="secondary-btn " href="{% url 'buy-airtime' %}" onclick="">Buy Again</a>
+                    <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
+                </div> 
+            </div>
+        
+        </div>
+
+        <!-- Beneficiary modal -->
+        <div class="setting-modal" id="beneficiaryModal" style="display: none;">
+            <div class="content beneficairy">   
+                <div class="modal-indicator"></div>
+                <h5 class="header">Beneficiaries</h5>
+                <a href="javascript:void(0)"></a>
+                {% if telecommsBeneficiaries != None and telecommsBeneficiaries|length > 0 %}
+                    {% for beneficiary in telecommsBeneficiaries%}
+                        <a href="javascript:void(0)" class="save-beneficiary" onclick="" data="{{beneficiary.operator}}|{{beneficiary.recipient}}">
+                            <div class="data">
+                                <div class="icon-box">
+                                    {% if beneficiary.operator == 'MTN' %}
+                                        <img src="{% static 'telecomms/images/mtnlogo.png' %}" alt=""> 
+                                    {% elif beneficiary.operator == 'Glo' %}  
+                                        <img src="{% static 'telecomms/images/glologo.png' %}" alt=""> 
+                                    {% elif beneficiary.operator == '9Mobile' %}  
+                                        <img src="{% static 'telecomms/images/9mobilelogo.png' %}" alt=""> 
+                                    {% elif beneficiary.operator == 'Airtel' %}  
+                                        <img src="{% static 'telecomms/images/airtellogo.png' %}" alt=""> 
+                                    {% endif %}
+                                </div>
+                                <div class="info">
+                                    <p class="operator">{{beneficiary.operator}}</p>
+                                    <p class="recipient">{{beneficiary.recipient}}</p>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}                
+                {% else %}
+                <div class="note">
+                    <p>You currently do not have any beneficiary saved</p>
+                </div>
+                {% endif %}
+            </div>
+        
+        </div>
+
+        <!-- Page Preloader -->
+        <div class="loader-overlay" id="mainLoader">
+            <div class="loader"></div>
+        </div>
+        
+        <!-- Offer Preloader -->
+        <div class="loader-overlay" id="offer-loader" style="display: none;">
+            <div class="loading-progress">
+                <div class="loader"></div>
+                <p class="discount" id="discountLoader">Generating discount</p>
+                <p class="offers" id="offerLoader">Looking for offers</p>
+            </div>
+            
+        </div>
+    </div>
+    
+
+    <script src="{% static 'billpayments/js/electricity.js' %}?v=1.025"></script>
+    <!-- <script type="text/javascript">
+		$('.money').simpleMoneyFormat();
+	</script> -->
+    
+</body>
+</html>
