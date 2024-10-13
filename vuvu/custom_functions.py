@@ -40,6 +40,42 @@ def reference(string_length=12):
     return random[0:string_length] # Return the random string.
 
 
+offers = {
+    "storeRating":{
+        "id":1,
+        "transCount":'3',
+        "discountType":"fixed",
+        "discountAmount":"20",
+        "trials":"2",
+    },
+}
+
+GIVEAWAY_DATA = {
+    "level1":{
+        "transCount":10,
+        "reward":"500MB",
+        "MTN":"71",
+        "Glo":"140",
+        "Airtel":"352",
+        "9Mobile":"217",
+    },
+    "level2":{
+        "transCount":100,
+        "reward":"5GB",
+        "MTN":"71",
+        "Glo":"140",
+        "Airtel":"352",
+        "9Mobile":"217",
+    },
+    "level3":{
+        "transCount":1000,
+        "reward":"500MB",
+    },
+}
+
+
+
+
 # Temporarily file writing
 # Function to convert a CSV to JSON
 # Takes the file paths as arguments

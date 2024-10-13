@@ -173,9 +173,94 @@
             </div> 
         </div>
 
+        <!-- Offer modal -->
+        <div class="setting-modal billSummary" id="offerModal" style="display: none;">
+            {% csrf_token %}  
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <!-- Store Rating-->
+
+                <!-- Android -->
+                <div class="offer-details" id="playstoreRating" style="display: none;">
+                    <!-- Offer Prompt -->
+                    <div class="offer-prompt" style="display: block;">
+                        <p class="offer-header">Congrats<span style="font-family: Noto Emoji, sans-serif;">🎉</span>!</p>
+                        <p class="offer-note">Yov've been made an offer to pay 
+                            <br>#<span class="offer-amount"></span> for this transaction. kindly rate us 
+                            <br>on Playstore to claim this offer.!
+                        </p>
+                        <div class="button-group">                        
+                            <a class="primary-btn accept-offer" href="https://www.forexfactory.com/" onclick="" >Rate us on Playstore</a>
+                            <button class="secondary-btn " href="javascript:void(0)" onclick="">Miss out on Offer</button>
+                        </div>
+                    </div>
+                    <!-- offer-pending -->
+                    <div class="offer-pending" style="display: none;" id="offer-pending">
+                        <p class="offer-note">Kindly complete your rating on 
+                            <br>Playstore to continue. Thank you! 
+                        </p>
+                        <div class="button-group confirm-offer" style="display: none;">                        
+                            <button class="primary-btn continue-offer"  onclick="">Continue</button>
+                            <!-- <a class="secondary-btn " href="javascript:void(0)" onclick="">Miss out on Offer</a> -->
+                        </div>
+                    </div>                     
+                </div>
+                <!-- IOS -->
+                <div class="offer-details" id="appstoreRating" style="display: none;">
+                    <!-- Offer Prompt -->
+                    <div class="offer-prompt" style="display: block;">
+                        <p class="offer-header">Congrats<span style="font-family: Noto Emoji, sans-serif;">🎉</span>!</p>
+                        <p class="offer-note">Yov've been made an offer to pay 
+                            <br>#<span class="offer-amount"></span> for this transaction. kindly rate us 
+                            <br>on Appstore to claim this offer.!
+                        </p>
+                        <div class="button-group">                        
+                            <a class="primary-btn accept-offer" href="https://www.forexfactory.com/" onclick="" >Rate us on Appstore</a>
+                            <button class="secondary-btn reject-offer" href="javascript:void(0)" onclick="" >Miss out on Offer</button>
+                        </div>
+                    </div>
+                    <!-- offer-pending -->
+                    <div class="offer-pending" style="display: none;" id="offer-pending">
+                        <p class="offer-note">Kindly complete your rating on 
+                            <br>Playstore to continue. Thank you! 
+                        </p>
+                        <div class="button-group confirm-offer" style="display: none;">                        
+                            <button class="primary-btn continue-offer"  onclick="">Continue</button>
+                            <!-- <a class="secondary-btn " href="javascript:void(0)" onclick="">Miss out on Offer</a> -->
+                        </div>
+                    </div>                     
+                </div>
+                <!-- TrustPilot -->
+                <div class="offer-details" id="trustPilotRating" style="display: none;">
+                    <!-- Offer Prompt -->
+                    <div class="offer-prompt" style="display: block;">
+                        <p class="offer-header">Congrats<span style="font-family: Noto Emoji, sans-serif;">🎉</span>!</p>
+                        <p class="offer-note">Yov've been made an offer to pay 
+                            <br>#<span class="offer-amount"></span> for this transaction. kindly rate us 
+                            <br>on TruesPilot to claim this offer.!
+                        </p>
+                        <div class="button-group">                        
+                            <a class="primary-btn accept-offer" href="https://www.forexfactory.com/" onclick="" >Rate us on TruesPilot</a>
+                            <button class="secondary-btn reject-offer" href="javascript:void(0)" onclick="" >Miss out on Offer</button>
+                        </div>
+                    </div>
+                    <!-- offer-pending -->
+                    <div class="offer-pending" style="display: none;" id="offer-pending">
+                        <p class="offer-note">Kindly complete your rating on 
+                            <br>Playstore to continue. Thank you! 
+                        </p>
+                        <div class="button-group confirm-offer" style="display: none;">                        
+                            <button class="primary-btn continue-offer"  onclick="">Continue</button>
+                            <!-- <a class="secondary-btn " href="javascript:void(0)" onclick="">Miss out on Offer</a> -->
+                        </div>
+                    </div>                     
+                </div>
+            </div>        
+        </div>
+
       
         <!-- Sumamry modal -->
-        <div class="setting-modal" id="billSummary" style="display: none;">
+        <div class="setting-modal billSummary" id="billSummary" style="display: none;">
             {% csrf_token %}  
             <div class="content vacc">   
                 <div class="modal-indicator"></div>

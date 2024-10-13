@@ -540,6 +540,9 @@ def buyData(request):
             operator = request.POST.get('operator')
             recipient = request.POST.get('recipient')
             planID = request.POST.get('planID')
+            offerType = request.POST.get('offerType')
+            offerStatus = request.POST.get('offerStatus')
+            offerDiscount = Decimal(5)
             
             
             wallet = UserWallet.objects.get(user=user)  
@@ -627,6 +630,96 @@ def buyData(request):
                         "message":"Duplicate transaction wait 1 minute"
                     })
 
+                # Process user offers
+                print(f"New POST request {request.POST}")
+                totalTransactions = user.transaction_count
+                completeOffers = user.completed_offers
+                # If user accept offer
+                if offerStatus == "claimed":                    
+                    if offerType == "storeRating" and (totalTransactions == 78 or totalTransactions == 80 ):
+                        offerDiscount = Decimal(20)
+                        if len(completeOffers) == 0:
+                            userOffers = []
+                            offerData = {
+                                "storeRating":{
+                                    "totalTrial":1,
+                                    "status":"completed"
+                                }
+                            }
+                            userOffers.append(offerData)
+                            user.completed_offers = userOffers
+                            user.save()
+                        else:
+                            if offerType == "storeRating":
+                                offerIndex = 0
+                                for offer in completeOffers:
+                                    for key in offer:
+                                        if key == 'storeRating':
+                                            offerIndex = completeOffers.index(offer)
+                                            rejectCount = completeOffers[offerIndex]['storeRating']['totalTrial']
+                                            if rejectCount == 1:
+                                                completeOffers[offerIndex]['storeRating']['totalTrial'] = 2
+                                                completeOffers[offerIndex]['storeRating']['status'] = 'completed'
+                                                user.completed_offers = completeOffers
+                                                user.save()
+                                            break
+                            elif offerType == "trustPilot":
+                                offerData = {
+                                        "trustPilot":{
+                                            "totalTrial":1,
+                                            "status":"completed"
+                                        }
+                                    }
+                                userOffers.append(offerData)
+                                user.completed_offers = userOffers
+                                user.save()
+
+                #If user reject offer                
+                if offerStatus == "rejected":
+                    if offerType == "storeRating" and (totalTransactions == 78 or totalTransactions == 80 ):
+                        if len(completeOffers) == 0:
+                            userOffers = []
+                            offerData = {
+                                "storeRating":{
+                                    "totalTrial":1,
+                                    "status":"pending"
+                                }
+                            }
+                            userOffers.append(offerData)
+                            user.completed_offers = userOffers
+                            user.save()
+                        else:
+                            offerIndex = 0
+                            for offer in completeOffers:
+                                for key in offer:
+                                    if key == 'storeRating':
+                                        offerIndex = completeOffers.index(offer)
+                                        rejectCount = completeOffers[offerIndex]['storeRating']['totalTrial']
+                                        if rejectCount == 1:
+                                            completeOffers[offerIndex]['storeRating']['totalTrial'] = 2
+                                            completeOffers[offerIndex]['storeRating']['status'] = 'completed'
+                                            user.completed_offers = completeOffers
+                                            user.save()
+                                        break
+                    elif offerType == "trustPilot" and totalTransactions == 80: 
+                        offerData = {
+                                "trustPilot":{
+                                    "totalTrial":1,
+                                    "status":"completed"
+                                }
+                            }
+                        userOffers.append(offerData)
+                        user.completed_offers = userOffers
+                        user.save()
+
+                # return JsonResponse({
+                #     "code":"09",
+                #     "message":"Testing ongoing",
+                #     "data":user.completed_offers
+                # })
+                
+                
+                
                 # Check if user has enough balance to make purchase
                 if selectedPlan.price <= wallet.balance:
                     balanceBefore = wallet.balance
@@ -647,16 +740,16 @@ def buyData(request):
                     )
                     # Create Transaction Record
                     transaction = Transaction.objects.create(
-                                    user = user,
-                                    operator = operator,
-                                    transaction_type = "Data",
-                                    recipient = recipient,
-                                    reference = transRef,
-                                    package = selectedPlan.plan,
-                                    amount = selectedPlan.price,
-                                    balanceBefore = balanceBefore,
-                                    balanceAfter = wallet.balance,
-                                )
+                            user = user,
+                            operator = operator,
+                            transaction_type = "Data",
+                            recipient = recipient,
+                            reference = transRef,
+                            package = selectedPlan.plan,
+                            amount = selectedPlan.price,
+                            balanceBefore = balanceBefore,
+                            balanceAfter = wallet.balance,
+                        )
                     
                     transaction.refresh_from_db()
                     user.last_transacted = datetime.now().date()
@@ -697,14 +790,14 @@ def buyData(request):
                                 user = user,
                                 transaction_type = 'Data',
                                 message = f"Data {transaction.reference}",
-                                amount = Decimal(5)
+                                amount = offerDiscount
                             )
-                            wallet.cashback += Decimal(5)
+                            wallet.cashback += offerDiscount
                             wallet.save()
 
 
                             transaction.status = "Success"
-                            transaction.discount = Decimal(5)
+                            transaction.discount = offerDiscount
                             transaction.message = "Transaction successful"
                             transaction.APIreference = data['details']['reference']
                             transaction.save()                    
@@ -763,14 +856,14 @@ def buyData(request):
                                 user = user,
                                 transaction_type = 'Data',
                                 message = f"Data {transaction.reference}",
-                                amount = Decimal(5)
+                                amount = offerDiscount
                             )
-                            wallet.cashback += Decimal(5)
+                            wallet.cashback += offerDiscount
                             wallet.save()
                             
                             # Update transaction
                             transaction.status = "Success"
-                            transaction.discount = Decimal(5)
+                            transaction.discount = offerDiscount
                             transaction.message = "Transaction successful"
                             transaction.APIreference = data['data']['reference']
                             transaction.save()                    
@@ -838,14 +931,14 @@ def buyData(request):
                                 user = user,
                                 transaction_type = 'Data',
                                 message = f"Data {transaction.reference}",
-                                amount = Decimal(5)
+                                amount = offerDiscount
                             )
-                            wallet.cashback += Decimal(5)
+                            wallet.cashback += offerDiscount
                             wallet.save()
                             
                             # Update transaction
                             transaction.status = "Success"
-                            transaction.discount = Decimal(5)
+                            transaction.discount = offerDiscount
                             transaction.message = "Transaction successful"
                             transaction.APIreference = transRef
                             transaction.save()                    
@@ -907,3 +1000,59 @@ def buyData(request):
                 "code":"09",
                 "message":"Invalid request"
             })
+
+
+# Get Available offer
+def getCurrentOffer(request):
+    user = request.user
+
+    # Check if user have ever made a deposit
+    if is_ajax(request) and request.method == "GET":  
+        totalTransactions = user.transaction_count
+        # totalTransactions = 90
+
+        print(f"total Transaction is  {totalTransactions}")
+        completeOffers = user.completed_offers
+        print(f"Total completed offers {len(completeOffers)}")
+        
+        if len(completeOffers) == 0:
+            if totalTransactions ==78 or totalTransactions ==79:
+                return JsonResponse({
+                    "code":"00",
+                    "currentOffer":"storeRating",
+                    "discount":"20"
+                })
+        else:
+            if totalTransactions == 78 or totalTransactions == 79:
+                offerIndex = 0
+                for offer in completeOffers:
+                    for key in offer:
+                        if key == 'storeRating':
+                            offerIndex = completeOffers.index(offer)
+                            rejectCount = completeOffers[offerIndex]['storeRating']['totalTrial']
+                            if rejectCount == 1: #first attempt for store rating
+                                return JsonResponse({
+                                    "code":"00",
+                                    "currentOffer":"storeRating",
+                                    "discount":"20"
+                                })
+                            else:
+                                return JsonResponse({
+                                    "code":"04",
+                                    "message":"on offer found",
+                                })
+                            break
+            elif totalTransactions == 80:
+                return JsonResponse({
+                    "code":"00",
+                    "currentOffer":"trustPilot",
+                    "discount":"20"
+                })
+            else:
+                return JsonResponse({
+                    "code":"04",
+                    "message":"on offer found",
+                })
+
+
+        

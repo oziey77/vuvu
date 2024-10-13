@@ -287,58 +287,39 @@
             <!-- Give Away -->
             <div class="give-away-section">
                 <p class="title">Give-Away!</p>
-                <div class="give-away-progress">
-                    <input type="text" value="{{giveAwayProgress}}" id="userGiveAwayProgress" hidden>
-                    <div class="progress red">
-                        <div class="progress-bar" id="progressRate" style="width: 0%;  background-color:var(--text-color)">
-                        </div>
-                        <div class="end-design">
-
-                        </div>
+                {% if giveAwayLevelComplete == False %}
+                    <div class="give-away-data" >
+                        <div class="give-away-progress">
+                            <input type="text" value="{{giveAwayProgress}}" id="userGiveAwayProgress" hidden>
+                            <div class="progress red">
+                                <div class="progress-bar" id="progressRate" style="width: 0%;  background-color:var(--text-color)">
+                                </div>
+                                <div class="end-design">
+        
+                                </div>
+                            </div>
+                            <div class="icon-box">
+                                
+                                <svg width="24px" height="24px" viewBox="0 0 32 32" id="i-gift" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+        
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                                    
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                                    
+                                    <g id="SVGRepo_iconCarrier"> <path d="M4 14 L4 30 28 30 28 14 M2 9 L2 14 30 14 30 9 Z M16 9 C 16 9 14 0 8 3 2 6 16 9 16 9 16 9 18 0 24 3 30 6 16 9 16 9 M16 9 L16 30"/> </g>
+                                    
+                                </svg>
+                            </div>                    
+                        </div>  
+                        <a href="javascript:void(0)" id="giveAwayBTN" onclick="">How to win ?</a>
                     </div>
-                    <div class="icon-box">
-                        <!-- <svg fill="#000000" height="38px" width="38px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-                            viewBox="0 0 371.002 371.002" xml:space="preserve">
-                            <path d="M353.502,27.45H17.5C7.851,27.45,0,35.301,0,44.95v73.376c0,9.649,7.851,17.5,17.5,17.5h4.052v193.225
-                                c0,7.995,6.504,14.5,14.5,14.5H334.95c7.995,0,14.5-6.505,14.5-14.5V135.827h4.052c9.649,0,17.5-7.851,17.5-17.5V44.95
-                                C371.002,35.301,363.151,27.45,353.502,27.45z M334.45,328.552H36.552V135.827h21.004c-9.433,16.089-11.292,29.619-5.493,40.252
-                                c4.384,8.038,15.192,17.619,41.787,17.619c7.674,0,16.119-0.822,25.151-2.422v50.914c0,2.538,0.722,4.842,2.089,6.664
-                                c1.793,2.39,4.54,3.76,7.537,3.76c2.12,0,4.271-0.699,6.222-2.021l21.012-14.246c0.075-0.009,0.206-0.009,0.281,0l21.012,14.245
-                                c0.278,0.189,0.562,0.361,0.848,0.524v21.074c0,2.538,0.722,4.842,2.089,6.664c1.793,2.39,4.54,3.76,7.537,3.76
-                                c2.12,0,4.271-0.699,6.222-2.021l21.012-14.246c0.074-0.009,0.207-0.009,0.281,0l21.012,14.245c1.951,1.323,4.103,2.022,6.223,2.022
-                                c5.487,0,9.625-4.481,9.625-10.423v-80.914c9.032,1.6,17.478,2.422,25.151,2.422c26.596,0,37.403-9.581,41.787-17.619
-                                c5.8-10.633,3.94-24.163-5.493-40.252h21.004V328.552z M74.548,96.731c-1.754-6.928-3.742-14.78-1.722-17.374
-                                c0.794-1.02,3.903-3.393,15.593-3.393c32.46,0,54.717,14.968,67.673,27.525c2.749,2.664,5.204,5.35,7.4,7.989
-                                c-9.286,6.49-15.332,16.965-15.332,28.768c0,8.515,3.148,16.339,8.387,22.476c-8.57,5.062-20.054,9.711-35.118,12.825
-                                c-10.114,2.091-19.394,3.151-27.58,3.151c-14.79,0-25.221-3.572-28.618-9.801c-3.327-6.1-0.744-16.315,7.272-28.763
-                                C81.858,125.609,77.805,109.597,74.548,96.731z M297.646,96.758c-3.802,12.833-8.533,28.803,0.853,43.376
-                                c8.017,12.448,10.6,22.663,7.272,28.763c-3.397,6.229-13.828,9.801-28.618,9.801c-8.187,0-17.466-1.061-27.58-3.151
-                                c-15.064-3.114-26.548-7.763-35.117-12.825c5.239-6.137,8.387-13.961,8.387-22.475c0-11.802-6.046-22.278-15.331-28.768
-                                c2.196-2.639,4.651-5.325,7.4-7.989c12.955-12.557,35.212-27.525,67.673-27.525c13.669,0,16.832,2.813,17.477,3.676
-                                C301.962,82.19,299.669,89.93,297.646,96.758z M237.001,187.957v75.087l-13.652-9.256c-2.33-1.58-5.295-2.45-8.348-2.45
-                                s-6.018,0.87-8.348,2.45l-13.652,9.256v-20.854v-67.038c3.044-0.595,5.96-1.532,8.687-2.79
-                                C210.863,178.596,222.663,184.06,237.001,187.957z M207.842,140.246c0,11.382-10.022,20.642-22.341,20.642
-                                c-12.319,0-22.341-9.26-22.341-20.642s10.022-20.642,22.341-20.642C197.819,119.604,207.842,128.864,207.842,140.246z
-                                M178.001,175.151v57.893l-13.652-9.256c-2.33-1.58-5.295-2.45-8.348-2.45s-6.018,0.87-8.347,2.45l-13.653,9.256v-45.087
-                                c14.338-3.897,26.138-9.36,35.313-15.595C172.041,173.619,174.956,174.556,178.001,175.151z M356.002,118.327
-                                c0,1.355-1.145,2.5-2.5,2.5H334.95h-26.885c-0.029-6.303,1.982-13.124,3.963-19.807c3.172-10.707,6.452-21.779,0.05-30.353
-                                c-4.942-6.619-14.314-9.702-29.495-9.702c-42.363,0-72.737,22.728-89.489,44.382c-2.453-0.486-4.992-0.742-7.593-0.742
-                                s-5.14,0.257-7.593,0.742c-16.752-21.654-47.126-44.382-89.489-44.382c-13.839,0-22.555,2.917-27.43,9.179
-                                c-6.523,8.381-3.707,19.508-0.982,30.269c1.742,6.883,3.518,13.91,3.224,20.414H36.052H17.5c-1.355,0-2.5-1.145-2.5-2.5V44.95
-                                c0-1.355,1.145-2.5,2.5-2.5h336.002c1.355,0,2.5,1.145,2.5,2.5V118.327z"/>
-                        </svg> -->
-                        <svg width="24px" height="24px" viewBox="0 0 32 32" id="i-gift" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
-
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"/>
-                            
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-                            
-                            <g id="SVGRepo_iconCarrier"> <path d="M4 14 L4 30 28 30 28 14 M2 9 L2 14 30 14 30 9 Z M16 9 C 16 9 14 0 8 3 2 6 16 9 16 9 16 9 18 0 24 3 30 6 16 9 16 9 M16 9 L16 30"/> </g>
-                            
-                        </svg>
-                    </div>                    
-                </div>  
-                <a href="javascript:void(0)" id="giveAwayBTN" onclick="">How to win ?</a>              
+                {% else %}
+                    <div class="claim-give-away">
+                        <p style="font-size: 0.9em;margin: 12px 0;text-align: center;">Congratulation, you completed the first level</p>
+                        <a href="javascript:void(0)" style="text-align: center; font-size: 1em!important;" id="claimGiveAway"><p >claim now</p></a>                    
+                    </div>
+                {% endif %}
+                              
             </div>
             <!-- Cashback / withdrawal -->
             <div class="cashback-section">
@@ -515,6 +496,133 @@
                         </span>
                     </p>
                     <p class="ref-message-feedback">Copied, now paste on your WhatsApp status</p>
+                </div>
+            </div>
+        
+        </div>
+
+        <!-- Offer modal -->
+        <div class="setting-modal billSummary" id="giveAwayModal" style="display: none;">
+            {% csrf_token %}  
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <!-- Store Rating-->
+                 <!-- Transaction Form -->
+            <div class="transaction-form" >
+                <p class="tag">Fill out the required details below <br>to claim your reward</p>
+                <form action="">
+                    <input type="text" name="network" hidden>
+                    <div class="operator-container">
+                        <a href="javascript:void(0)" onclick="" id="network-selector">
+                            <div class="network-selector">
+                                <div class="network-group">
+                                    <div class="icon-box" id="selectedOperatorImg">
+                                        <img src="" alt="">    
+                                    </div>
+                                    <p class="operator-text">Select a network</p>
+                                </div>                    
+                                <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>                        
+                            </div>
+                        </a>                    
+                        <div class="dropdown" id="network-dropdown">
+                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/mtnlogo.png' %}" network-data="MTN" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'telecomms/images/mtnlogo.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>MTN</p>
+                                        <small>MTN Data</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/glologo.png' %}" network-data="Glo" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'telecomms/images/glologo.png' %}" alt="">
+                                    </div>
+                                    <div class="list">
+                                        <p>Glo</p>
+                                        <small>Glo Data</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/airtellogo.png' %}" network-data="Airtel" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'telecomms/images/airtellogo.png' %}" alt="">
+
+                                    </div>
+                                    <div class="list">
+                                        <p>Airtel</p>
+                                        <small>Airtel Data</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" class="mobile-operator" image-data="{% static 'telecomms/images/9mobilelogo.png' %}" network-data="9Mobile" >
+                                <div class="item">
+                                    <div class="icon-box">
+                                        <img src="{% static 'telecomms/images/9mobilelogo.png' %}" alt="">
+
+                                    </div>
+                                    <div class="list">
+                                        <p>9Mobile</p>
+                                        <small>9Mobile Data</small>
+                                    </div>
+                                </div>
+                            </a>
+
+
+                        </div>
+                    </div>
+
+                    <div class="input-group right-float">
+                        <input type="text" name="phone_number" id="phone_number" placeholder="Enter phone number" maxlength="11" inputmode="numeric"> 
+                        <svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                viewBox="0 0 330 330" xml:space="preserve" class="open-beneficiary">
+                            <g id="XMLID_12_">
+                                <path id="XMLID_13_" d="M305,0H105C69.159,0,40,29.159,40,65v15H25c-8.284,0-15,6.716-15,15s6.716,15,15,15h15v40H25
+                                    c-8.284,0-15,6.716-15,15s6.716,15,15,15h15v40H25c-8.284,0-15,6.716-15,15s6.716,15,15,15h15v15c0,35.841,29.159,65,65,65h200
+                                    c8.284,0,15-6.716,15-15V15C320,6.716,313.284,0,305,0z M214.213,199.212c-28.342,28.342-63.587,39.049-78.718,23.918
+                                    c-0.296-0.295-20.494-20.494-20.494-20.494l30.67-30.67l20.526,20.525l41.283-41.282l-20.526-20.526l30.683-30.682
+                                    c0,0,20.199,20.198,20.494,20.494C253.263,135.626,242.556,170.87,214.213,199.212z"/>
+                            </g>
+                        </svg>                        
+                    </div>
+
+                    <div class="error-feedback">
+                        <div class="transaction-error">
+                            <svg fill="#FFF" width="32px" height="32px" viewBox="0 0 24 24" id="caution-sign-circle" xmlns="http://www.w3.org/2000/svg" class="icon line">
+                                <line id="primary-upstroke" x1="11.95" y1="16.5" x2="12.05" y2="16.5" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.95;"></line>
+                                <path id="primary" d="M3,12a9,9,0,0,1,9-9h0a9,9,0,0,1,9,9h0a9,9,0,0,1-9,9h0a9,9,0,0,1-9-9Zm9,0V7" style="fill: none; stroke: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5;"></path>
+                            </svg>
+                            <p class="error-message" id="error-message"></p>
+                        </div>
+                    </div>
+
+                    <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="processGiveAway">Proceed</button>
+                </form>
+            </div> 
+            </div>        
+        </div>
+
+        <!-- Feeback modal -->
+        <div class="setting-modal" id="transactionFeedback" style="display: none;">
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <!-- Feedback -->
+                <div class="feedback-image-container">
+                    <lottie-player src="https://lottie.host/a4b16f7e-e9e7-4cc1-8f34-54f435ea80c5/FmzCUPyAsk.json" background="transparent" speed="1" style="width: 180px; height: 180px" loop autoplay direction="1" mode="normal"></lottie-player>
+                </div>
+                <div class="feedback">
+                    <p>Your <span id="giveAwayReward">500MB</span> Give-Away<br>Was Claimed Successfully</p>
+                    <small>Your should receive it<br>within a few seconds.</small>
+                </div>
+    
+                <div class="button-group">
+                    <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
                 </div>
             </div>
         

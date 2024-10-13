@@ -23,7 +23,7 @@ from telecomms.models import ATNDataPlans, DataServices
 from telecomms.serializers import ATNDataPlanSerializer
 from users.forms import KYCDataForm, MyUserCreationForm
 from users.serializers import TransactionSerializer
-from vuvu.custom_functions import is_ajax, isNum, reference
+from vuvu.custom_functions import GIVEAWAY_DATA, is_ajax, isNum, reference,offers
 from .models import AccountDeleteQueue, KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
 
 import uuid
@@ -456,6 +456,8 @@ def dashboardPage(request):
     user = request.user
     page = "dashboard"
 
+    print(f"impported offers is {GIVEAWAY_DATA}")
+
     
     period = "Morning"
     hourOfDay= datetime.now().time().hour
@@ -474,10 +476,24 @@ def dashboardPage(request):
     transYear = datetime.now().date().year
     totalDataTrans = Transaction.objects.filter(user=user,transaction_type="Data",created__year=transYear).count()
     giveAwayProgress = 0
-    if totalDataTrans < 10:
-        giveAwayProgress = 20 + ((totalDataTrans/10) * 100)
-    if totalDataTrans >= 10:
-        giveAwayProgress = 100
+
+    # Give away progress
+    giveAwayLevelComplete = False
+    giveAwayLevel = user.give_away_level
+    currentGiveAway = GIVEAWAY_DATA[f"level{giveAwayLevel}"]
+    print(f"current giveaway is {currentGiveAway}")
+    if giveAwayLevel == 1:    
+        if totalDataTrans < 10:
+            giveAwayProgress = 20 + ((totalDataTrans/10) * 100)
+        if totalDataTrans >= currentGiveAway["transCount"]:
+            giveAwayProgress = 100
+            giveAwayLevelComplete = True
+    else:    
+        if totalDataTrans < currentGiveAway["transCount"]:
+            giveAwayProgress = ((totalDataTrans/currentGiveAway["transCount"]) * 100)
+        if totalDataTrans >= currentGiveAway["transCount"]:
+            giveAwayProgress = 100
+            giveAwayLevelComplete = True
 
     pinSet = False
     try:
@@ -492,8 +508,108 @@ def dashboardPage(request):
         "giveAwayProgress":giveAwayProgress,
         "page":page,
         "unreadNotifications":unreadNotifications,
+        "giveAwayLevelComplete":giveAwayLevelComplete,
+        "giveAwayLevel":giveAwayLevel,
     }
     return render(request,'users/dashboard.html',context)
+
+# Password Reset Successful page
+@login_required(login_url='login')
+def claimGiveAway(request):
+    user = request.user
+    if is_ajax(request) and request.method == "GET":
+        print(request.GET)
+        operator = request.GET.get("selectedOperator")
+        recipient = request.GET.get("recipient")
+
+        transYear = datetime.now().date().year
+        totalDataTrans = Transaction.objects.filter(user=user,transaction_type="Data",created__year=transYear).count()
+        giveAwayLevel = user.give_away_level
+        currentGiveAway = GIVEAWAY_DATA[f"level{giveAwayLevel}"]
+        canClaim = False
+
+        if giveAwayLevel == 1 and totalDataTrans >= currentGiveAway["transCount"]:
+            canClaim = True
+        elif giveAwayLevel == 2 and totalDataTrans >= currentGiveAway["transCount"]:
+            canClaim = True
+        
+        if canClaim:
+            if operator == "MTN":
+                networkID = "1"
+            elif operator == "Airtel":
+                networkID = "2"
+            elif operator == "Glo":
+                networkID = "3"
+            elif operator == "9Mobile":
+                networkID = "4"
+
+            # API CALL FOR DATA REWARD
+            transRef = reference(26)
+            wallet = UserWallet.objects.get(user=user)  
+            # Twins10
+            apiToken = settings.TWINS10_TOKEN
+            url = 'https://twins10.com/api/data'
+            payload = {
+                        "network": networkID,
+                        "phone":recipient,
+                        "data_plan":currentGiveAway[operator],
+                        "bypass":False,
+                        "request-id":transRef                  
+                    }
+            headers = {
+                        'Authorization': f"Token {apiToken}",
+                        'Accept': 'application/json'
+                    }
+            
+            print(f"payload is {payload}")
+
+            response = requests.request('POST', url, headers=headers, json=payload)
+            data = response.json()
+
+            
+            print(f"Twins10 response is {data}")
+            if data['status'] == "success" or data['status'] == "processing":
+                user.give_away_level = 2
+                user.save()
+                Transaction.objects.create(
+                    user = user,
+                    operator = operator,
+                    transaction_type = "Data",
+                    recipient = recipient,
+                    reference = transRef,
+                    package = currentGiveAway["reward"],
+                    message = "Give-away Reward",
+                    amount = 0,
+                    balanceBefore = wallet.balance,
+                    balanceAfter = wallet.balance,
+                )
+                return JsonResponse({
+                    "code":"00"
+                })
+            elif data['status'] == "fail":
+                if 'response' in data:
+                    APIResponse = data["response"]
+                elif 'message' in data:
+                    APIResponse = data["message"]
+
+                if "Insufficient Account" in APIResponse:
+                    return JsonResponse({
+                    "code":"09",
+                    "message":"network downtime!"
+                    })
+                else:
+                    return JsonResponse({
+                        "code":"09",
+                        "message":APIResponse
+                    })
+        else:
+            return JsonResponse({
+                "code":"09",
+                "message":"invalid request"
+            })
+
+        
+    pass
 
 @login_required(login_url='login')
 def fetchWalletBalance(request):
