@@ -1,0 +1,68 @@
+/* :root{
+	--white-bg: #FFF;
+	--bg-color1:#FFEAEA;
+	--light-bg1:#FFF4F4;
+	--success1:#0da22b;
+	--danger-1:rgb(219, 6, 38);
+	--orange-1:rgb(224, 191, 6);
+	--disabled-color:#2c2c2c7b;
+	--text-color:#1B3248;
+	--text-color2:#858181e0;
+	--overlay-bg-1:#49494932;
+	--overlay-bg-2:#272727a7;
+	--box-shadow1: 0 1px 1px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.12);
+	--color-variant-1: #FFF;
+  } */
+#pinwrapper{
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+}
+
+.pinlogin .pinlogin-field
+{
+	box-sizing:border-box;
+	
+	display:inline-block;
+	
+	width: 32px;
+	height: 32px;
+	
+	padding: 5px;
+	
+	margin: 0 5px;
+	
+	border:1px solid #ccc;
+	
+	-webkit-border-radius:2px;
+	-moz-border-radius:2px;	
+	border-radius: 2px;
+	
+	text-align:center;
+
+}
+.four-digits .pinlogin .pinlogin-field{
+	width: 40px !important;
+	height: 40px !important;
+}
+
+.pinlogin .pinlogin-field:first-of-type {
+    margin-left: 0;
+}
+
+.pinlogin .pinlogin-field:last-of-type {
+    margin-right: 0;
+}
+
+.pinlogin .pinlogin-field:read-only
+{
+	border:1px solid #ddd;
+	background:#fafafa;
+	cursor:default;
+}
+
+.pinlogin .pinlogin-field.invalid
+{
+	border:1px solid red;
+	color:red;
+}
