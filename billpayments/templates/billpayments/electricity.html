@@ -67,137 +67,268 @@
                                     <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>                        
                             </div>
-                        </a>                    
-                        <div class="dropdown bills" id="operator-dropdown">
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/aedc.png' %}" disco="AEDC" network-data="BP-ABUJA" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/aedc.png' %}" alt="">
+                        </a>   
+                        {% if electricityBackend.active_backend == "9Payment" %}                 
+                            <div class="dropdown bills" id="operator-dropdown">
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/aedc.png' %}" disco="AEDC" network-data="BP-ABUJA" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/aedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>AEDC</p>
+                                            <small>Abuja Electricity Distribution PLC</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>AEDC</p>
-                                        <small>Abuja Electricity Distribution PLC</small>
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/bedc.png' %}" disco="BEDC" network-data="BP-BENIN" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/bedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>BEDC</p>
+                                            <small>Benin Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/bedc.png' %}" disco="BEDC" network-data="BP-BENIN" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/bedc.png' %}" alt="">
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/eedc.png' %}" disco="EEDC" network-data="BP-ENUGU" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/eedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>Enugu</p>
+                                            <small>Enugu Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>BEDC</p>
-                                        <small>Benin Electricity Distribution Company</small>
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ekedc.png' %}" disco="EKEDC" network-data="BP-EKO" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/ekedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>EKEDC</p>
+                                            <small>Eko Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/eedc.png' %}" disco="EEDC" network-data="BP-ENUGU" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/eedc.png' %}" alt="">
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ibedc.png' %}" disco="IBEDC" network-data="BP-IBADAN" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/ibedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>IBEDC</p>
+                                            <small>Ibadan Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>Enugu</p>
-                                        <small>Enugu Electricity Distribution Company</small>
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ikedc.png' %}" disco="IKEDC" network-data="BP-IKEJA" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/ikedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>IKEDC</p>
+                                            <small>Ikeja Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ekedc.png' %}" disco="EKEDC" network-data="BP-EKO" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/ekedc.png' %}" alt="">
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/jedc.png' %}" disco="JEDC" network-data="BP-JOS" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/jedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>JEDC</p>
+                                            <small>Jos Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>EKEDC</p>
-                                        <small>Eko Electricity Distribution Company</small>
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/kaedc.png' %}" disco="KEDC" network-data="BP-KADUNA" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/kaedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>KEDC</p>
+                                            <small>Kaduna Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ibedc.png' %}" disco="IBEDC" network-data="BP-IBADAN" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/ibedc.png' %}" alt="">
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/kedco.png' %}" disco="KEDCO" network-data="BP-KANO" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/kedco.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>KEDCO</p>
+                                            <small>Kano Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>IBEDC</p>
-                                        <small>Ibadan Electricity Distribution Company</small>
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/phed.png' %}" disco="PHED" network-data="BP-PH" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/phed.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>PHED</p>
+                                            <small>Port Harcourt Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ikedc.png' %}" disco="IKEDC" network-data="BP-IKEJA" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/ikedc.png' %}" alt="">
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/yedc.png' %}" disco="YEDC" network-data="BP-YOLA" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/yedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>YEDC</p>
+                                            <small>Yola Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>IKEDC</p>
-                                        <small>Ikeja Electricity Distribution Company</small>
+                                </a> 
+                            </div>
+                        {% elif electricityBackend.active_backend == "SafeHaven" %}  
+                            <div class="dropdown bills" id="operator-dropdown">
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/aedc.png' %}" disco="AEDC" network-data="61e98c4390dbbfc905f48f0d" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/aedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>AEDC</p>
+                                            <small>Abuja Electricity Distribution PLC</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/jedc.png' %}" disco="JEDC" network-data="BP-JOS" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/jedc.png' %}" alt="">
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/bedc.png' %}" disco="BEDC" network-data="61e98bf962d9b6a917f93030" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/bedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>BEDC</p>
+                                            <small>Benin Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>JEDC</p>
-                                        <small>Jos Electricity Distribution Company</small>
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/eedc.png' %}" disco="EEDC" network-data="61e98c5f90dbbfc905f48f10" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/eedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>Enugu</p>
+                                            <small>Enugu Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/kaedc.png' %}" disco="KEDC" network-data="BP-KADUNA" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/kaedc.png' %}" alt="">
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ekedc.png' %}" disco="EKEDC" network-data="61e98c2090dbbfc905f48f0a" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/ekedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>EKEDC</p>
+                                            <small>Eko Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>KEDC</p>
-                                        <small>Kaduna Electricity Distribution Company</small>
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ibedc.png' %}" disco="IBEDC" network-data="61e98c7790dbbfc905f48f13" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/ibedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>IBEDC</p>
+                                            <small>Ibadan Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/kedco.png' %}" disco="KEDCO" network-data="BP-KANO" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/kedco.png' %}" alt="">
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/ikedc.png' %}" disco="IKEDC" network-data="61e98ca5ab69182f326e6db6" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/ikedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>IKEDC</p>
+                                            <small>Ikeja Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>KEDCO</p>
-                                        <small>Kano Electricity Distribution Company</small>
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/jedc.png' %}" disco="JEDC" network-data="61e98cc6ab69182f326e6db9" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/jedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>JEDC</p>
+                                            <small>Jos Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/phed.png' %}" disco="PHED" network-data="BP-PH" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/phed.png' %}" alt="">
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/kaedc.png' %}" disco="KEDC" network-data="61e98ceeab69182f326e6dbc" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/kaedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>KEDC</p>
+                                            <small>Kaduna Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>PHED</p>
-                                        <small>Port Harcourt Electricity Distribution Company</small>
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/kedco.png' %}" disco="KEDCO" network-data="61e98d0bab69182f326e6dbf" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/kedco.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>KEDCO</p>
+                                            <small>Kano Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/yedc.png' %}" disco="YEDC" network-data="BP-YOLA" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/yedc.png' %}" alt="">
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/phed.png' %}" disco="PHED" network-data="61e98d28ab69182f326e6dc2" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/phed.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>PHED</p>
+                                            <small>Port Harcourt Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                    <div class="list">
-                                        <p>YEDC</p>
-                                        <small>Yola Electricity Distribution Company</small>
+                                </a>
+                                <a href="javascript:void(0)" class="mobile-operator disco" image-data="{% static 'billpayments/images/yedc.png' %}" disco="YEDC" network-data="61e98d43ab69182f326e6dc5" >
+                                    <div class="item">
+                                        <div class="icon-box">
+                                            <img src="{% static 'billpayments/images/yedc.png' %}" alt="">
+                                        </div>
+                                        <div class="list">
+                                            <p>YEDC</p>
+                                            <small>Yola Electricity Distribution Company</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a> 
-                        </div>
+                                </a> 
+                            </div> 
+                        {% endif %}
                     </div>
                     <!-- Meter Type -->
                     <div class="custom-select">
                         <select name="meter_type" id="meterType" >
                             <option value="" disabled selected>Select meter type</option>
+                            {% if electricityBackend.active_backend == "9Payment" %}
                             <option value="VT01">Prepaid</option>
                             <option value="VT02">Postpaid</option>
+                            {% elif electricityBackend.active_backend == "SafeHaven" %} 
+                            <option value="Prepaid">Prepaid</option>
+                            <option value="Postpaid">Postpaid</option>
+                            {% endif %}
                         </select>
                         <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -354,7 +485,7 @@
                                 <img src="" id="paymentDiscoImage" alt="">
                             </div>
                         </div>                        
-                        <p class="disco discoOperator" id="paymentDisco">IBEDC</p>
+                        <p class="disco discoOperator" id="paymentDisco"></p>
                         <p class="transaction-amount">#<span class="billAmount" id="paymentAmount"></span></p>
                         <div class="transaction-status">
                             <svg width="16px" height="16px" viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg" fill="#000000">
@@ -371,10 +502,10 @@
                         <div class="data">
                             <p class="info">Token</p>
                             <div class="flex-container">
-                                <p class="value" id="paymentToken"></p>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyOneTimeAcc" onclick="">
-                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
-                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                                <p class="value" id="paymentToken" style="font-size: 0.7em;">7222-4007-9966-7341-7875</p>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyToken" onclick="">
+                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FC846B"/>
+                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FC846B"/>
                                 </svg>
                             </div>
                             
@@ -382,22 +513,23 @@
                         <div class="data">
                             <p class="info">Reference</p>
                             <div class="flex-container">
-                                <p class="value"><span id="paymentReference"></span></p>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyOneTimeAcc" onclick="">
-                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
-                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                                <p class="value"><span id="paymentReference" style="font-size: 0.7em;">20E3DAE3E23743A0AE5CFF62D</span></p>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyReference" onclick="">
+                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FC846B"/>
+                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FC846B"/>
                                 </svg>
                             </div>
                             
                         </div>
                         <div class="data">
                             <p class="info">Units</p>
-                            <p class="value"><span id="paymentUnits"></span> kWh</p>
+                            <p class="value"  style="font-size: 0.7em;"><span id="paymentUnits"></span> kWh</p>
                         </div>
+                        <p class="copyIndicator" id="copyIndicator">copied</p>
                     </div>                     
                     <div class="details">
                         <div class="data">
-                            <p class="info">Meter Number</p>
+                            <p class="info">Meter No.</p>
                             <p class="value recipientMeterNum" id=""></p>
                         </div>
                         <div class="data">
@@ -436,12 +568,12 @@
                     <lottie-player src="https://lottie.host/a4b16f7e-e9e7-4cc1-8f34-54f435ea80c5/FmzCUPyAsk.json" background="transparent" speed="1" style="width: 180px; height: 180px" loop autoplay direction="1" mode="normal"></lottie-player>
                 </div>
                 <div class="feedback">
-                    <p>Your <span>Airtime Purchase</span> <br>Was Successful</p>
-                    <small>Your airtime should be received<br>within a few seconds.</small>
+                    <p>Your <span>Electricity Payment</span> <br>Was Successful</p>
+                    <small>Your account will be updated<br>within a few seconds.</small>
                 </div>
                 
                 <div class="button-group">
-                    <a class="secondary-btn " href="{% url 'buy-airtime' %}" onclick="">Buy Again</a>
+                    <a class="secondary-btn " href="{% url 'buy-electricity' %}" onclick="">Buy Again</a>
                     <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
                 </div> 
             </div>

@@ -8,8 +8,9 @@ from django.contrib import messages
 from django.conf import settings
 import requests
 import json
-from adminbackend.forms import AirtimeDiscountForm, NotificationForm
-from adminbackend.models import AirtimeBackend, AirtimeDiscount, DataBackend
+from adminbackend.forms import AirtimeDiscountForm, NotificationForm, VuvuStoryForm
+from adminbackend.models import AirtimeBackend, AirtimeDiscount, CableBackend, DataBackend, ElectricityBackend
+from billpayments.models import BillPaymentServices
 from payments.models import WalletFunding
 from telecomms.forms import ATNDataPlanForm, HonourworldDataPlanForm, Twins10DataPlanForm
 from telecomms.models import ATNDataPlans, AirtimeServices, DataServices, HonouworldDataPlans, Twins10DataPlans
@@ -382,10 +383,12 @@ def manageServices(request):
     if user.is_staff: # only staff user(main admin can login)
         airtimeServices = AirtimeServices.objects.all().order_by('id')
         dataServices = DataServices.objects.all().order_by('id')
+        billsPaymentServices = BillPaymentServices.objects.all().order_by('id')
         
         context = {
             'airtimeServices':airtimeServices,
             'dataServices':dataServices,
+            'billsPaymentServices':billsPaymentServices,
         }
         return render(request,'adminbackend/services.html',context)
     
@@ -417,7 +420,7 @@ def updateService(request):
                         'available':service.available,
                         })
                 
-            # Disable/Enable Airtime
+            # Disable/Enable Data
             if serviceType == "data":
                 service = DataServices.objects.get(network_operator=operator)
                 if service.available == True:
@@ -435,23 +438,25 @@ def updateService(request):
                         'available':service.available,
                         })
                 
-                # Disable/Enable Airtime
-            # if serviceType == "utility":
-            #     service = UtilityServices.objects.get(service_type=operator)
-            #     if service.available == True:
-            #         service.available = False
-            #         service.save()
-            #         return JsonResponse({
-            #         'status':'success',
-            #         'available':service.available,
-            #         })
-            #     elif service.available == False:
-            #         service.available = True
-            #         service.save()
-            #         return JsonResponse({
-            #             'status':'success',
-            #             'available':service.available,
-            #             })
+            # Disable/Enable Bill Payments
+            if serviceType == "bills":
+                service = BillPaymentServices.objects.get(service_type=operator)
+                if service.available == True:
+                    service.available = False
+                    service.save()
+                    return JsonResponse({
+                    'status':'success',
+                    'available':service.available,
+                    })
+                elif service.available == False:
+                    service.available = True
+                    service.save()
+                    return JsonResponse({
+                        'status':'success',
+                        'available':service.available,
+                        })
+                
+            
 
 # Data Backend Page
 @login_required(login_url='login')
@@ -483,7 +488,71 @@ def updateDataBackend(request,operator):
         except ObjectDoesNotExist:
             messages.error(request,"selected backend does not exist")
             return redirect("data-backends")
-        
+
+# Electricity Backend Page
+@login_required(login_url='login')
+def electricityBackendPage(request):
+    user = request.user
+    electricityBackend = ElectricityBackend.objects.get(name="Main")
+
+    context = {
+        "electricityBackend":electricityBackend
+    }
+
+    
+    if user.is_staff: # only staff user(main admin can login)
+        return render(request,"adminbackend/electricity-backends.html",context)
+
+#Update 
+@login_required(login_url='login')
+def updateElectricityBackend(request):
+    user = request.user
+    
+    if user.is_staff: # only staff user(main admin can login)
+        try:
+            selectedBackend = ElectricityBackend.objects.get(name="Main")
+            if selectedBackend is not None:
+                newBackend = request.POST.get("active_backend")
+                selectedBackend.active_backend = newBackend
+                selectedBackend.save()
+                messages.success(request,f"active backend for Electricity set to {newBackend} successfully")
+                return redirect("electricity-backends")
+        except ObjectDoesNotExist:
+            messages.error(request,"selected backend does not exist")
+            return redirect("electricity-backends")
+
+# Cable Backend Page
+@login_required(login_url='login')
+def cableBackendPage(request):
+    user = request.user
+    cableBackend = CableBackend.objects.get(name="Main")
+
+    context = {
+        "cableBackend":cableBackend
+    }
+
+    
+    if user.is_staff: # only staff user(main admin can login)
+        return render(request,"adminbackend/cable-backends.html",context)
+
+# Update Cable Backend    
+@login_required(login_url='login')
+def updateCableBackend(request):
+    user = request.user
+    
+    if user.is_staff: # only staff user(main admin can login)
+        try:
+            selectedBackend = CableBackend.objects.get(name="Main")
+            if selectedBackend is not None:
+                newBackend = request.POST.get("active_backend")
+                selectedBackend.active_backend = newBackend
+                selectedBackend.save()
+                messages.success(request,f"active backend for Cable set to {newBackend} successfully")
+                return redirect("cable-backends")
+        except ObjectDoesNotExist:
+            messages.error(request,"selected backend does not exist")
+            return redirect("cable-backends")
+
 # Transaction History
 @login_required(login_url='login')
 def transactionHistoryPage(request):
@@ -864,6 +933,39 @@ def sendGeneralNotification(request):
         
         return redirect("notifications-management")
     return redirect('login') 
+
+# Add Story Page
+@login_required(login_url='login')
+def vuvuStoryPage(request):
+    user = request.user    
+    if user.is_staff: # only staff user(main admin can login)
+        if request.method == "POST": # only staff user(main admin can login)
+            form = VuvuStoryForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"new story added successfully")
+            else:
+                print(form.errors)
+                messages.error(request,"could not be added at the moment")
+            return redirect("add-story")
+        return render(request,'adminbackend/vuvu-story.html')
+    return redirect('login') 
+
+# @login_required(login_url='login')
+# def saveStory(request):
+#     user = request.user    
+#     if user.is_staff and request.method == "POST": # only staff user(main admin can login)
+#         form = VuvuStoryForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request,"new story added successfully")
+#         else:
+#             print(form.errors)
+#             messages.error(request,"could not be added at the moment")
+        
+#         return redirect("notifications-management")
+#     return redirect('login') 
+
 
 
 

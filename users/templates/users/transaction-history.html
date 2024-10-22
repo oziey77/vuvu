@@ -73,17 +73,57 @@
                 <a href="javascript:void(0)" class="transInfo" transID="{{transaction.id}}">
                     <div class="transaction">
                         <div class="left">
-                            <div class="icon-box">
-                                {% if transaction.operator == 'MTN' %}
-                                    <img src="{% static 'telecomms/images/mtnlogo.png' %}" alt=""> 
-                                {% elif transaction.operator == 'Glo' %}  
-                                    <img src="{% static 'telecomms/images/glologo.png' %}" alt=""> 
-                                {% elif transaction.operator == '9Mobile' %}  
-                                    <img src="{% static 'telecomms/images/9mobilelogo.png' %}" alt=""> 
-                                {% elif transaction.operator == 'Airtel' %}  
-                                    <img src="{% static 'telecomms/images/airtellogo.png' %}" alt=""> 
+                            {% if transaction.transaction_type == "Airtime" or transaction.transaction_type == "Data"   %}
+                                <div class="icon-box">
+                                    {% if transaction.operator == 'MTN' %}
+                                        <img src="{% static 'telecomms/images/mtnlogo.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'Glo' %}  
+                                        <img src="{% static 'telecomms/images/glologo.png' %}" alt=""> 
+                                    {% elif transaction.operator == '9Mobile' %}  
+                                        <img src="{% static 'telecomms/images/9mobilelogo.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'Airtel' %}  
+                                        <img src="{% static 'telecomms/images/airtellogo.png' %}" alt=""> 
+                                    {% endif %} 
+                                </div>
+                            {% elif transaction.transaction_type == "Electricity" %}
+                                <div class="icon-box utility">
+                                    {% if transaction.operator == 'AEDC' %}
+                                        <img src="{% static 'billpayments/images/aedc.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'BEDC' %}
+                                        <img src="{% static 'billpayments/images/bedc.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'EEDC' %}
+                                        <img src="{% static 'billpayments/images/eedc.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'EKEDC' %}
+                                        <img src="{% static 'billpayments/images/ekedc.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'IBEDC' %}
+                                        <img src="{% static 'billpayments/images/ibedc.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'IKEDC' %}
+                                        <img src="{% static 'billpayments/images/ikedc.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'JEDC' %}
+                                        <img src="{% static 'billpayments/images/jedc.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'KEDC' %}
+                                        <img src="{% static 'billpayments/images/kedc.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'KEDCO' %}
+                                        <img src="{% static 'billpayments/images/kedco.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'PHED' %}
+                                        <img src="{% static 'billpayments/images/phed.png' %}" alt=""> 
+                                    {% elif transaction.operator == 'YEDC' %}
+                                        <img src="{% static 'billpayments/images/yedc.png' %}" alt=""> 
+                                    {% endif %}   
+                                </div>
+                            {% elif transaction.transaction_type == "Cable" %}
+                            <div class="icon-box utility">
+                                {% if transaction.operator == 'DSTV' %}
+                                    <img src="{% static 'billpayments/images/dstv-logo.png' %}" alt=""> 
+                                {% elif transaction.operator == 'GOTV' %}  
+                                    <img src="{% static 'billpayments/images/gotv-logo.png' %}" alt=""> 
+                                {% elif transaction.operator == 'STARTIMES' %}  
+                                    <img src="{% static 'billpayments/images/startimes-logo.png' %}" alt=""> 
+                                {% elif transaction.operator == 'SHOWMAX' %}  
+                                    <img src="{% static 'billpayments/images/showmax-logo.png' %}" alt=""> 
                                 {% endif %} 
-                            </div>
+                            </div>                          
+                            {% endif %}
                             <div class="data">
                                 <p class="header">{{transaction.transaction_type}}</p>
                                 <p class="tag">{{transaction.created}}</p>
@@ -96,14 +136,67 @@
                             </div>
                         </div>
                     </div>
-                </a>
+                </a>                
                 {% endfor %}
+                <div class="paginator">
+                    <!-- <div> -->
+                        {% if transactions.has_previous %}
+                        <a href="?{% if transaction %}transaction={{transaction}}&{% endif %}page={{ transactions.previous_page_number }}">
+                            <div class="page-number">
+                                <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15 19.9201L8.47997 13.4001C7.70997 12.6301 7.70997 11.3701 8.47997 10.6001L15 4.08008" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg> 
+    
+                            </div>                        
+                        </a>
+                       {% else %}
+                         <a>
+                            <div class="page-number">
+                                <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15 19.9201L8.47997 13.4001C7.70997 12.6301 7.70997 11.3701 8.47997 10.6001L15 4.08008" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg> 
+                            </div>                        
+                         </a>
+                       {% endif %}
+                       
+                       {% for i in transactions.paginator.page_range %}
+                       {% if i <= transactions.number|add:3 and i >= transactions.number|add:-3 %}
+                         {% if transactions.number == i %}
+                         
+                           <a href="#">
+                            <div class="page-number active">
+                                <p>{{ i }} </p>
+                             </div>
+                           </a>
+                         {% else %}
+                           <a href="?{% if transaction %}transaction={{transaction}}&{% endif %}page={{ i }}">
+                            <div class="page-number">
+                                {{ i }}
+                            </div>                        
+                            </a>
+                         {% endif %}
+                        {% endif %} 
+                       {% endfor %}
+                       
+                       {% if transactions.has_next %}
+                         <a href="?{% if transaction %}transaction={{transaction}}&{% endif %}page={{ transactions.next_page_number }}">
+                            <div class="page-number">
+                                <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            </div>
+                         </a>
+    
+                       {% else %}
+                         <a>
+                            <div class="page-number">
+                                <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            </div>
+                         </a>
+                       {% endif %}
+                    <!-- </div> -->
+                </div>
                 {% else %}
                 <div class="history-note">
                     <p>No transaction record found</p>
                 </div>
                 {% endif %}
             </div>
+            
 
          </div>
         
@@ -195,15 +288,108 @@
                             </div>
                             <div class="right">
                                 <div class="flex-data">
-                                    <p id="reference"></p>
-                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyReference" onclick="">
+                                    <p class="telTransRef"></p>
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="copyTelReference" onclick="">
                                         <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FC846B"/>
                                         <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FC846B"/>
                                     </svg>
                                 </div>
                             </div>
                         </div>
-                        <p id="refCopyIndicator">Reference Copied</p>
+                        <p class="refCopyIndicator">Reference Copied</p>
+        
+                        <a class="supportDefault" id="" href="">
+                            <p class="report-transaction">Report an issue</p>
+                        </a>
+                    </div>
+                    <!-- Cable -->
+                    <div class="details" id="cableDetails">
+                        <div class="heading">
+                            <div class="icon-box">
+                                <img src="" alt="" id="cableOperatorImg">
+                            </div>
+                            <p class="transaction-type"></p>
+                        </div>
+                        <div class="info">
+                            <div class="left">
+                                <p>Service Operator</p>
+                            </div>
+                            <div class="right">
+                                <p id="cableOperator"></p>
+                            </div>
+                        </div>
+        
+                        <div class="info">
+                            <div class="left">
+                                <p>Transaction Type</p>
+                            </div>
+                            <div class="right">
+                                <p class="transaction-type"></p>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="left">
+                                <p>Smartcar No.</p>
+                            </div>
+                            <div class="right">
+                                <p id="smartcardNo"></p>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="left">
+                                <p>Package</p>
+                            </div>
+                            <div class="right">
+                                <p id="cablePackage"></p>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="left">
+                                <p>Amount</p>
+                            </div>
+                            <div class="right">
+                                <p id="operator">&#8358;<span id="cableTransAmount"></span></p>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="left">
+                                <p>Cashback</p>
+                            </div>
+                            <div class="right">
+                                <p id="operator">&#8358;<span class="cashback"></span></p>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="left">
+                                <p>Status</p>
+                            </div>
+                            <div class="right">
+                                <p class="cableTranStatus"></p>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="left">
+                                <p>Date</p>
+                            </div>
+                            <div class="right">
+                                <p id="cableTransDate"></p>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <div class="left">
+                                <p>Reference</p>
+                            </div>
+                            <div class="right">
+                                <div class="flex-data">
+                                    <p class="cableTransRef"></p>
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="copyCableReference" onclick="">
+                                        <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FC846B"/>
+                                        <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FC846B"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="refCopyIndicator">Reference Copied</p>
         
                         <a id="supportDefault" href="">
                             <p class="report-transaction">Report an issue</p>
@@ -213,6 +399,96 @@
             </div>
         
         </div>
+
+        <!-- Transaction Receipt modal -->
+        <div class="setting-modal billSummary feedback" id="billsFeedback" style="display: none;">
+            {% csrf_token %}  
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <!-- Transaction Summary -->
+                <div  id="" style="display: block;">
+                    <div class="details transaction-header">
+                        <div class="icon-container">
+                            <div class="icon-box">
+                                <img src="" id="paymentDiscoImage" alt="">
+                            </div>
+                        </div>                        
+                        <p class="disco discoOperator" id="paymentDisco"></p>
+                        <p class="transaction-amount">#<span class="billAmount" id="paymentAmount"></span></p>
+                        <div class="transaction-status">
+                            <!-- <svg width="16px" height="16px" viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path fill="var(--success1)" d="M512 64a448 448 0 110 896 448 448 0 010-896zm-55.808 536.384l-99.52-99.584a38.4 38.4 0 10-54.336 54.336l126.72 126.72a38.272 38.272 0 0054.336 0l262.4-262.464a38.4 38.4 0 10-54.272-54.336L456.192 600.384z"></path>
+                                </g>
+                            </svg> -->
+                            <p class="transStatus"></p>
+                        </div>
+                    </div>
+                    <div class="details token">
+                        <div class="data">
+                            <p class="info">Token</p>
+                            <div class="flex-container">
+                                <p class="value" id="paymentToken" style="font-size: 0.7em;"></p>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyToken" onclick="">
+                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FC846B"/>
+                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FC846B"/>
+                                </svg>
+                            </div>
+                            
+                        </div>
+                        <div class="data">
+                            <p class="info">Reference</p>
+                            <div class="flex-container">
+                                <p class="value"><span id="paymentReference" style="font-size: 0.7em;"></span></p>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyReference" onclick="">
+                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FC846B"/>
+                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FC846B"/>
+                                </svg>
+                            </div>
+                            
+                        </div>
+                        <div class="data">
+                            <p class="info">Units</p>
+                            <p class="value"  style="font-size: 0.7em;"><span id="paymentUnits"></span>kWh</p>
+                        </div>
+                        <p class="copyIndicator" id="copyIndicator">copied</p>
+                    </div>                     
+                    <div class="details">
+                        <div class="data">
+                            <p class="info">Meter No.</p>
+                            <p class="value recipientMeterNum" id="recipientMeterNum"></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Meter Type</p>
+                            <p class="value recipientMeterType" id="recipientMeterType"></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Name</p>
+                            <p class="value recipientMeterName" id="recipientMeterName"></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Address</p>
+                            <p class="value recipientMeterAddress" id="recipientMeterAddress"></p>
+                        </div>                        
+                        <div class="data">
+                            <p class="info">Date</p>
+                            <p class="value"><span id="paymentDate"></span></p>
+                        </div>
+
+                        <a class="supportDefault" href="">
+                            <p class="report-transaction">Report an issue</p>
+                        </a>
+                    </div>
+                    
+        
+                </div>
+            </div>
+        
+        </div>
+
+        
 
         <!-- Bottom Navs -->
         {% include 'users/includes/bottom-navs.html' %}

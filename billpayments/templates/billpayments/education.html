@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vuvu - Pay Cable Sub</title>
+    <title>Vuvu - Buy Education PIN</title>
     {% include 'users/includes/header.html' %}
 </head>
 <body>
@@ -16,7 +16,7 @@
                 <!-- Header -->
                 <div class="services-header">               
                     <div class="service-info">
-                        <p >Cable</p>
+                        <p>Education </p>
                         <!-- <div class="icon-box">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="style=linear">
@@ -61,111 +61,51 @@
                                     <div class="icon-box" id="selectedOperatorImg">
                                         <img src="" alt="">    
                                     </div>
-                                    <p class="operator-text">Select your cable company</p>
+                                    <p class="operator-text">Select your service provider</p>
                                 </div>                    
                                 <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>                        
                             </div>
-                        </a>
-                        {% if cableBackend == '9Payment' %}                    
+                        </a>                    
                         <div class="dropdown bills" id="operator-dropdown" style="height: fit-content !important;">
-                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/dstv-logo.png' %}" disco="DSTV" network-data="CW-DSTV" >
+                            <a href="javascript:void(0)" class="mobile-operator exam-body" image-data="{% static 'billpayments/images/waec.jpg' %}" disco="WAEC" network-data="CW-P06N" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/dstv-logo.png' %}" alt="">
+                                        <img src="{% static 'billpayments/images/waec.jpg' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>DStv</p>
-                                        <small>A cable company</small>
+                                        <p>WAEC</p>
+                                        <small>West African Examinations Council</small>
                                     </div>
                                 </div>
                             </a>
-                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/gotv-logo.png' %}" disco="GOTV" network-data="CW-GOTV" >
+                            <a href="javascript:void(0)" class="mobile-operator exam-body" image-data="{% static 'billpayments/images/jamb.png' %}" disco="JAMB" network-data="CW-P07N" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/gotv-logo.png' %}" alt="">
+                                        <img src="{% static 'billpayments/images/jamb.png' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>GOtv</p>
-                                        <small>Another cable Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/startimes-logo.png' %}" disco="STARTIMES" network-data="CW-STARTIMES" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/startimes-logo.png' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Startimes</p>
-                                        <small>A completely different cable Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/showmax-logo.png' %}" disco="SHOWMAX" network-data="CW-SOMX" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/showmax-logo.png' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Showmax</p>
-                                        <small>Another cable Company</small>
+                                        <p>JAMB</p>
+                                        <small>Joint Admissions and Matriculation Board</small>
                                     </div>
                                 </div>
                             </a>
                         </div>
-                        {% elif cableBackend == 'SafeHaven' %}
-                        <div class="dropdown bills" id="operator-dropdown" style="height: fit-content !important;">
-                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/dstv-logo.png' %}" disco="DSTV" network-data="61e98b3562d9b6a917f9302a" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/dstv-logo.png' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>DStv</p>
-                                        <small>A cable company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/gotv-logo.png' %}" disco="GOTV" network-data="61e98b6462d9b6a917f9302d" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/gotv-logo.png' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>GOtv</p>
-                                        <small>Another cable Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator cable-company" image-data="{% static 'billpayments/images/startimes-logo.png' %}" disco="STARTIMES" network-data="61e98b8a90dbbfc905f48f07" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/startimes-logo.png' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Startimes</p>
-                                        <small>A completely different cable Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        {% endif %}
                     </div>
-                    <!-- Bouquet List -->
+                    <!-- Internet Plan List -->
                     <div class="custom-select">
-                        <select name="cable-package" id="cablePackage" >
-                            <option value="" disabled selected>Select a bouquet</option>
+                        <select name="internet-package" id="examData" >
+                            <option value="" disabled selected>Select a package</option>
                         </select>
                         <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg> 
                     </div>
-                    <!-- Smartcard number -->
+                    <!-- meter number -->
                     <div class="input-group right-float">
-                        <input type="text" name="" id="smartcardNumber" placeholder="Enter smartcard number" inputmode="numeric"> 
-                        <svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                        <input type="text" name="" id="customerName" placeholder="Enter full name" > 
+                        <!-- <svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                                 viewBox="0 0 330 330" xml:space="preserve" class="open-beneficiary">
                             <g id="XMLID_12_">
                                 <path id="XMLID_13_" d="M305,0H105C69.159,0,40,29.159,40,65v15H25c-8.284,0-15,6.716-15,15s6.716,15,15,15h15v40H25
@@ -174,7 +114,7 @@
                                     c-0.296-0.295-20.494-20.494-20.494-20.494l30.67-30.67l20.526,20.525l41.283-41.282l-20.526-20.526l30.683-30.682
                                     c0,0,20.199,20.198,20.494,20.494C253.263,135.626,242.556,170.87,214.213,199.212z"/>
                             </g>
-                        </svg>                        
+                        </svg>                         -->
                     </div>
                     
                     <input type="text" class="" name="amount" id="bouquetCost" placeholder="Package cost" inputmode="numeric" disabled>
@@ -193,7 +133,7 @@
                     </div>
                     
     
-                    <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="buyCable" disabled>Proceed</button>
+                    <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="payExam">Proceed</button>
                 </form>
              </div> 
         </div>
@@ -233,20 +173,24 @@
                     <div class="details">
                         <div class="data">
                             <p class="info">Bill Type</p>
-                            <p class="value" id="">Cable Subscription</p>
+                            <p class="value" id="">Education</p>
                         </div>
                         <div class="data">
-                            <p class="info">Operator</p>
+                            <p class="info">Exam Body</p>
                             <p class="value discoOperator" id="discoOperator"></p>
                         </div>
                         <div class="data">
-                            <p class="info">Smartcard Number</p>
+                            <p class="info">PIN Type</p>
+                            <p class="value PINType" id=""></p>
+                        </div>
+                        <!-- <div class="data">
+                            <p class="info">Customer ID</p>
                             <p class="value recipientMeterNum" id="recipientMeterNum"></p>
-                        </div>
-                        <div class="data">
-                            <p class="info">Package</p>
+                        </div> -->
+                        <!-- <div class="data">
+                            <p class="info">Customer ID</p>
                             <p class="value recipientMeterType" id="recipientMeterType"></p>
-                        </div>
+                        </div> -->
                         <div class="data">
                             <p class="info">Name</p>
                             <p class="value recipientMeterName" id="recipientMeterName"></p>
@@ -269,10 +213,9 @@
                             <p class="value total" >&#8358;<span id="total">1,200</span></p>
                         </div>
                     </div>
-                    <div class="details beneficiary">
+                    <!-- <div class="details beneficiary">
                         <div class="data">
                             <p class="info">Save Beneficiary</p>
-                            <!-- <p class="value" id="">Airtime</p> -->
                             <div class="service-item">
                                 <label class="switch">
                                   <input class="checkbox" type="checkbox" id="safeBeneficiary" >
@@ -280,7 +223,7 @@
                                 </label>                        
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="error-feedback" style="display: none;">
                         <div class="transaction-error">
                             <svg fill="#FFF" width="32px" height="32px" viewBox="0 0 24 24" id="caution-sign-circle" xmlns="http://www.w3.org/2000/svg" class="icon line">
@@ -293,14 +236,99 @@
         
                     <div class="button-group">
                         <button href="javascript:void(0)" class="secondary-btn  cancelTrans" id="cancelAirtime" onclick="">Cancel</button>
-                        <button href="javascript:void(0)" class="primary-btn"  id="purchaseCable" onclick="">Purchase</button>
+                        <button href="javascript:void(0)" class="primary-btn"  id="purchaseEPin" onclick="">Purchase</button>
                     </div>
                 </div>
             </div>
         
         </div>
 
+        <!-- Transaction Receipt modal -->
+        <div class="setting-modal billSummary feedback" id="billsFeedback" style="display: none;">
+            {% csrf_token %}  
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <!-- Transaction Summary -->
+                <div  id="" style="display: block;">
+                    <div class="details transaction-header">
+                        <div class="icon-container">
+                            <div class="icon-box">
+                                <img src="" id="paymentDiscoImage" alt="">
+                            </div>
+                        </div>                        
+                        <p class="disco discoOperator" id="paymentDisco">IBEDC</p>
+                        <p class="transaction-amount">#<span class="billAmount" id="paymentAmount"></span></p>
+                        <div class="transaction-status">
+                            <svg width="16px" height="16px" viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path fill="var(--success1)" d="M512 64a448 448 0 110 896 448 448 0 010-896zm-55.808 536.384l-99.52-99.584a38.4 38.4 0 10-54.336 54.336l126.72 126.72a38.272 38.272 0 0054.336 0l262.4-262.464a38.4 38.4 0 10-54.272-54.336L456.192 600.384z"></path>
+                                </g>
+                            </svg>
+                            <p>Successful</p>
+                        </div>
+                    </div>
+                    <div class="details token">
+                        <div class="data">
+                            <p class="info">Token</p>
+                            <div class="flex-container">
+                                <p class="value" id="paymentToken"></p>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyOneTimeAcc" onclick="">
+                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
+                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                                </svg>
+                            </div>
+                            
+                        </div>
+                        <div class="data">
+                            <p class="info">Reference</p>
+                            <div class="flex-container">
+                                <p class="value"><span id="paymentReference"></span></p>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyOneTimeAcc" onclick="">
+                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
+                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                                </svg>
+                            </div>
+                            
+                        </div>
+                        <div class="data">
+                            <p class="info">Units</p>
+                            <p class="value"><span id="paymentUnits"></span> kWh</p>
+                        </div>
+                    </div>                     
+                    <div class="details">
+                        <div class="data">
+                            <p class="info">Meter Number</p>
+                            <p class="value recipientMeterNum" id=""></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Meter Type</p>
+                            <p class="value recipientMeterType" id=""></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Name</p>
+                            <p class="value recipientMeterName" id=""></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Address</p>
+                            <p class="value recipientMeterAddress" id=""></p>
+                        </div>                        
+                        <div class="data">
+                            <p class="info">Date</p>
+                            <p class="value"><span id="paymentDate"></span></p>
+                        </div>
+                    </div>
         
+                    <div class="button-group">
+                        <a class="secondary-btn " href="{% url 'buy-electricity' %}" onclick="">Buy Again</a>
+                        <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
         <!-- Feeback modal -->
         <div class="setting-modal" id="transactionFeedback" style="display: none;">
             <div class="content vacc">   
@@ -310,12 +338,35 @@
                     <lottie-player src="https://lottie.host/a4b16f7e-e9e7-4cc1-8f34-54f435ea80c5/FmzCUPyAsk.json" background="transparent" speed="1" style="width: 180px; height: 180px" loop autoplay direction="1" mode="normal"></lottie-player>
                 </div>
                 <div class="feedback">
-                    <p>Your <span>Cable Subscription</span> <br>Was Successful</p>
-                    <small>Your subscription should be renewed<br>within a few seconds.</small>
+                    <p>Your <span>Education PIN Purchase</span> <br>Was Successful</p>
+                    <!-- <small>Your plan should be updated<br>within a few seconds.</small> -->
                 </div>
+                <div class="details token">
+                    <div class="data">
+                        <p class="info">Serial No</p>
+                        <div class="flex-container">
+                            <p class="value" id="serialNum"></p>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copySerialNum" onclick="">
+                                <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
+                                <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                            </svg>
+                        </div>                        
+                    </div>
+                    <div class="data">
+                        <p class="info">Pin:</p>
+                        <div class="flex-container">
+                            <p class="value"><span id="examPIN"></span></p>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyExamPIN" onclick="">
+                                <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
+                                <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                            </svg>
+                        </div>                        
+                    </div>
+                    <p class="copyIndicator" id="copyIndicator">copied</p>
+                </div>   
                 
                 <div class="button-group">
-                    <a class="secondary-btn " href="{% url 'cable-page' %}" onclick="">Buy Again</a>
+                    <a class="secondary-btn " href="{% url 'education' %}" onclick="">Buy Again</a>
                     <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
                 </div> 
             </div>
@@ -376,7 +427,7 @@
     </div>
     
 
-    <script src="{% static 'billpayments/js/cable.js' %}?v=1.025"></script>
+    <script src="{% static 'billpayments/js/education.js' %}?v=1.025"></script>
     <!-- <script type="text/javascript">
 		$('.money').simpleMoneyFormat();
 	</script> -->

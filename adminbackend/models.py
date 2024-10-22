@@ -40,6 +40,7 @@ class DataBackend(models.Model):
 
 ELECTRICITY_BACKEND=(
     ("9Payment","9Payment"),
+    ("SafeHaven","SafeHaven"),
     )
 class ElectricityBackend(models.Model):
     name = models.CharField(max_length=10,default="Main")
@@ -50,6 +51,7 @@ class ElectricityBackend(models.Model):
     
 CABLE_BACKEND=(
     ("9Payment","9Payment"),
+    ("SafeHaven","SafeHaven"),
     )
 class CableBackend(models.Model):
     name = models.CharField(max_length=10,default="Main")
@@ -57,3 +59,18 @@ class CableBackend(models.Model):
 
     def __str__(self):
         return self.name
+
+EPIN_BACKEND=(
+    ("9Payment","9Payment"),
+    )    
+class EPINBackend(models.Model):
+    name = models.CharField(max_length=10,default="Main")
+    active_backend = models.CharField(max_length=15,choices=EPIN_BACKEND,default="9Payment")
+
+    def __str__(self):
+        return self.name
+    
+class VuvuStory(models.Model):
+    youtube_id= models.CharField(max_length=20)
+    def __str__(self):
+        return self.youtube_id

@@ -1,0 +1,100 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuvu - Stories</title>
+    {% include 'users/includes/header.html' %}
+</head>
+<body>
+    <!-- Transaction Form -->
+     {% csrf_token %}
+    <div class="main-content transasction-page"  style="display: block;">
+        
+        <div class="stories-list">
+            {% for story in stories %}
+            <div class="story-item">
+                <iframe width="360" height="240"
+                src="https://www.youtube.com/embed/{{story.youtube_id}}?controls=0">
+                </iframe>
+                <!-- <div class="overly"></div> -->
+            </div>
+            <hr>
+            {% endfor %}
+
+            <div class="paginator">
+                <!-- <div> -->
+                    {% if stories.has_previous %}
+                    <a href="?page={{ stories.previous_page_number }}">
+                        <div class="page-number">
+                            <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15 19.9201L8.47997 13.4001C7.70997 12.6301 7.70997 11.3701 8.47997 10.6001L15 4.08008" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg> 
+
+                        </div>                        
+                    </a>
+                   {% else %}
+                     <a>
+                        <div class="page-number">
+                            <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15 19.9201L8.47997 13.4001C7.70997 12.6301 7.70997 11.3701 8.47997 10.6001L15 4.08008" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg> 
+                        </div>                        
+                     </a>
+                   {% endif %}
+                   
+                   {% for i in stories.paginator.page_range %}
+                   {% if i <= stories.number|add:5 and i >= stories.number|add:-5 %}
+                     {% if stories.number == i %}
+                     
+                       <a href="#">
+                        <div class="page-number active">
+                            <p>{{ i }} </p>
+                         </div>
+                       </a>
+                     {% else %}
+                       <a href="?page={{ i }}">
+                        <div class="page-number">
+                            {{ i }}
+                        </div>                        
+                        </a>
+                     {% endif %}
+                    {% endif %} 
+                   {% endfor %}
+                   
+                   {% if stories.has_next %}
+                     <a href="?page={{ stories.next_page_number }}">
+                        <div class="page-number">
+                            <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        </div>
+                     </a>
+
+                   {% else %}
+                     <a>
+                        <div class="page-number">
+                            <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        </div>
+                     </a>
+                   {% endif %}
+                <!-- </div> -->
+            </div>
+        </div>
+        
+        
+         <!-- Bottom Nav -->
+        {% include 'users/includes/bottom-navs.html' %}  
+
+    </div>
+
+    
+
+
+
+    <!-- Page Preloader -->
+    <div class="loader-overlay">
+        <div class="loader"></div>
+    </div>
+
+    
+    <script src="{% static 'users/js/stories.js' %}?v=1.001"></script>
+    <script src="{% static 'users/js/main.js' %}"></script>
+    
+</body>
+</html>

@@ -10,4 +10,4 @@ class TransactionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Transaction
-        fields = ['id','operator','transaction_type','recipient','amount','discount','status','created','reference','package']
+        fields = "__all__"

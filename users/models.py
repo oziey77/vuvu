@@ -124,6 +124,8 @@ class Beneficiary(models.Model):
     cable = models.JSONField(default=list)
     electricity = models.JSONField(default=list)
     bet_funding = models.JSONField(default=list)
+    internet = models.JSONField(default=list)
+    education = models.JSONField(default=list)
 
     def __str__(self):
         return self.user.username
@@ -183,6 +185,8 @@ TRANSACTION_TYPE = (
     ("Cable","Cable"),
     ("Electricity","Electricity"),
     ("Bet Funding","Bet Funding"),
+    ("Internet","Internet"),
+    ("Education","Education"),
     ("Top Up","Top Up"),
     ("Admin Top Up","Admin Top Up"),
     ("Cashback Withdrwal","Cashback Withdrwal"),
@@ -210,6 +214,8 @@ SERVICE_TYPE = (
     ("Cable","Cable"),
     ("Electricity","Electricity"),
     ("Bet Funding","Bet Funding"),
+    ("Internet","Internet"),
+    ("Education","Education"),
 )
 TRANSACTION_STATUS = (
     ("Processing","Processing"),
@@ -225,7 +231,7 @@ API_BACKEND=(
 class Transaction(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     message = models.CharField(max_length=500,default='No feedback')
-    operator = models.CharField(max_length=10,)
+    operator = models.CharField(max_length=25,)
     transaction_type = models.CharField(max_length=20,choices=SERVICE_TYPE)
     recipient = models.CharField(max_length=20,)
     APIBackend = models.CharField(max_length=15,choices=API_BACKEND,default='-')
@@ -243,6 +249,7 @@ class Transaction(models.Model):
     electricity_units = models.CharField(max_length=25,default='-') 
     customerName = models.CharField(max_length=50,default='-',)
     customerAddress = models.CharField(max_length=200,default='-',)
+    education_data = models.JSONField(default=dict)
 
     def __str__(self):
         return self.user.username
@@ -308,4 +315,11 @@ class Notifications(models.Model):
     def __str__(self):
         return self.user.username
 
+class Story(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    body = models.CharField(max_length=3500)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
 

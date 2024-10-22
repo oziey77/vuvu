@@ -8,7 +8,8 @@ from django.conf import settings
 import requests
 from django.core.exceptions import ObjectDoesNotExist
 
-from adminbackend.models import CableBackend, ElectricityBackend
+from adminbackend.models import CableBackend, EPINBackend, ElectricityBackend
+from billpayments.models import BillPaymentServices
 from users.models import Beneficiary, Transaction, UserWallet, WalletActivity
 from vuvu.custom_functions import is_ajax, reference
 
@@ -20,7 +21,8 @@ from datetime import datetime, timedelta
 def electricityPage(request):
     user = request.user
     wallet = UserWallet.objects.get(user=user)
-    # Telecomms Beneficiary
+    # Electricity Beneficiary
+    electricityBackend = ElectricityBackend.objects.get(name='Main')
     electricityBeneficiaries = None
     try:
         userBeneficiaries = Beneficiary.objects.get(user=user)
@@ -30,7 +32,8 @@ def electricityPage(request):
         pass
     context = {
         'mainBalance':wallet.balance,
-        'electricityBeneficiaries':electricityBeneficiaries
+        'electricityBeneficiaries':electricityBeneficiaries,
+        'electricityBackend':electricityBackend,
     }
     return render(request,'billpayments/electricity.html',context)
 
@@ -42,42 +45,121 @@ def validateMeter(request):
         meterNumber = request.GET.get("meterNumber")
         selectedOperator = request.GET.get("selectedOperator")
         meterType = request.GET.get("meterType")
+        print(f"Request meter type is {meterType}")
         amount = request.GET.get("amount")
 
-        # API CALL to validate meter
+        electricityAvailable = BillPaymentServices.objects.get(service_type="Electricity").available
 
-        # Remove temp API KEY
-        APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODA4NjY5OSwianRpIjoiMGNkYjMxY2YtNjNlYy00NDM1LWE3NzQtY2FmMDVkMTAzYjA5IiwiZXhwIjoxNzI4MDkzODk5fQ.z1SAlWhnY8T83XO8RUHf1q_12hhLCTYs_aq73JjqHhaGCSmzq3nYv7DoLcYHGZrboJ4EbOM8Vf29LyD6yc_PmA"
-        # END of remove
-        url = 'http://102.216.128.75:9090/vas/api/v1/billspayment/validate'
-        payload = {
-                "customerId": meterNumber,
-                "amount": str(amount),
-                "billerId": selectedOperator,
-                "itemId": meterType,
-                }
-        headers = {
-                'Authorization': f"Bearer {APIKEY}",
-                # 'Content-Type': 'application/json',
-                # 'Accept': 'application/json'
+        if electricityAvailable:
+            electricityBackend = ElectricityBackend.objects.get(name='Main').active_backend
+            
+            if electricityBackend == "9Payment":
+                # API CALL to validate meter
+
+                # Remove temp API KEY
+                APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODA4NjY5OSwianRpIjoiMGNkYjMxY2YtNjNlYy00NDM1LWE3NzQtY2FmMDVkMTAzYjA5IiwiZXhwIjoxNzI4MDkzODk5fQ.z1SAlWhnY8T83XO8RUHf1q_12hhLCTYs_aq73JjqHhaGCSmzq3nYv7DoLcYHGZrboJ4EbOM8Vf29LyD6yc_PmA"
+                # END of remove
+                url = 'http://102.216.128.75:9090/vas/api/v1/billspayment/validate'
+                payload = {
+                        "customerId": meterNumber,
+                        "amount": str(amount),
+                        "billerId": selectedOperator,
+                        "itemId": meterType,
+                        }
+                headers = {
+                        'Authorization': f"Bearer {APIKEY}",
+                        # 'Content-Type': 'application/json',
+                        # 'Accept': 'application/json'
+                        }
+
+                response = requests.request('POST', url, headers=headers, json=payload)
+                responseDetails = response.json()
+                if responseDetails['responseCode'] == '200':
+                    customerData = responseDetails['data']
+                    return JsonResponse({
+                        "code":"00",
+                        "customerName":customerData['customerName'],
+                        "address":customerData['otherField'],
+                        "amount":customerData['amount'],
+                        'backend':"9Payment", 
+                    })
+                if responseDetails['responseCode'] == '400':
+                    return JsonResponse({
+                        "code":"09",
+                        "message":"Invalid meter number"
+                    })
+            elif electricityBackend == "SafeHaven":
+                clientID = settings.SAFEH_CLIENT_ID
+                clientAssertion = settings.SAFEH_CLIENT_ASSERTION
+                authToken = ''
+                # Generate Token
+                url ='https://api.sandbox.safehavenmfb.com/oauth2/token'                                        
+                headers = {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 }
 
-        response = requests.request('POST', url, headers=headers, json=payload)
-        responseDetails = response.json()
-        print(responseDetails)
-        if responseDetails['responseCode'] == '200':
-            customerData = responseDetails['data']
+                payload = json.dumps({
+                "grant_type": "client_credentials",
+                "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+                "client_assertion": clientAssertion,
+                "client_id": clientID
+                })
+                response = requests.request("POST", url, headers=headers, data=payload)
+
+                data = json.loads(response.text)
+                if 'access_token' in data:
+                    authToken = data['access_token']
+                    # VERIFY METER
+                    url = "https://api.sandbox.safehavenmfb.com/vas/verify"                                        
+                    headers = {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization':f"Bearer {authToken}",
+                        'ClientID':clientID
+                    }
+
+                    
+                    payload = json.dumps({
+                        "serviceCategoryId": selectedOperator,
+                        "entityNumber": meterNumber
+                    })
+                    responseData = requests.request("POST", url, headers=headers, data=payload)
+                    
+                    
+                    responseData = json.loads(responseData.text)
+                    print(f"Safehaven feed back is {responseData}")
+                    if responseData['statusCode'] == 200:
+                        customerDetails = responseData['data']
+                        if customerDetails["vendType"] != meterType.upper():
+                            return JsonResponse({
+                            "code":"09",
+                            "message":"wrong meter type selected"
+                            })
+                        else:
+                            return JsonResponse({
+                                "code":"00",
+                                "customerName":customerDetails["name"],
+                                "address":customerDetails["address"],
+                                "amount":amount,
+                                'backend':"SafeHaven",    
+                            })
+                    else:
+                        return JsonResponse({
+                            "code":"09",
+                            "message":responseData['message']
+                        })
+        else:
             return JsonResponse({
-                "code":"00",
-                "customerName":customerData['customerName'],
-                "address":customerData['otherField'],
-                "amount":customerData['amount'],
+                'code': '09',
+                'message': "electricity payment is currently unavailable",
             })
-        if responseDetails['responseCode'] == '400':
-            return JsonResponse({
-                "code":"09",
-                "message":"Invalid meter number"
-            })
+    else:
+        return JsonResponse({
+            "code":"09",
+            "message":"invalid request"
+        })
+        
 
 
 # Ajax call to buy Electricity
@@ -93,7 +175,6 @@ def buyElectricity(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
-            print(request.POST)
             meterNumber = request.POST.get("meterNumber")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
@@ -102,7 +183,6 @@ def buyElectricity(request):
             customerName = request.POST.get("customerName")
             otherField = request.POST.get("otherField")
             amount = Decimal(request.POST.get("amount"))
-            print(f"sent amount is {amount}")
             saveBeneficiary = request.POST.get('saveBeneficiary')
             
             # Get user wallet
@@ -133,7 +213,7 @@ def buyElectricity(request):
                                     "meterType":meterType,
                                 }
                             ) 
-                            userBeneficiaries.telecomms = electricityBeneficiary 
+                            userBeneficiaries.electricity = electricityBeneficiary 
                             userBeneficiaries.save() 
                             print("New beneficary added")               
                         print(f"these are the current telecomms beneficiaries 2 {electricityBeneficiary}")
@@ -148,7 +228,7 @@ def buyElectricity(request):
                     # Create Beficiaryobject
                     Beneficiary.objects.create(
                         user = user,
-                        telecomms = newBeneficiary
+                        electricity = newBeneficiary
                     )
 
             # Todo Integrate electricity Services
@@ -222,10 +302,10 @@ def buyElectricity(request):
                         "message":"Duplicate transaction wait 1 minute"
                     })
                 else:
-                    electricityBackend = ElectricityBackend.objects.get(name='Main')
+                    electricityBackend = ElectricityBackend.objects.get(name='Main').active_backend
                     
                     # Buy from 9Payment Backend
-                    if electricityBackend.active_backend == "9Payment":
+                    if electricityBackend == "9Payment":
                         # Remove temp API KEY
                         APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODA4NjY5OSwianRpIjoiMGNkYjMxY2YtNjNlYy00NDM1LWE3NzQtY2FmMDVkMTAzYjA5IiwiZXhwIjoxNzI4MDkzODk5fQ.z1SAlWhnY8T83XO8RUHf1q_12hhLCTYs_aq73JjqHhaGCSmzq3nYv7DoLcYHGZrboJ4EbOM8Vf29LyD6yc_PmA"
                         # END of remove
@@ -252,7 +332,6 @@ def buyElectricity(request):
 
                         response = requests.request('POST', url, headers=headers, json=payload)
                         responseData = response.json()
-                        print(f"9Payment response is {responseData}")
                         
                         if responseData['responseCode'] == "200":
                             paymentData = responseData['data']
@@ -291,7 +370,8 @@ def buyElectricity(request):
                                 'token':token,
                                 'units':paymentData['otherField'],
                                 'reference':transaction.reference,
-                                'date':transaction.created,                                    
+                                'date':transaction.created, 
+                                'backend':"9Payment",                                    
                             })
                         else:
                             transaction.status = "Refunded"
@@ -318,7 +398,112 @@ def buyElectricity(request):
                                 "code":"09",
                                 "message":responseData['message']
                             })
-                    
+                    elif electricityBackend == "SafeHaven":
+                        # Get Access token
+                        clientID = settings.SAFEH_CLIENT_ID
+                        clientAssertion = settings.SAFEH_CLIENT_ASSERTION
+                        utilityAccount = settings.SAFEH_UTILITY_ACCOUNT
+                        authToken = ''
+                        # Generate Token
+                        url ='https://api.sandbox.safehavenmfb.com/oauth2/token'                                        
+                        headers = {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        }
+
+                        payload = json.dumps({
+                        "grant_type": "client_credentials",
+                        "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+                        "client_assertion": clientAssertion,
+                        "client_id": clientID
+                        })
+                        response = requests.request("POST", url, headers=headers, data=payload)
+
+                        data = json.loads(response.text)
+                        # print(f"TOKEN RESPONSE IS {data}")
+                        if 'access_token' in data:
+                            authToken = data['access_token']
+
+                            url = "https://api.sandbox.safehavenmfb.com/vas/pay/utility"                                        
+                            headers = {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'Authorization':f"Bearer {authToken}",
+                                'ClientID':clientID
+                            }                            
+
+                            payload = {
+                                "amount": float(amount),
+                                "channel": "WEB",
+                                "serviceCategoryId": selectedOperator,
+                                "debitAccountNumber": utilityAccount,
+                                "meterNumber": meterNumber,
+                                "vendType": meterType.upper()
+                                }
+
+                            # print(f"ELECTRICITY PAYLOAD IS {payload}")
+
+                            
+                            responseData = requests.request("POST", url, headers=headers, json=payload)
+                            
+                            responseData = json.loads(responseData.text)
+                            print(f"ELECTRICITY RESPONSE IS {responseData}")
+                            if responseData['statusCode'] == 200:
+                                details = responseData["data"]
+                                metaData = details['metaData']
+                                isToken = False
+                                token = ''
+                                units = '-'
+
+                                transaction.status = "Success"
+                                transaction.APIBackend = "SafeHaven"
+                                # transaction.discount = calculatedDiscount
+                                transaction.message = "Transaction successful"
+                                transaction.customerName = customerName
+                                transaction.customerAddress = otherField #other field is customer address passed from frontend
+                                
+                                transaction.APIreference = details["reference"]
+                                if "token" in metaData :
+                                    isToken = True
+                                    transaction.token = metaData["token"]
+                                    transaction.electricity_units = metaData["units"]
+                                    units = metaData["units"]
+                                transaction.save()   
+
+                                return JsonResponse({
+                                    'code':'00',   
+                                    'isToken':isToken,
+                                    'token':transaction.token,
+                                    'units':units,
+                                    'reference':transaction.reference,
+                                    'date':transaction.created,   
+                                    'backend':"SafeHaven",                               
+                                })
+                            else:
+                                transaction.status = "Refunded"
+                                transaction.message = "Transaction refunded"
+                                transaction.refunded = True
+                                transaction.save()
+
+                                balanceBefore = wallet.balance
+                                wallet.balance += transaction.amount
+                                wallet.save()
+
+                                # Create wallet Activity
+                                WalletActivity.objects.create(
+                                    user = user,
+                                    event_type = "Credit",
+                                    transaction_type = "Electricity",
+                                    comment = f"Electricity {transRef} Refund",
+                                    amount = transaction.amount,
+                                    balanceBefore = balanceBefore,
+                                    balanceAfter = wallet.balance,
+                                )
+
+                                return JsonResponse({
+                                    "code":"09",
+                                    "message":responseData['message']
+                                })
             else:
                 return JsonResponse({
                     "code":"09",
@@ -346,7 +531,7 @@ def buyElectricity(request):
 def cablePage(request):
     user = request.user
     wallet = UserWallet.objects.get(user=user)
-    # Telecomms Beneficiary
+    # Cable Beneficiary
     cableBeneficiaries = None
     try:
         userBeneficiaries = Beneficiary.objects.get(user=user)
@@ -354,9 +539,12 @@ def cablePage(request):
             cableBeneficiaries = userBeneficiaries.cable
     except ObjectDoesNotExist:
         pass
+
+    cableBackend = CableBackend.objects.get(name='Main').active_backend
     context = {
         'mainBalance':wallet.balance,
-        'cableBeneficiaries':cableBeneficiaries
+        'cableBeneficiaries':cableBeneficiaries,
+        'cableBackend':cableBackend
     }
     return render(request,'billpayments/cable.html',context)
 
@@ -366,50 +554,107 @@ def getCableBouquet(request):
     user = request.user
     if is_ajax(request) and request.method == "GET":
         selectedOperator = request.GET.get("selectedOperator")
+        cableBackend = CableBackend.objects.get(name='Main').active_backend
 
-        # API CALL to validate meter
+        cableAvailable = BillPaymentServices.objects.get(service_type="Cable").available
 
-        # Remove temp API KEY
-        APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODIwMzI5NCwianRpIjoiYTU1MDAzZDEtNjk4My00ZDExLWJlYzEtZTI3NzQ3ZjhlODZlIiwiZXhwIjoxNzI4MjEwNDk0fQ.PyKt7VuQy5QBt44guG7bTgbQtWnfP_E1dailEyXzGsQvC5nWXQK2bymigmYIPZmfl5bpBHjg_PP-MJv1Cn3BMA"
-        # END of remove
-        url = f'http://102.216.128.75:9090/vas/api/v1/billspayment/fields/{selectedOperator}'
-        payload = {
+        if cableAvailable:        
+            if cableBackend == "9Payment":
+                # Remove temp API KEY
+                APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyOTM5NzY5NCwianRpIjoiZmFjZGQzNDUtY2Y3Ni00NzQ4LThhYjgtYTBjMDBjMDNmMGMxIiwiZXhwIjoxNzI5NDA0ODk0fQ.Mu2uWC9pSzsATI-ycNdnt1kWSitIOpgCXgfbFF1RvV3t5cv6Ga_TL-l86oXXVbwGn7pnfPlSvixnenEOck4ICQ"
+                # END of remove
+                url = f'http://102.216.128.75:9090/vas/api/v1/billspayment/fields/{selectedOperator}'
+                payload = {
+                        }
+                headers = {
+                        'Authorization': f"Bearer {APIKEY}",
+                        # 'Content-Type': 'application/json',
+                        # 'Accept': 'application/json'
+                        }
+
+                response = requests.request('GET', url, headers=headers,)
+                responseDetails = response.json()
+                # print(responseDetails)
+                if responseDetails['responseCode'] == '200':
+                    operatorData = responseDetails['data']
+                    bouquetList = []
+                    for entry in operatorData:
+                        if entry['fieldName'] == 'itemId':
+                            bouquetList = entry['items']
+                            break
+                    # print(f"bouquet list is {bouqueList}")
+                    if bouquetList !=[]:
+                        print(f"bouquet list is {bouquetList}")
+                        return JsonResponse({
+                            "code":"00",
+                            "bouquetList":bouquetList,
+                            'cableBackend':cableBackend,
+                        })
+                    else:
+                        return JsonResponse({
+                                "code":"09",
+                                "message":"error fetching bouquet, try again later",
+                            }) 
+                    
+                if responseDetails['responseCode'] == '400':
+                    return JsonResponse({
+                        "code":"09",
+                        "message":"Invalid operator"
+                    })
+            elif cableBackend == "SafeHaven":
+                clientID = settings.SAFEH_CLIENT_ID
+                clientAssertion = settings.SAFEH_CLIENT_ASSERTION
+                authToken = ''
+                # Generate Token
+                url ='https://api.sandbox.safehavenmfb.com/oauth2/token'                                        
+                headers = {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 }
-        headers = {
-                'Authorization': f"Bearer {APIKEY}",
-                # 'Content-Type': 'application/json',
-                # 'Accept': 'application/json'
-                }
 
-        response = requests.request('GET', url, headers=headers,)
-        responseDetails = response.json()
-        # print(responseDetails)
-        if responseDetails['responseCode'] == '200':
-            operatorData = responseDetails['data']
-            bouquetList = []
-            for entry in operatorData:
-                if entry['fieldName'] == 'itemId':
-                    bouquetList = entry['items']
-                    break
-            # print(f"bouquet list is {bouqueList}")
-            if bouquetList !=[]:
-                print(f"bouquet list is {bouquetList}")
-                return JsonResponse({
-                    "code":"00",
-                    "bouquetList":bouquetList,
+                payload = json.dumps({
+                "grant_type": "client_credentials",
+                "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+                "client_assertion": clientAssertion,
+                "client_id": clientID
                 })
-            else:
-               return JsonResponse({
-                    "code":"09",
-                    "message":"error fetching bouquet, try again later",
-                }) 
-            
-        if responseDetails['responseCode'] == '400':
-            return JsonResponse({
-                "code":"09",
-                "message":"Invalid operator"
-            })
+                response = requests.request("POST", url, headers=headers, data=payload)
 
+                data = json.loads(response.text)
+                if 'access_token' in data:
+                    authToken = data['access_token']
+
+
+                    # VERIFY TRANSACTION
+                    url = f"https://api.sandbox.safehavenmfb.com/vas/service-category/{selectedOperator}/products"                                        
+                    headers = {
+                        # 'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization':f"Bearer {authToken}",
+                        'ClientID':clientID
+                    }
+
+                    
+                    response = requests.request("GET", url, headers=headers)
+                    
+                    responseData = json.loads(response.text)
+                    if responseData['statusCode'] == 200:
+
+                        return JsonResponse({
+                            'code': '00',
+                            'bouquetList': responseData['data'],
+                            'cableBackend':cableBackend,
+                        })
+                    else:
+                        return JsonResponse({
+                                'code': '09',
+                                'message': responseData['message'],
+                            }) 
+        else:
+            return JsonResponse({
+                'code': '09',
+                'message': "cable subscription is currently unavailable",
+            })
 # Validate smartcard  
 @login_required(login_url='login')
 def validateSmartcard(request):
@@ -419,42 +664,97 @@ def validateSmartcard(request):
         selectedOperator = request.GET.get("selectedOperator")
         # meterType = request.GET.get("meterType")
         amount = request.GET.get("amount")
+        cableBackend = CableBackend.objects.get(name='Main').active_backend
 
-        # API CALL to validate meter
+        
+        if cableBackend == "9Payment":
+            # Remove temp API KEY
+            APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODIwMzI5NCwianRpIjoiYTU1MDAzZDEtNjk4My00ZDExLWJlYzEtZTI3NzQ3ZjhlODZlIiwiZXhwIjoxNzI4MjEwNDk0fQ.PyKt7VuQy5QBt44guG7bTgbQtWnfP_E1dailEyXzGsQvC5nWXQK2bymigmYIPZmfl5bpBHjg_PP-MJv1Cn3BMA"
+            # END of remove
+            url = 'http://102.216.128.75:9090/vas/api/v1/billspayment/validate'
+            payload = {
+                    "customerId": smartcardNumber,
+                    "amount": str(amount),
+                    "billerId": selectedOperator,
+                    # "itemId": meterType,
+                    }
+            headers = {
+                    'Authorization': f"Bearer {APIKEY}",
+                    # 'Content-Type': 'application/json',
+                    # 'Accept': 'application/json'
+                    }
 
-        # Remove temp API KEY
-        APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODIwMzI5NCwianRpIjoiYTU1MDAzZDEtNjk4My00ZDExLWJlYzEtZTI3NzQ3ZjhlODZlIiwiZXhwIjoxNzI4MjEwNDk0fQ.PyKt7VuQy5QBt44guG7bTgbQtWnfP_E1dailEyXzGsQvC5nWXQK2bymigmYIPZmfl5bpBHjg_PP-MJv1Cn3BMA"
-        # END of remove
-        url = 'http://102.216.128.75:9090/vas/api/v1/billspayment/validate'
-        payload = {
-                "customerId": smartcardNumber,
-                "amount": str(amount),
-                "billerId": selectedOperator,
-                # "itemId": meterType,
-                }
-        headers = {
-                'Authorization': f"Bearer {APIKEY}",
-                # 'Content-Type': 'application/json',
-                # 'Accept': 'application/json'
-                }
+            response = requests.request('POST', url, headers=headers, json=payload)
+            responseDetails = response.json()
+            print(responseDetails)
+            if responseDetails['responseCode'] == '200':
+                customerData = responseDetails['data']
+                return JsonResponse({
+                    "code":"00",
+                    "customerName":customerData['customerName'],
+                    "otherField":customerData['otherField'],
+                    "amount":customerData['amount'],
+                })
+            if responseDetails['responseCode'] == '400':
+                return JsonResponse({
+                    "code":"09",
+                    "message":"Invalid meter number"
+                })
+        elif cableBackend == "SafeHaven":
+            clientID = settings.SAFEH_CLIENT_ID
+            clientAssertion = settings.SAFEH_CLIENT_ASSERTION
+            authToken = ''
+            # Generate Token
+            url ='https://api.sandbox.safehavenmfb.com/oauth2/token'                                        
+            headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }
 
-        response = requests.request('POST', url, headers=headers, json=payload)
-        responseDetails = response.json()
-        print(responseDetails)
-        if responseDetails['responseCode'] == '200':
-            customerData = responseDetails['data']
-            return JsonResponse({
-                "code":"00",
-                "customerName":customerData['customerName'],
-                "otherField":customerData['otherField'],
-                "amount":customerData['amount'],
+            payload = json.dumps({
+            "grant_type": "client_credentials",
+            "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+            "client_assertion": clientAssertion,
+            "client_id": clientID
             })
-        if responseDetails['responseCode'] == '400':
-            return JsonResponse({
-                "code":"09",
-                "message":"Invalid meter number"
-            })
+            response = requests.request("POST", url, headers=headers, data=payload)
 
+            data = json.loads(response.text)
+            if 'access_token' in data:
+                authToken = data['access_token']
+                # VERIFY METER
+                url = "https://api.sandbox.safehavenmfb.com/vas/verify"                                        
+                headers = {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization':f"Bearer {authToken}",
+                    'ClientID':clientID
+                }
+
+                
+                payload = json.dumps({
+                    "serviceCategoryId": selectedOperator,
+                    "entityNumber": smartcardNumber
+                })
+                responseData = requests.request("POST", url, headers=headers, data=payload)
+                
+                responseData = json.loads(responseData.text)
+                print(f"safehaven verifiction {responseData}")
+                if responseData['statusCode'] == 200:
+                    customerDetails = responseData['data']
+                    return JsonResponse({
+                        "code":"00",
+                        # "name": customerDetails["name"],
+                        "customerName":customerDetails["name"],
+                        "otherField":"",
+                        "amount":amount,
+                        "backend":"SafeHaven",
+                    })
+                else:
+                    return JsonResponse({
+                        "code":"09",
+                        "message":responseData['message']
+                    })
 
 # Ajax call to buy cable
 @login_required(login_url='login')
@@ -489,10 +789,10 @@ def buyCable(request):
                 try:
                     userBeneficiaries = Beneficiary.objects.get(user=user)
                     if userBeneficiaries is not None:
-                        electricityBeneficiary = userBeneficiaries.electricity 
+                        cableBeneficiary = userBeneficiaries.cable 
                         # Search of record already exist
                         alreadySaved = False
-                        for entry in electricityBeneficiary:
+                        for entry in cableBeneficiary:
                             # print(entry)
                             # alreadySaved = True
                             if entry['smartcardNumber'] == smartcardNumber:
@@ -501,17 +801,17 @@ def buyCable(request):
                                 break
                         # If rececipient has not been saved before
                         if alreadySaved == False:
-                            electricityBeneficiary.append(
+                            cableBeneficiary.append(
                                 {
                                     "operator":selectedOperatorName,
                                     "smartcardNumber":smartcardNumber,
                                     "customerName":customerName,
                                 }
                             ) 
-                            userBeneficiaries.telecomms = electricityBeneficiary 
+                            userBeneficiaries.cable = cableBeneficiary 
                             userBeneficiaries.save() 
                             print("New beneficary added")               
-                        print(f"these are the current telecomms beneficiaries 2 {electricityBeneficiary}")
+                        print(f"these are the current telecomms beneficiaries 2 {cableBeneficiary}")
                         
                 except ObjectDoesNotExist:
                     newBeneficiary = [{
@@ -522,7 +822,7 @@ def buyCable(request):
                     # Create Beficiaryobject
                     Beneficiary.objects.create(
                         user = user,
-                        telecomms = newBeneficiary
+                        cable = newBeneficiary
                     )
 
             # Todo Integrate electricity Services
@@ -541,127 +841,330 @@ def buyCable(request):
                     "code":"09",
                     "message":"Duplicate transaction wait 1 minute"
                 })
-            
-            # Remove temp API KEY
-            APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODIwMzI5NCwianRpIjoiYTU1MDAzZDEtNjk4My00ZDExLWJlYzEtZTI3NzQ3ZjhlODZlIiwiZXhwIjoxNzI4MjEwNDk0fQ.PyKt7VuQy5QBt44guG7bTgbQtWnfP_E1dailEyXzGsQvC5nWXQK2bymigmYIPZmfl5bpBHjg_PP-MJv1Cn3BMA"
-            # END of remove
+            else:
+                cableBackend = CableBackend.objects.get(name='Main').active_backend
 
-            # Verify selected package price
-            url = f'http://102.216.128.75:9090/vas/api/v1/billspayment/fields/{selectedOperator}'
-            payload = {
-                    }
-            headers = {
-                    'Authorization': f"Bearer {APIKEY}",
-                    # 'Content-Type': 'application/json',
-                    # 'Accept': 'application/json'
-                    }
+                if cableBackend == "9Payment":            
+                    # Remove temp API KEY
+                    APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODIwMzI5NCwianRpIjoiYTU1MDAzZDEtNjk4My00ZDExLWJlYzEtZTI3NzQ3ZjhlODZlIiwiZXhwIjoxNzI4MjEwNDk0fQ.PyKt7VuQy5QBt44guG7bTgbQtWnfP_E1dailEyXzGsQvC5nWXQK2bymigmYIPZmfl5bpBHjg_PP-MJv1Cn3BMA"
+                    # END of remove
 
-            response = requests.request('GET', url, headers=headers,)
-            responseDetails = response.json()
-            # print(responseDetails)
-            
-            if responseDetails['responseCode'] == '200':
-                operatorData = responseDetails['data']
-                bouquetList = []
-                for entry in operatorData:
-                    if entry['fieldName'] == 'itemId':
-                        bouquetList = entry['items']
-                        break
-                # print(f"bouquet list is {bouqueList}")
-                if bouquetList !=[]:
-                    packageCost = 0
-                    for package in bouquetList:
-                        if package['itemId'] == itemId:
-                            packageCost = Decimal(package['amount'])
-                            break
+                    # Verify selected package price
+                    url = f'http://102.216.128.75:9090/vas/api/v1/billspayment/fields/{selectedOperator}'
+                    payload = {
+                            }
+                    headers = {
+                            'Authorization': f"Bearer {APIKEY}",
+                            # 'Content-Type': 'application/json',
+                            # 'Accept': 'application/json'
+                            }
+
+                    response = requests.request('GET', url, headers=headers,)
+                    responseDetails = response.json()
+                    # print(responseDetails)
                     
-                    if packageCost == amount:
-                        # Check if user has enough balance
-                        if amount > 0 and amount <= wallet.balance:
-                            balanceBefore = wallet.balance
-                            wallet.balance -= amount
-                            wallet.save()
+                    if responseDetails['responseCode'] == '200':
+                        operatorData = responseDetails['data']
+                        bouquetList = []
+                        for entry in operatorData:
+                            if entry['fieldName'] == 'itemId':
+                                bouquetList = entry['items']
+                                break
+                        # print(f"bouquet list is {bouqueList}")
+                        if bouquetList !=[]:
+                            packageCost = 0
+                            for package in bouquetList:
+                                if package['itemId'] == itemId:
+                                    packageCost = Decimal(package['amount'])
+                                    break
                             
-                            transRef = reference(25)
-                            try:
-                                existing = Transaction.objects.get(reference=transRef)
-                                while existing is not None:
-                                    transRef = reference(25)
-                                    existing = Transaction.objects.get(reference=transRef)
-                            except ObjectDoesNotExist:
-                                # Set user referral  codes and create wallet
-                                pass
-
-                            # Create wallet Activity
-                            WalletActivity.objects.create(
-                                user = user,
-                                event_type = "Debit",
-                                transaction_type = "Cable",
-                                comment = f"Cable {transRef}",
-                                amount = Decimal(amount),
-                                balanceBefore = balanceBefore,
-                                balanceAfter = wallet.balance,
-                            )
-                            # Create Transaction Record
-                            transaction = Transaction.objects.create(
-                                user = user,
-                                operator = selectedOperatorName,
-                                transaction_type = "Cable",
-                                recipient = smartcardNumber,
-                                reference = transRef,
-                                package = packageName,
-                                amount = amount,
-                                balanceBefore = balanceBefore,
-                                balanceAfter = wallet.balance,
-                            )
-                
-                            transaction.refresh_from_db()
-
-                            user.last_transacted = datetime.now().date()
-                            user.save()
-
-                            # Second check for duplicate transaction
-                            startTime = datetime.now() - timedelta(seconds=30) 
-                            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=smartcardNumber,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
-                            if existingTran.count() > 1:
-                                return JsonResponse({
-                                    "code":"09",
-                                    "message":"Duplicate transaction wait 1 minute"
-                                })
-                            else:
-                                cableBackend = CableBackend.objects.get(name='Main')
-                                
-                                # Buy from 9Payment Backend
-                                if cableBackend.active_backend == "9Payment":
+                            if packageCost == amount:
+                                # Check if user has enough balance
+                                if amount > 0 and amount <= wallet.balance:
+                                    balanceBefore = wallet.balance
+                                    wallet.balance -= amount
+                                    wallet.save()
                                     
+                                    transRef = reference(25)
+                                    try:
+                                        existing = Transaction.objects.get(reference=transRef)
+                                        while existing is not None:
+                                            transRef = reference(25)
+                                            existing = Transaction.objects.get(reference=transRef)
+                                    except ObjectDoesNotExist:
+                                        # Set user referral  codes and create wallet
+                                        pass
+
+                                    # Create wallet Activity
+                                    WalletActivity.objects.create(
+                                        user = user,
+                                        event_type = "Debit",
+                                        transaction_type = "Cable",
+                                        comment = f"Cable {transRef}",
+                                        amount = Decimal(amount),
+                                        balanceBefore = balanceBefore,
+                                        balanceAfter = wallet.balance,
+                                    )
+                                    # Create Transaction Record
+                                    transaction = Transaction.objects.create(
+                                        user = user,
+                                        operator = selectedOperatorName,
+                                        transaction_type = "Cable",
+                                        recipient = smartcardNumber,
+                                        reference = transRef,
+                                        package = packageName,
+                                        amount = amount,
+                                        balanceBefore = balanceBefore,
+                                        balanceAfter = wallet.balance,
+                                    )
+                        
+                                    transaction.refresh_from_db()
+
+                                    user.last_transacted = datetime.now().date()
+                                    user.save()
+
+                                    # Second check for duplicate transaction
+                                    startTime = datetime.now() - timedelta(seconds=30) 
+                                    existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=smartcardNumber,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                                    if existingTran.count() > 1:
+                                        return JsonResponse({
+                                            "code":"09",
+                                            "message":"Duplicate transaction wait 1 minute"
+                                        })
+                                    else:
+                                            
+                                        transaction.APIBackend = '9Payment'
+                                        transaction.save()
+                                        url = 'http://102.216.128.75:9090/vas/api/v1/billspayment/pay'
+                                        
+                                        payload = {
+                                            "customerId": smartcardNumber,
+                                            "amount": str(amount),
+                                            "billerId": selectedOperator,
+                                            "itemId": itemId,
+                                            "customerPhone": user.phone_number,
+                                            "customerName": customerName,
+                                            "otherField": otherField,
+                                            "debitAccount": "1100000505",
+                                            "transactionReference": transRef
+                                            }
+                                        headers = {
+                                            'Authorization': f"Bearer {APIKEY}",
+                                            # 'Content-Type': 'application/json',
+                                            # 'Accept': 'application/json'
+                                            }
+
+                                        response = requests.request('POST', url, headers=headers, json=payload)
+                                        responseData = response.json()
+                                        print(f"9Payment response is {responseData}")
+                                        
+                                        if responseData['responseCode'] == "200":
+                                            paymentData = responseData['data']
+                                            isToken = paymentData['isToken']
+                                            
+                                            #Todo calculate Discount/cashback
+                                            # airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
+                                            # discountRate = airtimeDiscount.rate
+                                            # calculatedDiscount = Decimal((transaction.amount * discountRate) / Decimal(100))
+                                            # Cashback.objects.create(
+                                            #     user = user,
+                                            #     transaction_type = 'Airtime',
+                                            #     message = f"Airtime {transaction.reference}",
+                                            #     amount = calculatedDiscount
+                                            # )
+                                            # wallet.cashback += calculatedDiscount
+                                            # wallet.save()
+
+
+                                            transaction.status = "Success"
+                                            transaction.APIBackend = "9Payment"
+                                            # transaction.discount = calculatedDiscount
+                                            transaction.message = "Transaction successful"
+                                            transaction.customerName = customerName
+                                            transaction.customerAddress = otherField #other field is customer address passed from frontend
+                                            # transaction.electricity_units = paymentData['otherField']
+                                            # if isToken == True:
+                                            #     transaction.token = paymentData['token']
+                                            #     token = paymentData['token']
+                                            
+                                            transaction.save()   
+
+                                            return JsonResponse({
+                                                'code':'00',   
+                                                'isToken':isToken,
+                                                'date':transaction.created,                                    
+                                            })
+                                        else:
+                                            transaction.status = "Refunded"
+                                            transaction.message = "Transaction refunded"
+                                            transaction.refunded = True
+                                            transaction.save()
+
+                                            balanceBefore = wallet.balance
+                                            wallet.balance += transaction.amount
+                                            wallet.save()
+
+                                            # Create wallet Activity
+                                            WalletActivity.objects.create(
+                                                user = user,
+                                                event_type = "Credit",
+                                                transaction_type = "Cable",
+                                                comment = f"Cable {transRef} Refund",
+                                                amount = transaction.amount,
+                                                balanceBefore = balanceBefore,
+                                                balanceAfter = wallet.balance,
+                                            )
+
+                                            return JsonResponse({
+                                                "code":"09",
+                                                "message":responseData['message']
+                                            })
+                                        
+                                else:
+                                    return JsonResponse({
+                                        "code":"09",
+                                        "message":"Insufficient wallet Balance"
+                                    })
+                
+                elif cableBackend == "SafeHaven":  
+                    # Get Access token
+                    clientID = settings.SAFEH_CLIENT_ID
+                    clientAssertion = settings.SAFEH_CLIENT_ASSERTION
+                    utilityAccount = settings.SAFEH_UTILITY_ACCOUNT
+                    authToken = ''
+                    # Generate Token
+                    url ='https://api.sandbox.safehavenmfb.com/oauth2/token'                                        
+                    headers = {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    }
+
+                    payload = json.dumps({
+                    "grant_type": "client_credentials",
+                    "client_assertion_type": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+                    "client_assertion": clientAssertion,
+                    "client_id": clientID
+                    })
+                    response = requests.request("POST", url, headers=headers, data=payload)
+
+                    data = json.loads(response.text) 
+                    print(f"safehaven auth message {data}")                   
+                    if 'access_token' in data:
+                        authToken = data['access_token']
+                        
+                        # VERIFY TRANSACTION
+                        url = f"https://api.sandbox.safehavenmfb.com/vas/service-category/{selectedOperator}/products"                                        
+                        headers = {
+                            # 'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization':f"Bearer {authToken}",
+                            'ClientID':clientID
+                        }
+
+                        
+                        response = requests.request("GET", url, headers=headers)
+                        
+                        responseData = json.loads(response.text)
+                        print(f"Response data Cable bundle is {responseData}")
+                        if responseData['statusCode'] == 200:
+                            bouquets = responseData['data']
+
+                            selectedBouquet = {}
+
+                            for i in range(len(bouquets)):
+                                if bouquets[i]["bundleCode"] == itemId:
+                                    # print(f"Matching Bouquet is {bouquets[i]}")
+                                    selectedBouquet = bouquets[i]
+                            
+                            amount = selectedBouquet["amount"]
+                            bouquetName = selectedBouquet["name"]
+
+                            if amount > 0 and amount <= wallet.balance:
+                                balanceBefore = wallet.balance
+                                wallet.balance -= amount
+                                wallet.save()
+                                
+                                transRef = reference(25)
+
+                                # discount = Decimal((amount * 0.7) / 100.0)
+                                # Create wallet deduction
+                                try:
+                                    existing = Transaction.objects.get(reference=transRef)
+                                    while existing is not None:
+                                        transRef = reference(25)
+                                        existing = Transaction.objects.get(reference=transRef)
+                                except ObjectDoesNotExist:
+                                    # Set user referral  codes and create wallet
+                                    pass
+
+                                # Create wallet Activity
+                                WalletActivity.objects.create(
+                                    user = user,
+                                    event_type = "Debit",
+                                    transaction_type = "Cable",
+                                    comment = f"Cable {transRef}",
+                                    amount = Decimal(amount),
+                                    balanceBefore = balanceBefore,
+                                    balanceAfter = wallet.balance,
+                                )
+                                # Create Transaction Record
+                                transaction = Transaction.objects.create(
+                                    user = user,
+                                    operator = selectedOperatorName,
+                                    transaction_type = "Cable",
+                                    recipient = smartcardNumber,
+                                    reference = transRef,
+                                    package = packageName,
+                                    amount = amount,
+                                    balanceBefore = balanceBefore,
+                                    balanceAfter = wallet.balance,
+                                )
+                    
+                                transaction.refresh_from_db()
+
+                                user.last_transacted = datetime.now().date()
+                                user.save()
+
+                                # Second check for duplicate transaction
+                                startTime = datetime.now() - timedelta(seconds=30) 
+                                existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=smartcardNumber,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                                if existingTran.count() > 1:
+                                    return JsonResponse({
+                                        "code":"09",
+                                        "message":"Duplicate transaction wait 1 minute"
+                                    })
+                                else:                                            
                                     transaction.APIBackend = '9Payment'
                                     transaction.save()
-                                    url = 'http://102.216.128.75:9090/vas/api/v1/billspayment/pay'
-                                    
-                                    payload = {
-                                        "customerId": smartcardNumber,
-                                        "amount": str(amount),
-                                        "billerId": selectedOperator,
-                                        "itemId": itemId,
-                                        "customerPhone": user.phone_number,
-                                        "customerName": customerName,
-                                        "otherField": otherField,
-                                        "debitAccount": "1100000505",
-                                        "transactionReference": transRef
-                                        }
-                                    headers = {
-                                        'Authorization': f"Bearer {APIKEY}",
-                                        # 'Content-Type': 'application/json',
-                                        # 'Accept': 'application/json'
-                                        }
 
-                                    response = requests.request('POST', url, headers=headers, json=payload)
-                                    responseData = response.json()
-                                    print(f"9Payment response is {responseData}")
+
+
+                                    # Make Payment
+                                    url = f"https://api.sandbox.safehavenmfb.com/vas/pay/cable-tv"                                        
+                                    headers = {
+                                        # 'Content-Type': 'application/json',
+                                        'Accept': 'application/json',
+                                        'Authorization':f"Bearer {authToken}",
+                                        'ClientID':clientID
+                                    }
+
+                                    payload = {
+                                        "amount": int(amount),
+                                        "channel": "WEB",
+                                        "serviceCategoryId": selectedOperator,
+                                        "debitAccountNumber": utilityAccount,
+                                        "bundleCode": itemId,
+                                        "cardNumber": smartcardNumber
+                                    }                            
+
                                     
-                                    if responseData['responseCode'] == "200":
-                                        paymentData = responseData['data']
-                                        isToken = paymentData['isToken']
+                                    response = requests.request("POST", url, headers=headers, data=payload)
+                                    
+                                    paymentResponse = json.loads(response.text)
+                                    # Successful Transaction
+                                    if paymentResponse['statusCode'] == 200:
+                                        paymentData = paymentResponse['data']
+                                        isToken = False
                                         
                                         #Todo calculate Discount/cashback
                                         # airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
@@ -678,11 +1181,13 @@ def buyCable(request):
 
 
                                         transaction.status = "Success"
-                                        transaction.APIBackend = "9Payment"
+                                        transaction.APIBackend = "SafeHaven"
+                                        transaction.APIreference = paymentData["reference"]
                                         # transaction.discount = calculatedDiscount
                                         transaction.message = "Transaction successful"
                                         transaction.customerName = customerName
-                                        transaction.customerAddress = otherField #other field is customer address passed from frontend
+                                        
+                                        transaction.customerAddress = '-' #other field is customer address passed from frontend
                                         # transaction.electricity_units = paymentData['otherField']
                                         # if isToken == True:
                                         #     transaction.token = paymentData['token']
@@ -695,6 +1200,9 @@ def buyCable(request):
                                             'isToken':isToken,
                                             'date':transaction.created,                                    
                                         })
+
+                                        
+                                    # Failed Transaction
                                     else:
                                         transaction.status = "Refunded"
                                         transaction.message = "Transaction refunded"
@@ -718,15 +1226,27 @@ def buyCable(request):
 
                                         return JsonResponse({
                                             "code":"09",
-                                            "message":responseData['message']
+                                            "message":paymentResponse['message']
                                         })
-                                
+
+                            else:
+                                user.transacting = False
+                                user.save()
+                                return JsonResponse({
+                                    'code':'09',
+                                    'message':"Insufficient wallet Balance"
+                                    }) 
                         else:
                             return JsonResponse({
                                 "code":"09",
-                                "message":"Insufficient wallet Balance"
+                                "message":responseData['message']
                             })
-
+                    else:
+                        return JsonResponse({
+                            "code":"09",
+                            "message":"authentication error"
+                        })
+                    
         else:       
             return JsonResponse({
                 "code":"09",
@@ -775,7 +1295,7 @@ def validateBettingAccount(request):
         # API CALL to validate meter
 
         # Remove temp API KEY
-        APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODMwMTcwNiwianRpIjoiZGZjM2E3MzAtODA1NC00YmY1LTk3MzYtM2JjOWNlMGZlZTBlIiwiZXhwIjoxNzI4MzA4OTA2fQ.LiZofc-oj6WW9VdVIBmNsSR94Z1F7F9GfMiOcIZhknMLt6maAQaHK1eOKMHINalhTdb6Jf2omFx1agLXHvexLA"
+        APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyOTA4NTYzMiwianRpIjoiMDNlMTMyYWYtMmY3Yy00ZmM5LWEzOWEtNTZjNjc1YmRiZjI1IiwiZXhwIjoxNzI5MDkyODMyfQ.7Kb9tCpxg5LLWodGztpSi2qRgEL0NQLcfOsW6JnV0PhGGLpSndaWNj7dbA47q6qyFfishhw04M6-pGEHqnBzKQ"
         # END of remove
         url = 'http://102.216.128.75:9090/vas/api/v1/billspayment/validate'
         payload = {
@@ -872,7 +1392,7 @@ def fundBettingWallet(request):
                     # Create Beficiaryobject
                     Beneficiary.objects.create(
                         user = user,
-                        telecomms = newBeneficiary
+                        bet_funding = newBeneficiary
                     )
 
             # Todo Integrate electricity Services
@@ -893,7 +1413,7 @@ def fundBettingWallet(request):
                 })
             
             # Remove temp API KEY
-            APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODMwMTcwNiwianRpIjoiZGZjM2E3MzAtODA1NC00YmY1LTk3MzYtM2JjOWNlMGZlZTBlIiwiZXhwIjoxNzI4MzA4OTA2fQ.LiZofc-oj6WW9VdVIBmNsSR94Z1F7F9GfMiOcIZhknMLt6maAQaHK1eOKMHINalhTdb6Jf2omFx1agLXHvexLA"
+            APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyOTA4NDk5MCwianRpIjoiMDM5NDhkZGUtN2QxOC00ZWE2LThlNzAtYWQ2MDU1MmE0MmEyIiwiZXhwIjoxNzI5MDkyMTkwfQ.j1wMy8mmPYx15ilvDha6Q0YICElY5LRzOSWQz3ou1ZM3pj_JbyJqOZNnTOemJGR8BeDJiSac7dqbjiKiZPtMGA"
             # END of remove
 
             
@@ -961,7 +1481,7 @@ def fundBettingWallet(request):
                             "customerId": accountId,
                             "amount": str(amount),
                             # "billerId": selectedOperator,
-                            "billerId": "BET9JA",
+                            "billerId": "BETKING",
                             # "itemId": itemId,
                             "customerPhone": user.phone_number,
                             "customerName": customerName,
@@ -1062,3 +1582,723 @@ def fundBettingWallet(request):
                 "message":"Invalid request"
             })
 
+
+# Electricity Page 
+@login_required(login_url='login')
+def internetPage(request):
+    user = request.user
+    wallet = UserWallet.objects.get(user=user)
+    # Telecomms Beneficiary
+    internetBeneficiaries = None
+    try:
+        userBeneficiaries = Beneficiary.objects.get(user=user)
+        if userBeneficiaries is not None:
+            internetBeneficiaries = userBeneficiaries.internet
+    except ObjectDoesNotExist:
+        pass
+    context = {
+        'mainBalance':wallet.balance,
+        'internetBeneficiaries':internetBeneficiaries,
+    }
+    return render(request,'billpayments/internet.html',context)
+
+# Get ISP Plans  
+@login_required(login_url='login')
+def getInternetPlans(request):
+    user = request.user
+    if is_ajax(request) and request.method == "GET":
+        selectedOperator = request.GET.get("selectedOperator")
+
+        # API CALL to validate meter
+
+        # Remove temp API KEY
+        APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODk5MjcxMywianRpIjoiN2QwZmQ0MjEtNDFhNS00ZTc1LWI5ODctMWE3ZjhlYTZkMGE3IiwiZXhwIjoxNzI4OTk5OTEzfQ.4t_v2ZxZey1S49sx7-sosONnatMg0MX8XIUS0g7TtHiUh6MbK_YX6hGowjJ1I3rNLoezzuZWxBus7c7I7vS7Pg"
+        # END of remove
+        url = f'http://102.216.128.75:9090/vas/api/v1/billspayment/fields/{selectedOperator}'
+        payload = {
+                }
+        headers = {
+                'Authorization': f"Bearer {APIKEY}",
+                # 'Content-Type': 'application/json',
+                # 'Accept': 'application/json'
+                }
+        
+
+        response = requests.request('GET', url, headers=headers,)
+        responseDetails = response.json()
+        # print(responseDetails)
+        if responseDetails['responseCode'] == '200':
+            operatorData = responseDetails['data']
+            bouquetList = []
+            for entry in operatorData:
+                if entry['fieldName'] == 'itemId':
+                    bouquetList = entry['items']
+                    break
+            # print(f"bouquet list is {bouqueList}")
+            if bouquetList !=[]:
+                print(f"bouquet list is {bouquetList}")
+                return JsonResponse({
+                    "code":"00",
+                    "bouquetList":bouquetList,
+                })
+            else:
+               return JsonResponse({
+                    "code":"09",
+                    "message":"error fetching bouquet, try again later",
+                }) 
+            
+        if responseDetails['responseCode'] == '400':
+            return JsonResponse({
+                "code":"09",
+                "message":"Invalid operator"
+            })
+
+
+# Validate ISP Customer  
+@login_required(login_url='login')
+def validateInternetCustomer(request):
+    user = request.user
+    if is_ajax(request) and request.method == "GET":
+        customerID = request.GET.get("customerID")
+        selectedOperator = request.GET.get("selectedOperator")
+        # meterType = request.GET.get("meterType")
+        amount = request.GET.get("amount")
+
+        # API CALL to validate meter
+
+        # Remove temp API KEY
+        APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODk5MjcxMywianRpIjoiN2QwZmQ0MjEtNDFhNS00ZTc1LWI5ODctMWE3ZjhlYTZkMGE3IiwiZXhwIjoxNzI4OTk5OTEzfQ.4t_v2ZxZey1S49sx7-sosONnatMg0MX8XIUS0g7TtHiUh6MbK_YX6hGowjJ1I3rNLoezzuZWxBus7c7I7vS7Pg"
+        # END of remove
+        url = 'http://102.216.128.75:9090/vas/api/v1/billspayment/validate'
+        payload = {
+                "customerId": customerID,
+                "amount": str(amount),
+                "billerId": selectedOperator,
+                # "itemId": meterType,
+                }
+        headers = {
+                'Authorization': f"Bearer {APIKEY}",
+                # 'Content-Type': 'application/json',
+                # 'Accept': 'application/json'
+                }
+
+        response = requests.request('POST', url, headers=headers, json=payload)
+        responseDetails = response.json()
+        print(responseDetails)
+        if responseDetails['responseCode'] == '200':
+            customerData = responseDetails['data']
+            return JsonResponse({
+                "code":"00",
+                "customerName":customerData['customerName'],
+                "otherField":customerData['otherField'],
+                "amount":customerData['amount'],
+            })
+        if responseDetails['responseCode'] == '400':
+            return JsonResponse({
+                "code":"09",
+                "message":"Invalid customer ID"
+            })
+        
+# Ajax call to buy internet plan
+@login_required(login_url='login')
+def buyInternetPlan(request):
+    user = request.user
+    totalWalletFunding = user.total_wallet_funding
+
+    # Check if user have ever made a deposit
+    if is_ajax(request) and request.method == "POST": 
+        # transcationPin = request.POST.get('transcationPin')
+        # transPin = TransactionPIN.objects.get(user=user)
+        # if check_password(transcationPin,transPin.transaction_pin):       
+        
+        if totalWalletFunding > 0:
+            print(request.POST)
+            customerID = request.POST.get("customerID")
+            selectedOperator = request.POST.get("selectedOperator")
+            selectedOperatorName = request.POST.get("selectedOperatorName")
+            packageName = request.POST.get("packageName")
+            itemId = request.POST.get("itemId")
+            customerName = request.POST.get("customerName")
+            otherField = request.POST.get("otherField")
+            amount = Decimal(request.POST.get("amount"))
+            print(f"sent amount is {amount}")
+            saveBeneficiary = request.POST.get('saveBeneficiary')
+            
+            # Get user wallet
+            wallet = UserWallet.objects.get(user=user)
+
+            # Safe Beneficiary Logic
+            if saveBeneficiary == "on":
+                try:
+                    userBeneficiaries = Beneficiary.objects.get(user=user)
+                    if userBeneficiaries is not None:
+                        internetBeneficiary = userBeneficiaries.internet 
+                        # Search of record already exist
+                        alreadySaved = False
+                        for entry in internetBeneficiary:
+                            # print(entry)
+                            # alreadySaved = True
+                            if entry['customerID'] == customerID:
+                                alreadySaved = True
+                                print("Record already saved")
+                                break
+                        # If rececipient has not been saved before
+                        if alreadySaved == False:
+                            internetBeneficiary.append(
+                                {
+                                    "operator":selectedOperatorName,
+                                    "customerID":customerID,
+                                    "customerName":customerName,
+                                }
+                            ) 
+                            userBeneficiaries.internet = internetBeneficiary 
+                            userBeneficiaries.save() 
+                            print("New beneficary added")               
+                        print(f"these are the current telecomms beneficiaries 2 {internetBeneficiary}")
+                        
+                except ObjectDoesNotExist:
+                    newBeneficiary = [{
+                        "operator":selectedOperatorName,
+                        "customerID":customerID,
+                        "customerName":customerName,
+                        }]
+                    # Create Beficiaryobject
+                    Beneficiary.objects.create(
+                        user = user,
+                        internet = newBeneficiary
+                    )
+
+            # Todo Integrate electricity Services
+            # airtimeServices = AirtimeServices.objects.get(network_operator=operator)
+            # if airtimeServices.available == False:
+            #     return JsonResponse({
+            #         "code":"09",
+            #         "message":f"{operator} airtime is currently unavailable"
+            #     }) 
+
+
+            # Todo First Check for duplicate transaction  
+            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=customerID,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+            if existingTran.count() > 0:
+                return JsonResponse({
+                    "code":"09",
+                    "message":"Duplicate transaction wait 1 minute"
+                })
+            
+            # Remove temp API KEY
+            APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODk5MjcxMywianRpIjoiN2QwZmQ0MjEtNDFhNS00ZTc1LWI5ODctMWE3ZjhlYTZkMGE3IiwiZXhwIjoxNzI4OTk5OTEzfQ.4t_v2ZxZey1S49sx7-sosONnatMg0MX8XIUS0g7TtHiUh6MbK_YX6hGowjJ1I3rNLoezzuZWxBus7c7I7vS7Pg"
+            # END of remove
+
+            # Verify selected package price
+            url = f'http://102.216.128.75:9090/vas/api/v1/billspayment/fields/{selectedOperator}'
+            payload = {
+                    }
+            headers = {
+                    'Authorization': f"Bearer {APIKEY}",
+                    # 'Content-Type': 'application/json',
+                    # 'Accept': 'application/json'
+                    }
+
+            response = requests.request('GET', url, headers=headers,)
+            responseDetails = response.json()
+            # print(responseDetails)
+            
+            if responseDetails['responseCode'] == '200':
+                operatorData = responseDetails['data']
+                bouquetList = []
+                for entry in operatorData:
+                    if entry['fieldName'] == 'itemId':
+                        bouquetList = entry['items']
+                        break
+                # print(f"bouquet list is {bouqueList}")
+                if bouquetList !=[]:
+                    packageCost = 0
+                    for package in bouquetList:
+                        if package['itemId'] == itemId:
+                            packageCost = Decimal(package['amount'])
+                            break
+                    
+                    if packageCost == amount:
+                        # Check if user has enough balance
+                        if amount > 0 and amount <= wallet.balance:
+                            balanceBefore = wallet.balance
+                            wallet.balance -= amount
+                            wallet.save()
+                            
+                            transRef = reference(25)
+                            try:
+                                existing = Transaction.objects.get(reference=transRef)
+                                while existing is not None:
+                                    transRef = reference(25)
+                                    existing = Transaction.objects.get(reference=transRef)
+                            except ObjectDoesNotExist:
+                                # Set user referral  codes and create wallet
+                                pass
+
+                            # Create wallet Activity
+                            WalletActivity.objects.create(
+                                user = user,
+                                event_type = "Debit",
+                                transaction_type = "Internet",
+                                comment = f"Internet {transRef}",
+                                amount = Decimal(amount),
+                                balanceBefore = balanceBefore,
+                                balanceAfter = wallet.balance,
+                            )
+                            # Create Transaction Record
+                            transaction = Transaction.objects.create(
+                                user = user,
+                                operator = selectedOperatorName,
+                                transaction_type = "Internet",
+                                recipient = customerID,
+                                reference = transRef,
+                                package = packageName,
+                                amount = amount,
+                                balanceBefore = balanceBefore,
+                                balanceAfter = wallet.balance,
+                            )
+                
+                            transaction.refresh_from_db()
+
+                            user.last_transacted = datetime.now().date()
+                            user.save()
+
+                            # Second check for duplicate transaction
+                            startTime = datetime.now() - timedelta(seconds=30) 
+                            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=customerID,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                            if existingTran.count() > 1:
+                                return JsonResponse({
+                                    "code":"09",
+                                    "message":"Duplicate transaction wait 1 minute"
+                                })
+                            else:
+                                cableBackend = CableBackend.objects.get(name='Main')
+                                
+                                # Buy from 9Payment Backend
+                                if cableBackend.active_backend == "9Payment":
+                                    
+                                    transaction.APIBackend = '9Payment'
+                                    transaction.save()
+                                    url = 'http://102.216.128.75:9090/vas/api/v1/billspayment/pay'
+                                    
+                                    payload = {
+                                        "customerId": customerID,
+                                        "amount": str(amount),
+                                        "billerId": selectedOperator,
+                                        "itemId": itemId,
+                                        # "customerPhone": user.phone_number,
+                                        "customerName": customerName,
+                                        # "otherField": otherField,
+                                        "debitAccount": "1100000505",
+                                        "transactionReference": transRef
+                                        }
+                                    headers = {
+                                        'Authorization': f"Bearer {APIKEY}",
+                                        # 'Content-Type': 'application/json',
+                                        # 'Accept': 'application/json'
+                                        }
+
+                                    response = requests.request('POST', url, headers=headers, json=payload)
+                                    responseData = response.json()
+                                    print(f"9Payment response is {responseData}")
+                                    
+                                    if responseData['responseCode'] == "200":
+                                        paymentData = responseData['data']
+                                        isToken = paymentData['isToken']
+                                        
+                                        #Todo calculate Discount/cashback
+                                        # airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
+                                        # discountRate = airtimeDiscount.rate
+                                        # calculatedDiscount = Decimal((transaction.amount * discountRate) / Decimal(100))
+                                        # Cashback.objects.create(
+                                        #     user = user,
+                                        #     transaction_type = 'Airtime',
+                                        #     message = f"Airtime {transaction.reference}",
+                                        #     amount = calculatedDiscount
+                                        # )
+                                        # wallet.cashback += calculatedDiscount
+                                        # wallet.save()
+
+
+                                        transaction.status = "Success"
+                                        transaction.APIBackend = "9Payment"
+                                        # transaction.discount = calculatedDiscount
+                                        transaction.message = "Transaction successful"
+                                        transaction.customerName = customerName
+                                        transaction.customerAddress = otherField #other field is customer address passed from frontend
+                                        # transaction.electricity_units = paymentData['otherField']
+                                        # if isToken == True:
+                                        #     transaction.token = paymentData['token']
+                                        #     token = paymentData['token']
+                                        
+                                        transaction.save()   
+
+                                        return JsonResponse({
+                                            'code':'00',   
+                                            'isToken':isToken,
+                                            'date':transaction.created,                                    
+                                        })
+                                    else:
+                                        transaction.status = "Refunded"
+                                        transaction.message = "Transaction refunded"
+                                        transaction.refunded = True
+                                        transaction.save()
+
+                                        balanceBefore = wallet.balance
+                                        wallet.balance += transaction.amount
+                                        wallet.save()
+
+                                        # Create wallet Activity
+                                        WalletActivity.objects.create(
+                                            user = user,
+                                            event_type = "Credit",
+                                            transaction_type = "Internet",
+                                            comment = f"Internet {transRef} Refund",
+                                            amount = transaction.amount,
+                                            balanceBefore = balanceBefore,
+                                            balanceAfter = wallet.balance,
+                                        )
+
+                                        return JsonResponse({
+                                            "code":"09",
+                                            "message":responseData['message']
+                                        })
+                                
+                        else:
+                            return JsonResponse({
+                                "code":"09",
+                                "message":"Insufficient wallet Balance"
+                            })
+
+        else:       
+            return JsonResponse({
+                "code":"09",
+                "message":"No funding history found for your account"
+            })
+        # else:
+        #     return JsonResponse({
+        #         "code":"01",
+        #         "message":"Invalid transaction PIN"
+        #     })
+    return JsonResponse({
+                "code":"09",
+                "message":"Invalid request"
+            })
+
+
+# Education PIN 
+@login_required(login_url='login')
+def educationPage(request):
+    user = request.user
+    wallet = UserWallet.objects.get(user=user)
+    # Telecomms Beneficiary
+    educationBeneficiaries = None
+    try:
+        userBeneficiaries = Beneficiary.objects.get(user=user)
+        if userBeneficiaries is not None:
+            educationBeneficiaries = userBeneficiaries.education
+    except ObjectDoesNotExist:
+        pass
+    context = {
+        'mainBalance':wallet.balance,
+        'educationBeneficiaries':educationBeneficiaries,
+    }
+    return render(request,'billpayments/education.html',context)
+
+# Get ISP Plans  
+@login_required(login_url='login')
+def getEducationData(request):
+    user = request.user
+    if is_ajax(request) and request.method == "GET":
+        selectedOperator = request.GET.get("selectedOperator")
+
+        # API CALL to validate meter
+
+        # Remove temp API KEY
+        APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyOTA4MTg2NCwianRpIjoiY2U2MDc5NjktNzNiNC00ZDMxLTgwYTUtYTQ2MzRkODQ2MTYwIiwiZXhwIjoxNzI5MDg5MDY0fQ.h3cPQ69hHPXsMA3fnr2TaTm7mIL8lvTaoA3ZyR0_Et0YKll-x-yLL35agRpGCV4-ifwjg36dJ0SWamZSb2oNDw"
+        # END of remove
+        url = f'http://102.216.128.75:9090/vas/api/v1/billspayment/fields/{selectedOperator}'
+        payload = {
+                }
+        headers = {
+                'Authorization': f"Bearer {APIKEY}",
+                # 'Content-Type': 'application/json',
+                # 'Accept': 'application/json'
+                }
+        
+
+        response = requests.request('GET', url, headers=headers,)
+        responseDetails = response.json()
+        # print(responseDetails)
+        if responseDetails['responseCode'] == '200':
+            operatorData = responseDetails['data']
+            bouquetList = []
+            for entry in operatorData:
+                if entry['fieldName'] == 'itemId':
+                    bouquetList = entry['items']
+                    break
+            # print(f"bouquet list is {bouqueList}")
+            if bouquetList !=[]:
+                print(f"bouquet list is {bouquetList}")
+                return JsonResponse({
+                    "code":"00",
+                    "bouquetList":bouquetList,
+                })
+            else:
+               return JsonResponse({
+                    "code":"09",
+                    "message":"error fetching bouquet, try again later",
+                }) 
+            
+        if responseDetails['responseCode'] == '400':
+            return JsonResponse({
+                "code":"09",
+                "message":"Invalid operator"
+            })
+
+
+# Ajax call to buy EPIN plan
+@login_required(login_url='login')
+def buyEducationPIN(request):
+    user = request.user
+    totalWalletFunding = user.total_wallet_funding
+
+    # Check if user have ever made a deposit
+    if is_ajax(request) and request.method == "POST": 
+        # transcationPin = request.POST.get('transcationPin')
+        # transPin = TransactionPIN.objects.get(user=user)
+        # if check_password(transcationPin,transPin.transaction_pin):       
+        
+        if totalWalletFunding > 0:
+            print(request.POST)
+            selectedOperator = request.POST.get("selectedOperator")
+            selectedOperatorName = request.POST.get("selectedOperatorName")
+            packageName = request.POST.get("packageName")
+            itemId = request.POST.get("itemId")
+            customerName = request.POST.get("customerName")
+            otherField = request.POST.get("otherField")
+            amount = Decimal(request.POST.get("amount"))
+            customerID = user.phone_number
+            email = user.email
+            
+            # Get user wallet
+            wallet = UserWallet.objects.get(user=user)
+
+            # Safe Beneficiary Logic
+            
+            # Todo Integrate electricity Services
+            # airtimeServices = AirtimeServices.objects.get(network_operator=operator)
+            # if airtimeServices.available == False:
+            #     return JsonResponse({
+            #         "code":"09",
+            #         "message":f"{operator} airtime is currently unavailable"
+            #     }) 
+
+
+            # Todo First Check for duplicate transaction  
+            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=customerID,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+            if existingTran.count() > 0:
+                return JsonResponse({
+                    "code":"09",
+                    "message":"Duplicate transaction wait 1 minute"
+                })
+            
+            # Remove temp API KEY
+            APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyOTA4MTg2NCwianRpIjoiY2U2MDc5NjktNzNiNC00ZDMxLTgwYTUtYTQ2MzRkODQ2MTYwIiwiZXhwIjoxNzI5MDg5MDY0fQ.h3cPQ69hHPXsMA3fnr2TaTm7mIL8lvTaoA3ZyR0_Et0YKll-x-yLL35agRpGCV4-ifwjg36dJ0SWamZSb2oNDw"
+            # END of remove
+
+            # Verify selected package price
+            url = f'http://102.216.128.75:9090/vas/api/v1/billspayment/fields/{selectedOperator}'
+            payload = {
+                    }
+            headers = {
+                    'Authorization': f"Bearer {APIKEY}",
+                    # 'Content-Type': 'application/json',
+                    # 'Accept': 'application/json'
+                    }
+
+            response = requests.request('GET', url, headers=headers,)
+            responseDetails = response.json()
+            # print(responseDetails)
+            
+            if responseDetails['responseCode'] == '200':
+                operatorData = responseDetails['data']
+                bouquetList = []
+                for entry in operatorData:
+                    if entry['fieldName'] == 'itemId':
+                        bouquetList = entry['items']
+                        break
+                # print(f"bouquet list is {bouqueList}")
+                if bouquetList !=[]:
+                    packageCost = 0
+                    for package in bouquetList:
+                        if package['itemId'] == itemId:
+                            packageCost = Decimal(package['amount'])
+                            break
+                    
+                    if packageCost == amount:
+                        # Check if user has enough balance
+                        if amount > 0 and amount <= wallet.balance:
+                            balanceBefore = wallet.balance
+                            wallet.balance -= amount
+                            wallet.save()
+                            
+                            transRef = reference(25)
+                            try:
+                                existing = Transaction.objects.get(reference=transRef)
+                                while existing is not None:
+                                    transRef = reference(25)
+                                    existing = Transaction.objects.get(reference=transRef)
+                            except ObjectDoesNotExist:
+                                # Set user referral  codes and create wallet
+                                pass
+
+                            # Create wallet Activity
+                            WalletActivity.objects.create(
+                                user = user,
+                                event_type = "Debit",
+                                transaction_type = "Education",
+                                comment = f"Education {transRef}",
+                                amount = Decimal(amount),
+                                balanceBefore = balanceBefore,
+                                balanceAfter = wallet.balance,
+                            )
+                            # Create Transaction Record
+                            transaction = Transaction.objects.create(
+                                user = user,
+                                operator = selectedOperatorName,
+                                transaction_type = "Education",
+                                recipient = customerID,
+                                reference = transRef,
+                                package = packageName,
+                                amount = amount,
+                                balanceBefore = balanceBefore,
+                                balanceAfter = wallet.balance,
+                            )
+                
+                            transaction.refresh_from_db()
+
+                            user.last_transacted = datetime.now().date()
+                            user.save()
+
+                            # Second check for duplicate transaction
+                            startTime = datetime.now() - timedelta(seconds=30) 
+                            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=customerID,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                            if existingTran.count() > 1:
+                                return JsonResponse({
+                                    "code":"09",
+                                    "message":"Duplicate transaction wait 1 minute"
+                                })
+                            else:
+                                epinBackend = EPINBackend.objects.get(name='Main')
+                                
+                                # Buy from 9Payment Backend
+                                if epinBackend.active_backend == "9Payment":
+                                    
+                                    transaction.APIBackend = '9Payment'
+                                    transaction.save()
+                                    url = 'http://102.216.128.75:9090/vas/api/v1/billspayment/pay'
+                                    
+                                    payload = {
+                                        "customerId": customerID,
+                                        "amount": str(amount),
+                                        "billerId": selectedOperator,
+                                        "itemId": itemId,
+                                        "customerPhone": user.phone_number,
+                                        "customerName": customerName,
+                                        "otherField": email,
+                                        "debitAccount": "1100000505",
+                                        "transactionReference": transRef
+                                        }
+                                    headers = {
+                                        'Authorization': f"Bearer {APIKEY}",
+                                        # 'Content-Type': 'application/json',
+                                        # 'Accept': 'application/json'
+                                        }
+
+                                    response = requests.request('POST', url, headers=headers, json=payload)
+                                    responseData = response.json()
+                                    print(f"9Payment response is {responseData}")
+                                    
+                                    if responseData['responseCode'] == "200":
+                                        paymentData = responseData['data']
+                                        isToken = paymentData['isToken']
+                                        
+                                        #Todo calculate Discount/cashback
+                                        # airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
+                                        # discountRate = airtimeDiscount.rate
+                                        # calculatedDiscount = Decimal((transaction.amount * discountRate) / Decimal(100))
+                                        # Cashback.objects.create(
+                                        #     user = user,
+                                        #     transaction_type = 'Airtime',
+                                        #     message = f"Airtime {transaction.reference}",
+                                        #     amount = calculatedDiscount
+                                        # )
+                                        # wallet.cashback += calculatedDiscount
+                                        # wallet.save()
+
+
+                                        transaction.status = "Success"
+                                        transaction.APIBackend = "9Payment"
+                                        # transaction.discount = calculatedDiscount
+                                        transaction.message = "Transaction successful"
+                                        transaction.customerName = customerName
+                                        transaction.education_data = paymentData
+                                        # if isToken == True:
+                                        #     transaction.token = paymentData['token']
+                                        #     token = paymentData['token']
+                                        
+                                        transaction.save()   
+
+                                        return JsonResponse({
+                                            'code':'00',   
+                                            'isToken':isToken,
+                                            'date':transaction.created,  
+                                            'data':paymentData                                 
+                                        })
+                                    else:
+                                        transaction.status = "Refunded"
+                                        transaction.message = "Transaction refunded"
+                                        transaction.refunded = True
+                                        transaction.save()
+
+                                        balanceBefore = wallet.balance
+                                        wallet.balance += transaction.amount
+                                        wallet.save()
+
+                                        # Create wallet Activity
+                                        WalletActivity.objects.create(
+                                            user = user,
+                                            event_type = "Credit",
+                                            transaction_type = "Education",
+                                            comment = f"Education {transRef} Refund",
+                                            amount = transaction.amount,
+                                            balanceBefore = balanceBefore,
+                                            balanceAfter = wallet.balance,
+                                        )
+
+                                        return JsonResponse({
+                                            "code":"09",
+                                            "message":responseData['message']
+                                        })
+                                
+                        else:
+                            return JsonResponse({
+                                "code":"09",
+                                "message":"Insufficient wallet Balance"
+                            })
+
+        else:       
+            return JsonResponse({
+                "code":"09",
+                "message":"No funding history found for your account"
+            })
+        # else:
+        #     return JsonResponse({
+        #         "code":"01",
+        #         "message":"Invalid transaction PIN"
+        #     })
+    return JsonResponse({
+                "code":"09",
+                "message":"Invalid request"
+            })

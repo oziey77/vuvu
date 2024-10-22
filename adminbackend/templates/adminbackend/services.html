@@ -67,7 +67,26 @@
                         {% endif %}                        
                       </div>
                       {% endfor %}        
-                  </div>                
+                  </div>  
+                  <div class="service-group">        
+                    <h5>Bill Payments</h4>
+                      {% for service in billsPaymentServices %}
+                      <div class="service-item">
+                        <p>{{service.service_type}}</p>
+                        {% if service.available == True %}
+                        <label class="switch">
+                          <input class="checkbox" type="checkbox" id="bills-{{service.service_type}}" checked>
+                          <span class="slider round"></span>
+                        </label>
+                        {% elif service.available == False %}
+                        <label class="switch">
+                          <input class="checkbox" type="checkbox" id="bills-{{service.service_type}}" >
+                          <span class="slider round"></span>
+                        </label>
+                        {% endif %}                        
+                      </div>
+                      {% endfor %}        
+                  </div>               
             </div>
             
         </div>

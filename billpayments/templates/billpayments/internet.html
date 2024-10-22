@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vuvu - Bet Funding</title>
+    <title>Vuvu - Buy Electricity Token</title>
     {% include 'users/includes/header.html' %}
 </head>
 <body>
@@ -16,7 +16,7 @@
                 <!-- Header -->
                 <div class="services-header">               
                     <div class="service-info">
-                        <p >Bet Funding</p>
+                        <p >Internet</p>
                         <!-- <div class="icon-box">
                             <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="style=linear">
@@ -61,162 +61,50 @@
                                     <div class="icon-box" id="selectedOperatorImg">
                                         <img src="" alt="">    
                                     </div>
-                                    <p class="operator-text">Select betting company</p>
+                                    <p class="operator-text">Select your service provider</p>
                                 </div>                    
                                 <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>                        
                             </div>
                         </a>                    
-                        <div class="dropdown bills" id="operator-dropdown" >
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/bet9ja.webp' %}" disco="BET9JA" network-data="CW-B01T" >
+                        <div class="dropdown bills" id="operator-dropdown" style="height: fit-content !important;">
+                            <a href="javascript:void(0)" class="mobile-operator internet-company" image-data="{% static 'billpayments/images/smile-logo.png' %}" disco="Smile Network" network-data="CW-D05D" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/bet9ja.webp' %}" alt="">
+                                        <img src="{% static 'billpayments/images/smile-logo.png' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>Bet9JA</p>
-                                        <small>A betting company</small>
+                                        <p>Smile Network</p>
+                                        <small>High Speed Internet</small>
                                     </div>
                                 </div>
                             </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/bangbet.jpg' %}" disco="BANGBET" network-data="CW-B02T" >
+                            <a href="javascript:void(0)" class="mobile-operator internet-company" image-data="{% static 'billpayments/images/spectranet.webp' %}" disco="Spectranet" network-data="CW-P05N" >
                                 <div class="item">
                                     <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/bangbet.jpg' %}" alt="">
+                                        <img src="{% static 'billpayments/images/spectranet.webp' %}" alt="">
                                     </div>
                                     <div class="list">
-                                        <p>BangBet</p>
-                                        <small>Another betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/nairabet.png' %}" disco="NAIRABET" network-data="CW-B03T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/nairabet.png' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Nairabet</p>
-                                        <small>A completely different betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/supabets.webp' %}" disco="SUPABET" network-data="CW-B04T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/supabets.webp' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Supabet</p>
-                                        <small>Another betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/cloudbet.jpg' %}" disco="CLOUDBET" network-data="CW-B05T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/cloudbet.jpg' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Cloudbet</p>
-                                        <small>Another betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/betlion.png' %}" disco="BETLION" network-data="CW-B06T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/betlion.png' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Betlion</p>
-                                        <small>Another betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/1xbet.png' %}" disco="1XBET" network-data="CW-B07T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/1xbet.png' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>1xbet</p>
-                                        <small>Another betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/merrybet.jpg' %}" disco="MERRYBET" network-data="CW-B08T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/merrybet.jpg' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Merrybet</p>
-                                        <small>Another betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/betway.png' %}" disco="BETWAY" network-data="CW-B09T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/betway.png' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Betway</p>
-                                        <small>Another betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/imagesbetland.jpg' %}" disco="BETLAND" network-data="CW-B10T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/betland.jpg' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Betland</p>
-                                        <small>Another betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/betking.jpg' %}" disco="BETKING" network-data="CW-B11T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/betking.jpg' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Betking</p>
-                                        <small>Another betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/livescorebet.png' %}" disco="LIVESCOREBET" network-data="CW-B12T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/livescorebet.png' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Livescorebet</p>
-                                        <small>Another betting Company</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0)" class="mobile-operator betting-company" image-data="{% static 'billpayments/images/naijabet.jpg' %}" disco="NAIJABET" network-data="CW-B13T" >
-                                <div class="item">
-                                    <div class="icon-box">
-                                        <img src="{% static 'billpayments/images/naijabet.jpg' %}" alt="">
-                                    </div>
-                                    <div class="list">
-                                        <p>Naijabet</p>
-                                        <small>Another betting Company</small>
+                                        <p>Spectranet</p>
+                                        <small>High Speed Internet</small>
                                     </div>
                                 </div>
                             </a>
                         </div>
                     </div>
-                    <!-- Betting ID -->
+                    <!-- Internet Plan List -->
+                    <div class="custom-select">
+                        <select name="internet-package" id="internetPackage" >
+                            <option value="" disabled selected>Select a package</option>
+                        </select>
+                        <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 10L12 15L17 10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg> 
+                    </div>
+                    <!-- meter number -->
                     <div class="input-group right-float">
-                        <input type="text" name="" id="bettingId" placeholder="Enter account ID" inputmode="numeric"> 
+                        <input type="text" name="meter_number" id="customerID" placeholder="Enter customer ID" inputmode="numeric"> 
                         <svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                                 viewBox="0 0 330 330" xml:space="preserve" class="open-beneficiary">
                             <g id="XMLID_12_">
@@ -229,7 +117,7 @@
                         </svg>                        
                     </div>
                     
-                    <input type="text" class="" name="amount" id="amount" placeholder="How much?" inputmode="numeric" >
+                    <input type="text" class="" name="amount" id="bouquetCost" placeholder="Package cost" inputmode="numeric" disabled>
                     <div class="discount-container">
                         <p>Cashback:&#8358; <Span class="calculatedDiscount"></Span></p>
                     </div>                    
@@ -245,13 +133,34 @@
                     </div>
                     
     
-                    <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="fundBetting" disabled>Proceed</button>
+                    <button href="javascript:void(0)" class="primary-btn disabled" style="margin-top: 80px;" id="payInternet">Proceed</button>
                 </form>
              </div> 
         </div>
         
 
-        
+        <!--Transaction PIN Validation -->
+        <div class="setting-modal" id="PINValidation">
+            {% csrf_token %}  
+            <div class="content">
+                <div class="modal-indicator">
+                    <!-- <hr> -->
+                </div>
+                <!-- Old PIN -->
+                <div class="" id="transactionPIN">
+                    <h6 class="header">Enter  4-Digit Transaction Pin</h6>
+                    <p class="tag">We just want to make sure it is you&#x1F512;</p>
+                    <form method="POST" class="setPinForm" id="setPinForm">
+                        <div class="pin-container">
+                            <div id="PINWrapper" ></div>
+                        </div>
+                    </form>
+                    <!-- Feedback -->
+                    <p class="text-center validationError" id="PINValidationError"></p>  
+                    <div class="spacer"></div>                            
+                </div>
+            </div>
+        </div>
 
         <!-- Summary modal -->
         <div class="setting-modal billSummary" id="billSummary" style="display: none;">
@@ -264,16 +173,20 @@
                     <div class="details">
                         <div class="data">
                             <p class="info">Bill Type</p>
-                            <p class="value" id="">Bet Funding</p>
+                            <p class="value" id="">Internet</p>
                         </div>
                         <div class="data">
-                            <p class="info">Operator</p>
+                            <p class="info">Internet Provider</p>
                             <p class="value discoOperator" id="discoOperator"></p>
                         </div>
                         <div class="data">
-                            <p class="info">Wallet ID</p>
+                            <p class="info">Customer ID</p>
                             <p class="value recipientMeterNum" id="recipientMeterNum"></p>
                         </div>
+                        <!-- <div class="data">
+                            <p class="info">Customer ID</p>
+                            <p class="value recipientMeterType" id="recipientMeterType"></p>
+                        </div> -->
                         <div class="data">
                             <p class="info">Name</p>
                             <p class="value recipientMeterName" id="recipientMeterName"></p>
@@ -320,14 +233,99 @@
         
                     <div class="button-group">
                         <button href="javascript:void(0)" class="secondary-btn  cancelTrans" id="cancelAirtime" onclick="">Cancel</button>
-                        <button href="javascript:void(0)" class="primary-btn"  id="fundBetWallet" onclick="">Purchase</button>
+                        <button href="javascript:void(0)" class="primary-btn"  id="purchaseInternet" onclick="">Purchase</button>
                     </div>
                 </div>
             </div>
         
         </div>
 
+        <!-- Transaction Receipt modal -->
+        <div class="setting-modal billSummary feedback" id="billsFeedback" style="display: none;">
+            {% csrf_token %}  
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <!-- Transaction Summary -->
+                <div  id="" style="display: block;">
+                    <div class="details transaction-header">
+                        <div class="icon-container">
+                            <div class="icon-box">
+                                <img src="" id="paymentDiscoImage" alt="">
+                            </div>
+                        </div>                        
+                        <p class="disco discoOperator" id="paymentDisco">IBEDC</p>
+                        <p class="transaction-amount">#<span class="billAmount" id="paymentAmount"></span></p>
+                        <div class="transaction-status">
+                            <svg width="16px" height="16px" viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path fill="var(--success1)" d="M512 64a448 448 0 110 896 448 448 0 010-896zm-55.808 536.384l-99.52-99.584a38.4 38.4 0 10-54.336 54.336l126.72 126.72a38.272 38.272 0 0054.336 0l262.4-262.464a38.4 38.4 0 10-54.272-54.336L456.192 600.384z"></path>
+                                </g>
+                            </svg>
+                            <p>Successful</p>
+                        </div>
+                    </div>
+                    <div class="details token">
+                        <div class="data">
+                            <p class="info">Token</p>
+                            <div class="flex-container">
+                                <p class="value" id="paymentToken"></p>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyOneTimeAcc" onclick="">
+                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
+                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                                </svg>
+                            </div>
+                            
+                        </div>
+                        <div class="data">
+                            <p class="info">Reference</p>
+                            <div class="flex-container">
+                                <p class="value"><span id="paymentReference"></span></p>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="copyOneTimeAcc" onclick="">
+                                    <path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#FF3131"/>
+                                    <path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#FF3131"/>
+                                </svg>
+                            </div>
+                            
+                        </div>
+                        <div class="data">
+                            <p class="info">Units</p>
+                            <p class="value"><span id="paymentUnits"></span> kWh</p>
+                        </div>
+                    </div>                     
+                    <div class="details">
+                        <div class="data">
+                            <p class="info">Meter Number</p>
+                            <p class="value recipientMeterNum" id=""></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Meter Type</p>
+                            <p class="value recipientMeterType" id=""></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Name</p>
+                            <p class="value recipientMeterName" id=""></p>
+                        </div>
+                        <div class="data">
+                            <p class="info">Address</p>
+                            <p class="value recipientMeterAddress" id=""></p>
+                        </div>                        
+                        <div class="data">
+                            <p class="info">Date</p>
+                            <p class="value"><span id="paymentDate"></span></p>
+                        </div>
+                    </div>
         
+                    <div class="button-group">
+                        <a class="secondary-btn " href="{% url 'buy-electricity' %}" onclick="">Buy Again</a>
+                        <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
         <!-- Feeback modal -->
         <div class="setting-modal" id="transactionFeedback" style="display: none;">
             <div class="content vacc">   
@@ -337,12 +335,12 @@
                     <lottie-player src="https://lottie.host/a4b16f7e-e9e7-4cc1-8f34-54f435ea80c5/FmzCUPyAsk.json" background="transparent" speed="1" style="width: 180px; height: 180px" loop autoplay direction="1" mode="normal"></lottie-player>
                 </div>
                 <div class="feedback">
-                    <p>Your <span>Bet Funding</span> <br>Was Successful</p>
-                    <small>Betting wallet should be updated<br>within a few seconds.</small>
+                    <p>Your <span>Internet Subscription</span> <br>Was Successful</p>
+                    <small>Your plan should be updated<br>within a few seconds.</small>
                 </div>
                 
                 <div class="button-group">
-                    <a class="secondary-btn " href="{% url 'bet-funding' %}" onclick="">Fund Again</a>
+                    <a class="secondary-btn " href="{% url 'internet-subscription' %}" onclick="">Buy Again</a>
                     <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
                 </div> 
             </div>
@@ -386,29 +384,6 @@
         
         </div>
 
-        <!--Transaction PIN Validation -->
-        <div class="setting-modal" id="PINValidation">
-            {% csrf_token %}  
-            <div class="content">
-                <div class="modal-indicator">
-                    <!-- <hr> -->
-                </div>
-                <!-- Old PIN -->
-                <div class="" id="transactionPIN">
-                    <h6 class="header">Enter  4-Digit Transaction Pin</h6>
-                    <p class="tag">We just want to make sure it is you&#x1F512;</p>
-                    <form method="POST" class="setPinForm" id="setPinForm">
-                        <div class="pin-container">
-                            <div id="PINWrapper" ></div>
-                        </div>
-                    </form>
-                    <!-- Feedback -->
-                    <p class="text-center validationError" id="PINValidationError"></p>  
-                    <div class="spacer"></div>                            
-                </div>
-            </div>
-        </div>
-
         <!-- Page Preloader -->
         <div class="loader-overlay" id="mainLoader">
             <div class="loader"></div>
@@ -426,7 +401,7 @@
     </div>
     
 
-    <script src="{% static 'billpayments/js/bet-funding.js' %}?v=1.025"></script>
+    <script src="{% static 'billpayments/js/internet.js' %}?v=1.025"></script>
     <!-- <script type="text/javascript">
 		$('.money').simpleMoneyFormat();
 	</script> -->

@@ -1,0 +1,73 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cable Backend</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+        
+
+        <!-- Main content -->
+        <div class="main-content">
+            
+            <!-- Table -->
+            <div class="table-container">
+                <!-- Feedback -->
+                {% if messages %}
+                {% for message in messages%}
+                <div class="feedback-messages {{message.tags}}">
+                <p>{{message}}</p>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <table>
+                  <caption>Cable Backends</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">SN</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Current</th>
+                        <th scope="col">Update</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-label="SN">1</td>
+                        <td data-label="Name">Cable</td>
+                        <td data-label="Current"> <strong id="{{backend.operator}}-backend">{{cableBackend.active_backend}}</strong></td>
+                        <td data-label="Update"> 
+                          <form action="{% url 'update-cable-backend' %}" method="post">
+                            {% csrf_token %}
+                            <div class="" style="margin-right: 10px; margin-bottom: 10px;">
+                              <input type="text" name="operator" hidden>
+                              <select name="active_backend" id="">
+                                <option value="9Payment">9Payment</option>
+                                <option value="SafeHaven">SafeHaven</option>
+                              </select>
+                              <input type="submit" value="update" class="primary-button">
+                            </div>
+                          </form> 
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>                          
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

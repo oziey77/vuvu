@@ -13,6 +13,10 @@ urlpatterns=[
     path("services/",views.manageServices,name='services'),
     path("data-backends/",views.dataBackendPage,name='data-backends'),
     path("update-data-backend/<str:operator>",views.updateDataBackend,name="update-data-backend"),
+    path("electricity-backends/",views.electricityBackendPage,name='electricity-backends'),
+    path("update-electricity-backend/",views.updateElectricityBackend,name="update-electricity-backend"),
+    path("cable-backends/",views.cableBackendPage,name='cable-backends'),
+    path("update-cable-backend/",views.updateCableBackend,name="update-cable-backend"),
     path("transactions/",views.transactionHistoryPage,name='transactions'),
     path('transaction-detail/<str:reference>',views.transactionDetailPage,name='transaction-detail'),
     path('refund-transaction/<str:pk>',views.refundTransaction,name='refund-transaction'),
@@ -31,6 +35,8 @@ urlpatterns=[
 
     path("notifications-management/",views.notificationsSetup,name="notifications-management"),
     path("send-general-notification/",views.sendGeneralNotification,name="send-general-notification"),
+
+    path("add-story/",views.vuvuStoryPage,name="add-story"),
     
     # Ajax
     path("update-services/",views.updateService),

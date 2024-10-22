@@ -17,11 +17,11 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
 import requests
 
-from adminbackend.models import DataBackend
+from adminbackend.models import DataBackend, VuvuStory
 from payments.models import DynamicAccountBackend, OneTimeDeposit, PartnerBank, WalletFunding
 from telecomms.models import ATNDataPlans, DataServices
 from telecomms.serializers import ATNDataPlanSerializer
-from users.forms import KYCDataForm, MyUserCreationForm
+from users.forms import KYCDataForm, MyUserCreationForm, StoryForm
 from users.serializers import TransactionSerializer
 from vuvu.custom_functions import GIVEAWAY_DATA, is_ajax, isNum, reference,offers
 from .models import AccountDeleteQueue, KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
@@ -1321,6 +1321,59 @@ def cancelAccountDelete(request):
 
     return redirect('delete-account')
 
+
+# Stories Page
+@login_required(login_url='login')
+def storiesPage(request):
+    user = request.user
+
+    
+    context = {
+    }
+    return render(request,'users/stories.html',context)
+
+# Stories Page
+@login_required(login_url='login')
+def watchStories(request):
+    user = request.user
+    storiesRaw = VuvuStory.objects.all().order_by("-id")
+
+    p = Paginator(storiesRaw,1)
+    page_number = request.GET.get('page')
+    try:
+        stories = p.get_page(page_number)
+    except PageNotAnInteger:
+        stories = p.page(1)
+
+    except EmptyPage:
+        stories = p.page(p.num_pages)
+
+    
+    context = {
+        "stories":stories,
+        "totalStories":storiesRaw.count()
+    }
+    return render(request,'users/watch-stories.html',context)
+
+# Submit story Page
+@login_required(login_url='login')
+def submitStory(request):
+    user = request.user
+    if request.method == "POST":
+        form = StoryForm(request.POST)
+        if form.is_valid():
+            newStory = form.save(commit=False)
+            newStory.user = user
+            newStory.save()
+            print("New story saved")
+            return redirect("tell-your-story")
+        else:
+            print(form.errors)
+            return redirect("tell-your-story")
+    
+    context = {
+    }
+    return render(request,'users/submit-story.html',context)
 
 
 

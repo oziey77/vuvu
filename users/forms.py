@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm,SetPasswordForm
 from django.contrib.auth import password_validation
 from django import forms
 
-from users.models import KYCData, User
+from users.models import KYCData, Story, User
 
 
 class MyUserCreationForm(UserCreationForm):
@@ -33,3 +33,8 @@ class KYCDataForm(forms.ModelForm):
         model = KYCData
         fields = "__all__"
         exclude = ["user","status","dob"]
+
+class StoryForm(forms.ModelForm):
+    class Meta:
+        model = Story
+        fields = ["body"]

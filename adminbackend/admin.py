@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from adminbackend.models import AirtimeBackend, AirtimeDiscount, CableBackend, DataBackend, ElectricityBackend
+from adminbackend.models import AirtimeBackend, AirtimeDiscount, CableBackend, DataBackend, EPINBackend, ElectricityBackend
+from billpayments.models import BillPaymentServices
 from users.models import Notifications
 
 # Register your models here.
@@ -19,3 +20,5 @@ admin.site.register(DataBackend,DataBackendAdmin)
 admin.site.register(Notifications)
 admin.site.register(ElectricityBackend)
 admin.site.register(CableBackend)
+admin.site.register(EPINBackend)
+admin.site.register(BillPaymentServices)
