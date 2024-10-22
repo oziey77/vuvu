@@ -43,13 +43,13 @@ class User(AbstractBaseUser):
     safeHavenAccount_account_number = models.CharField(max_length=10,default='',blank=True)
     safeHavenAccount_account_id = models.CharField(max_length=30,default='',blank=True)
 
-    completed_offers = models.JSONField(default=list)
+    completed_offers = models.JSONField(default=list,blank=True)
     give_away_level = models.IntegerField(default=1)
 
 
     USERNAME_FIELD = 'username'
     # REQUIRED_FIELDS =[]
-    # REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['email',]
 
     def __str__(self):
         return self.email
