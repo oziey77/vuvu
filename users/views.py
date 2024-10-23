@@ -23,6 +23,7 @@ from telecomms.models import ATNDataPlans, DataServices
 from telecomms.serializers import ATNDataPlanSerializer
 from users.forms import KYCDataForm, MyUserCreationForm, StoryForm
 from users.serializers import TransactionSerializer
+from users.tasks import sendConfirmOTP
 from vuvu.custom_functions import GIVEAWAY_DATA, is_ajax, isNum, reference,offers
 from .models import AccountDeleteQueue, KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
 
@@ -80,16 +81,7 @@ def signupPage(request):
             confirmationData.refresh_from_db()         
 
             # Send activation Email
-            current_site = get_current_site(request)  
-            mail_subject = 'Please confirm your email address'  
-            message = render_to_string('users/email/acc_active_email.html', {  
-                'user': user,  
-                'domain': current_site.domain,  
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),  
-                'token':account_activation_token.make_token(user),  
-            })  
-            # to_email = form.cleaned_data.get('email') 
-            send_mail(mail_subject, message, "Confirm Email <support@yagapay.io>", [user.email])
+            sendConfirmOTP.delay(username=user.username,email=user.email,otp=OTPCode) 
             return JsonResponse({
                 'code':'00',
                 'confirmationID':confirmationData.confirmation_id

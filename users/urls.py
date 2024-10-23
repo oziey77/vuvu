@@ -30,7 +30,7 @@ urlpatterns = [
     path("resend-registration-code/",views.resendRegOTP),
     path("verify-registration/",views.verifyRegistration),
     path('user-balance/',views.fetchWalletBalance),
-    path('logout',views.logoutUser,name='logout'),
+    path('logout/',views.logoutUser,name='logout'),
     path('trasnsaction-detail/<str:pk>',views.getTransactionDetails),
     path('change-password/',views.changePassword),
     path('send-otp/',views.sendOTP),
