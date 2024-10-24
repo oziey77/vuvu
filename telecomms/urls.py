@@ -13,5 +13,8 @@ urlpatterns=[
     path('fetch-data-plans/',views.fetchDataPlans),
     path('purchase-data/',views.buyData),
     path('available-offer/',views.getCurrentOffer),
+
+    # Callback URL
+    path('telecomms-callback',views.airtimeNGCallback),
     
 ]

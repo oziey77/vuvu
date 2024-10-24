@@ -62,9 +62,9 @@
                         <td data-label="Account No."> {{ funding.accountNumber }}</td>
                         <td data-label="Source Acc. No."> {{ funding.sourceAccountNumber }}</td>
                         <td data-label="Source Acc Name"> {{ funding.sourceAccountName }}</td>
-                        <td data-label="Amount"> VPoints: {{ funding.amount|intcomma }}</td>
-                        <td data-label="Bal. Before"> VPoints: {{ funding.balanceBefore|intcomma }}</td>
-                        <td data-label="Bal. After"> VPoints: {{ funding.balanceAfter|intcomma }}</td>
+                        <td data-label="Amount"> ₦: {{ funding.amount|intcomma }}</td>
+                        <td data-label="Bal. Before"> ₦: {{ funding.balanceBefore|intcomma }}</td>
+                        <td data-label="Bal. After"> ₦: {{ funding.balanceAfter|intcomma }}</td>
                         <td data-label="Date"> {{ funding.created }}</td>
                         </tr>
                         {% endfor %}

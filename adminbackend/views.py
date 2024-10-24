@@ -462,16 +462,15 @@ def updateService(request):
 @login_required(login_url='login')
 def dataBackendPage(request):
     user = request.user
-    dataBackends = DataBackend.objects.all().order_by("id")
-
-    context = {
-        "dataBackends":dataBackends
-    }
-
     
     if user.is_staff: # only staff user(main admin can login)
+        dataBackends = DataBackend.objects.all().order_by("id")
+
+        context = {
+            "dataBackends":dataBackends
+        }
         return render(request,"adminbackend/data-backends.html",context)
-    
+
 @login_required(login_url='login')
 def updateDataBackend(request,operator):
     user = request.user
@@ -493,14 +492,12 @@ def updateDataBackend(request,operator):
 @login_required(login_url='login')
 def electricityBackendPage(request):
     user = request.user
-    electricityBackend = ElectricityBackend.objects.get(name="Main")
-
-    context = {
-        "electricityBackend":electricityBackend
-    }
-
     
     if user.is_staff: # only staff user(main admin can login)
+        electricityBackend = ElectricityBackend.objects.get(name="Main")
+        context = {
+            "electricityBackend":electricityBackend
+        }
         return render(request,"adminbackend/electricity-backends.html",context)
 
 #Update 
@@ -525,14 +522,12 @@ def updateElectricityBackend(request):
 @login_required(login_url='login')
 def cableBackendPage(request):
     user = request.user
-    cableBackend = CableBackend.objects.get(name="Main")
-
-    context = {
-        "cableBackend":cableBackend
-    }
-
     
     if user.is_staff: # only staff user(main admin can login)
+        cableBackend = CableBackend.objects.get(name="Main")
+        context = {
+            "cableBackend":cableBackend
+        }
         return render(request,"adminbackend/cable-backends.html",context)
 
 # Update Cable Backend    
@@ -607,7 +602,7 @@ def transactionHistoryPage(request):
 @login_required(login_url='login')
 def transactionDetailPage(request,reference):
     user = request.user
-    if user.is_staff:
+    if user.is_admin:
         transaction = Transaction.objects.get(reference=reference)
         context = {
            'transaction':transaction

@@ -1,6 +1,6 @@
 from decimal import Decimal
 import json
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -14,7 +14,12 @@ from users.models import Beneficiary, Cashback, Transaction, TransactionPIN, Use
 from vuvu.custom_functions import is_ajax, reference
 from django.contrib.auth.hashers import check_password
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
+
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -71,12 +76,25 @@ def buyAirtime(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
-            print(request.POST)
             operator = request.POST.get('operator')
             recipient = request.POST.get('recipient')
             amount = Decimal(request.POST.get('amount'))
             wallet = UserWallet.objects.get(user=user)
             safeBeneficiary = request.POST.get('safeBeneficiary')
+
+            today = datetime.now(timezone.utc)
+
+            try:
+                recentAirtimeTransaction = Transaction.objects.filter(recipient=recipient,transaction_type="Airtime",created__date=today.date(),status='Success')
+                if recentAirtimeTransaction.count() > 0:
+                    total = recentAirtimeTransaction.aggregate(TOTAL = Sum('amount'))['TOTAL']
+                    if (total + Decimal(amount)) > 2000 or total == 2000:
+                        return JsonResponse(data = {
+                            "code":"09",
+                            "message":"recipient exceeded daily airtime limit of #2000",
+                        })
+            except ObjectDoesNotExist:
+                pass
 
             # Safe Beneficiary Logic
             if safeBeneficiary == "on":
@@ -87,11 +105,9 @@ def buyAirtime(request):
                         # Search of record already exist
                         alreadySaved = False
                         for entry in telecommsBeneficiary:
-                            # print(entry)
                             # alreadySaved = True
                             if entry['recipient'] == recipient:
                                 alreadySaved = True
-                                print("Record already saved")
                                 break
                         # If rececipient has not been saved before
                         if alreadySaved == False:
@@ -102,9 +118,7 @@ def buyAirtime(request):
                                 }
                             ) 
                             userBeneficiaries.telecomms = telecommsBeneficiary 
-                            userBeneficiaries.save() 
-                            print("New beneficary added")               
-                        print(f"these are the current telecomms beneficiaries 2 {telecommsBeneficiary}")
+                            userBeneficiaries.save()
                         
                 except ObjectDoesNotExist:
                     newBeneficiary = [{
@@ -194,6 +208,7 @@ def buyAirtime(request):
                     if airtimeBackend.active_backend == "ATN":
                         transaction.APIBackend = 'ATN'
                         transaction.save()
+                        callBackUrl = "https://webhook.vuvu.ng/atn-webhook.php"
                         url = 'https://www.airtimenigeria.com/api/v1/airtime/purchase'
                         
                         payload = {
@@ -201,7 +216,7 @@ def buyAirtime(request):
                             "phone": recipient,
                             "amount": str(amount),
                             "customer_reference": transRef,
-                            # "callback_url": callBackUrl,
+                            "callback_url": callBackUrl,
                             }
                         headers = {
                             'Authorization': airtimeNigeriaAPI,
@@ -413,7 +428,6 @@ def buyAirtime(request):
                                 balanceAfter = wallet.balance,
                             )
 
-                            print(f'Honourworld Response is {responseDetails}')
                             if error['msg'] == 'Insufficient wallet fund':
                                 return JsonResponse({
                                     "code":"09",
@@ -631,7 +645,6 @@ def buyData(request):
                     })
 
                 # Process user offers
-                print(f"New POST request {request.POST}")
                 totalTransactions = user.transaction_count
                 completeOffers = user.completed_offers
                 # If user accept offer
@@ -765,7 +778,7 @@ def buyData(request):
                     if activeBackend == "ATN" or dataType == "Extra":
                         transaction.APIBackend = 'ATN'
                         transaction.save()
-                        # callBackUrl = "https://webhook.yagapay.io/atn-webhook.php"
+                        callBackUrl = "https://webhook.vuvu.ng/atn-webhook.php"
                         # API ENDPOINT for AIRTIME     
                         url = 'https://www.airtimenigeria.com/api/v1/data/purchase'
                         payload = {
@@ -773,7 +786,7 @@ def buyData(request):
                                 "phone": recipient,
                                 "package_code": selectedPlan.package_id,
                                 "customer_reference": transRef, 
-                                # "callback_url": callBackUrl,                   
+                                "callback_url": callBackUrl,                   
                                 }
                         headers = {
                                 'Authorization': airtimeNigeriaAPI,
@@ -925,7 +938,6 @@ def buyData(request):
                         data = response.json()
 
                         
-                        print(f"Twins10 response is {data}")
                         if data['status'] == "success" or data['status'] == "processing":
                             Cashback.objects.create(
                                 user = user,
@@ -1011,9 +1023,7 @@ def getCurrentOffer(request):
         totalTransactions = user.transaction_count
         # totalTransactions = 90
 
-        print(f"total Transaction is  {totalTransactions}")
         completeOffers = user.completed_offers
-        print(f"Total completed offers {len(completeOffers)}")
         
         if len(completeOffers) == 0:
             if totalTransactions ==78 or totalTransactions ==79:
@@ -1054,5 +1064,56 @@ def getCurrentOffer(request):
                     "message":"on offer found",
                 })
 
+
+require_http_methods(['POST'])
+@csrf_exempt
+def airtimeNGCallback(request):
+    if request.method == "POST":       
+
+        
+        response = json.loads(request.body) 
+        
+        reference = response['reference']
+        customerReference = response['customer_reference']
+        responseData = response['data']
+        
+        try:
+            # Check if transaction is airtime recharge
+            transaction = Transaction.objects.get(APIreference=reference,reference=customerReference)
+            if transaction is not None:
+                if responseData['delivery_status'] == 'refunded':
+                    wallet = UserWallet.objects.get(user=transaction.user)
+                    transaction.status = "Refunded"
+                    transaction.message = "Transaction refunded"
+                    transaction.refunded = True
+                    transaction.save()
+
+                    balanceBefore = wallet.balance
+                    wallet.balance += transaction.amount
+                    wallet.save()
+                    comment = ''
+                    if transaction.transaction_type == "Airtime":
+                        comment = f"Airtime {transaction.reference} Refund"
+                    elif transaction.transaction_type == "Data":
+                        comment = f"Data {transaction.reference} Refund"
+
+                    # Create wallet Activity
+                    WalletActivity.objects.create(
+                        user = transaction.user,
+                        event_type = "Credit",
+                        transaction_type = "Data",
+                        comment = comment,
+                        amount = transaction.amount,
+                        balanceBefore = balanceBefore,
+                        balanceAfter = wallet.balance,
+                    )
+                    return HttpResponse(status=200)
+                    
+                    # transactionRefund.delay(userID=transaction.user.id,transationType='Airtime',message=transactionMessage)
+
+        except ObjectDoesNotExist:
+            pass
+        return HttpResponse(status=200)
+    pass
 
         

@@ -45,7 +45,6 @@ def validateMeter(request):
         meterNumber = request.GET.get("meterNumber")
         selectedOperator = request.GET.get("selectedOperator")
         meterType = request.GET.get("meterType")
-        print(f"Request meter type is {meterType}")
         amount = request.GET.get("amount")
 
         electricityAvailable = BillPaymentServices.objects.get(service_type="Electricity").available
@@ -93,7 +92,7 @@ def validateMeter(request):
                 clientAssertion = settings.SAFEH_CLIENT_ASSERTION
                 authToken = ''
                 # Generate Token
-                url ='https://api.sandbox.safehavenmfb.com/oauth2/token'                                        
+                url ='https://api.safehavenmfb.com/oauth2/token'                                        
                 headers = {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -111,7 +110,7 @@ def validateMeter(request):
                 if 'access_token' in data:
                     authToken = data['access_token']
                     # VERIFY METER
-                    url = "https://api.sandbox.safehavenmfb.com/vas/verify"                                        
+                    url = "https://api.safehavenmfb.com/vas/verify"                                        
                     headers = {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
@@ -128,7 +127,6 @@ def validateMeter(request):
                     
                     
                     responseData = json.loads(responseData.text)
-                    print(f"Safehaven feed back is {responseData}")
                     if responseData['statusCode'] == 200:
                         customerDetails = responseData['data']
                         if customerDetails["vendType"] != meterType.upper():
@@ -197,11 +195,9 @@ def buyElectricity(request):
                         # Search of record already exist
                         alreadySaved = False
                         for entry in electricityBeneficiary:
-                            # print(entry)
                             # alreadySaved = True
                             if entry['meterNumber'] == meterNumber:
                                 alreadySaved = True
-                                print("Record already saved")
                                 break
                         # If rececipient has not been saved before
                         if alreadySaved == False:
@@ -215,8 +211,6 @@ def buyElectricity(request):
                             ) 
                             userBeneficiaries.electricity = electricityBeneficiary 
                             userBeneficiaries.save() 
-                            print("New beneficary added")               
-                        print(f"these are the current telecomms beneficiaries 2 {electricityBeneficiary}")
                         
                 except ObjectDoesNotExist:
                     newBeneficiary = [{
@@ -405,7 +399,7 @@ def buyElectricity(request):
                         utilityAccount = settings.SAFEH_UTILITY_ACCOUNT
                         authToken = ''
                         # Generate Token
-                        url ='https://api.sandbox.safehavenmfb.com/oauth2/token'                                        
+                        url ='https://api.safehavenmfb.com/oauth2/token'                                        
                         headers = {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
@@ -420,11 +414,10 @@ def buyElectricity(request):
                         response = requests.request("POST", url, headers=headers, data=payload)
 
                         data = json.loads(response.text)
-                        # print(f"TOKEN RESPONSE IS {data}")
                         if 'access_token' in data:
                             authToken = data['access_token']
 
-                            url = "https://api.sandbox.safehavenmfb.com/vas/pay/utility"                                        
+                            url = "https://api.safehavenmfb.com/vas/pay/utility"                                        
                             headers = {
                                 'Content-Type': 'application/json',
                                 'Accept': 'application/json',
@@ -441,13 +434,11 @@ def buyElectricity(request):
                                 "vendType": meterType.upper()
                                 }
 
-                            # print(f"ELECTRICITY PAYLOAD IS {payload}")
 
                             
                             responseData = requests.request("POST", url, headers=headers, json=payload)
                             
                             responseData = json.loads(responseData.text)
-                            print(f"ELECTRICITY RESPONSE IS {responseData}")
                             if responseData['statusCode'] == 200:
                                 details = responseData["data"]
                                 metaData = details['metaData']
@@ -574,7 +565,6 @@ def getCableBouquet(request):
 
                 response = requests.request('GET', url, headers=headers,)
                 responseDetails = response.json()
-                # print(responseDetails)
                 if responseDetails['responseCode'] == '200':
                     operatorData = responseDetails['data']
                     bouquetList = []
@@ -582,9 +572,7 @@ def getCableBouquet(request):
                         if entry['fieldName'] == 'itemId':
                             bouquetList = entry['items']
                             break
-                    # print(f"bouquet list is {bouqueList}")
                     if bouquetList !=[]:
-                        print(f"bouquet list is {bouquetList}")
                         return JsonResponse({
                             "code":"00",
                             "bouquetList":bouquetList,
@@ -606,7 +594,7 @@ def getCableBouquet(request):
                 clientAssertion = settings.SAFEH_CLIENT_ASSERTION
                 authToken = ''
                 # Generate Token
-                url ='https://api.sandbox.safehavenmfb.com/oauth2/token'                                        
+                url ='https://api.safehavenmfb.com/oauth2/token'                                        
                 headers = {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -626,7 +614,7 @@ def getCableBouquet(request):
 
 
                     # VERIFY TRANSACTION
-                    url = f"https://api.sandbox.safehavenmfb.com/vas/service-category/{selectedOperator}/products"                                        
+                    url = f"https://api.safehavenmfb.com/vas/service-category/{selectedOperator}/products"                                        
                     headers = {
                         # 'Content-Type': 'application/json',
                         'Accept': 'application/json',
@@ -686,7 +674,6 @@ def validateSmartcard(request):
 
             response = requests.request('POST', url, headers=headers, json=payload)
             responseDetails = response.json()
-            print(responseDetails)
             if responseDetails['responseCode'] == '200':
                 customerData = responseDetails['data']
                 return JsonResponse({
@@ -705,7 +692,7 @@ def validateSmartcard(request):
             clientAssertion = settings.SAFEH_CLIENT_ASSERTION
             authToken = ''
             # Generate Token
-            url ='https://api.sandbox.safehavenmfb.com/oauth2/token'                                        
+            url ='https://api.safehavenmfb.com/oauth2/token'                                        
             headers = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -723,7 +710,7 @@ def validateSmartcard(request):
             if 'access_token' in data:
                 authToken = data['access_token']
                 # VERIFY METER
-                url = "https://api.sandbox.safehavenmfb.com/vas/verify"                                        
+                url = "https://api.safehavenmfb.com/vas/verify"                                        
                 headers = {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
@@ -739,7 +726,6 @@ def validateSmartcard(request):
                 responseData = requests.request("POST", url, headers=headers, data=payload)
                 
                 responseData = json.loads(responseData.text)
-                print(f"safehaven verifiction {responseData}")
                 if responseData['statusCode'] == 200:
                     customerDetails = responseData['data']
                     return JsonResponse({
@@ -769,7 +755,6 @@ def buyCable(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
-            print(request.POST)
             smartcardNumber = request.POST.get("smartcardNumber")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
@@ -778,7 +763,6 @@ def buyCable(request):
             customerName = request.POST.get("customerName")
             otherField = request.POST.get("otherField")
             amount = Decimal(request.POST.get("amount"))
-            print(f"sent amount is {amount}")
             saveBeneficiary = request.POST.get('saveBeneficiary')
             
             # Get user wallet
@@ -793,11 +777,9 @@ def buyCable(request):
                         # Search of record already exist
                         alreadySaved = False
                         for entry in cableBeneficiary:
-                            # print(entry)
                             # alreadySaved = True
                             if entry['smartcardNumber'] == smartcardNumber:
                                 alreadySaved = True
-                                print("Record already saved")
                                 break
                         # If rececipient has not been saved before
                         if alreadySaved == False:
@@ -809,9 +791,7 @@ def buyCable(request):
                                 }
                             ) 
                             userBeneficiaries.cable = cableBeneficiary 
-                            userBeneficiaries.save() 
-                            print("New beneficary added")               
-                        print(f"these are the current telecomms beneficiaries 2 {cableBeneficiary}")
+                            userBeneficiaries.save()              
                         
                 except ObjectDoesNotExist:
                     newBeneficiary = [{
@@ -861,7 +841,6 @@ def buyCable(request):
 
                     response = requests.request('GET', url, headers=headers,)
                     responseDetails = response.json()
-                    # print(responseDetails)
                     
                     if responseDetails['responseCode'] == '200':
                         operatorData = responseDetails['data']
@@ -870,7 +849,6 @@ def buyCable(request):
                             if entry['fieldName'] == 'itemId':
                                 bouquetList = entry['items']
                                 break
-                        # print(f"bouquet list is {bouqueList}")
                         if bouquetList !=[]:
                             packageCost = 0
                             for package in bouquetList:
@@ -956,7 +934,6 @@ def buyCable(request):
 
                                         response = requests.request('POST', url, headers=headers, json=payload)
                                         responseData = response.json()
-                                        print(f"9Payment response is {responseData}")
                                         
                                         if responseData['responseCode'] == "200":
                                             paymentData = responseData['data']
@@ -1033,7 +1010,7 @@ def buyCable(request):
                     utilityAccount = settings.SAFEH_UTILITY_ACCOUNT
                     authToken = ''
                     # Generate Token
-                    url ='https://api.sandbox.safehavenmfb.com/oauth2/token'                                        
+                    url ='https://api.safehavenmfb.com/oauth2/token'                                        
                     headers = {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
@@ -1047,13 +1024,12 @@ def buyCable(request):
                     })
                     response = requests.request("POST", url, headers=headers, data=payload)
 
-                    data = json.loads(response.text) 
-                    print(f"safehaven auth message {data}")                   
+                    data = json.loads(response.text)                   
                     if 'access_token' in data:
                         authToken = data['access_token']
                         
                         # VERIFY TRANSACTION
-                        url = f"https://api.sandbox.safehavenmfb.com/vas/service-category/{selectedOperator}/products"                                        
+                        url = f"https://api.safehavenmfb.com/vas/service-category/{selectedOperator}/products"                                        
                         headers = {
                             # 'Content-Type': 'application/json',
                             'Accept': 'application/json',
@@ -1065,7 +1041,6 @@ def buyCable(request):
                         response = requests.request("GET", url, headers=headers)
                         
                         responseData = json.loads(response.text)
-                        print(f"Response data Cable bundle is {responseData}")
                         if responseData['statusCode'] == 200:
                             bouquets = responseData['data']
 
@@ -1073,7 +1048,6 @@ def buyCable(request):
 
                             for i in range(len(bouquets)):
                                 if bouquets[i]["bundleCode"] == itemId:
-                                    # print(f"Matching Bouquet is {bouquets[i]}")
                                     selectedBouquet = bouquets[i]
                             
                             amount = selectedBouquet["amount"]
@@ -1140,7 +1114,7 @@ def buyCable(request):
 
 
                                     # Make Payment
-                                    url = f"https://api.sandbox.safehavenmfb.com/vas/pay/cable-tv"                                        
+                                    url = f"https://api.safehavenmfb.com/vas/pay/cable-tv"                                        
                                     headers = {
                                         # 'Content-Type': 'application/json',
                                         'Accept': 'application/json',
@@ -1312,7 +1286,6 @@ def validateBettingAccount(request):
 
         response = requests.request('POST', url, headers=headers, json=payload)
         responseDetails = response.json()
-        print(responseDetails)
         if responseDetails['responseCode'] == '200':
             customerData = responseDetails['data']
             return JsonResponse({
@@ -1341,14 +1314,12 @@ def fundBettingWallet(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
-            print(request.POST)
             accountId = request.POST.get("accountId")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
             customerName = request.POST.get("customerName")
             otherField = request.POST.get("otherField")
             amount = Decimal(request.POST.get("amount"))
-            print(f"sent amount is {amount}")
             saveBeneficiary = request.POST.get('saveBeneficiary')
             
             # Get user wallet
@@ -1363,11 +1334,9 @@ def fundBettingWallet(request):
                         # Search of record already exist
                         alreadySaved = False
                         for entry in betFundingBeneficiary:
-                            # print(entry)
                             # alreadySaved = True
                             if entry['accountId'] == accountId:
                                 alreadySaved = True
-                                print("Record already saved")
                                 break
                         # If rececipient has not been saved before
                         if alreadySaved == False:
@@ -1380,8 +1349,6 @@ def fundBettingWallet(request):
                             ) 
                             userBeneficiaries.bet_funding = betFundingBeneficiary 
                             userBeneficiaries.save() 
-                            print("New beneficary added")               
-                        print(f"these are the current telecomms beneficiaries 2 {betFundingBeneficiary}")
                         
                 except ObjectDoesNotExist:
                     newBeneficiary = [{
@@ -1497,7 +1464,6 @@ def fundBettingWallet(request):
 
                         response = requests.request('POST', url, headers=headers, json=payload)
                         responseData = response.json()
-                        print(f"9Payment response is {responseData}")
                         
                         if responseData['responseCode'] == "200":
                             paymentData = responseData['data']
@@ -1626,7 +1592,6 @@ def getInternetPlans(request):
 
         response = requests.request('GET', url, headers=headers,)
         responseDetails = response.json()
-        # print(responseDetails)
         if responseDetails['responseCode'] == '200':
             operatorData = responseDetails['data']
             bouquetList = []
@@ -1634,9 +1599,7 @@ def getInternetPlans(request):
                 if entry['fieldName'] == 'itemId':
                     bouquetList = entry['items']
                     break
-            # print(f"bouquet list is {bouqueList}")
             if bouquetList !=[]:
-                print(f"bouquet list is {bouquetList}")
                 return JsonResponse({
                     "code":"00",
                     "bouquetList":bouquetList,
@@ -1684,7 +1647,6 @@ def validateInternetCustomer(request):
 
         response = requests.request('POST', url, headers=headers, json=payload)
         responseDetails = response.json()
-        print(responseDetails)
         if responseDetails['responseCode'] == '200':
             customerData = responseDetails['data']
             return JsonResponse({
@@ -1712,7 +1674,6 @@ def buyInternetPlan(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
-            print(request.POST)
             customerID = request.POST.get("customerID")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
@@ -1721,7 +1682,6 @@ def buyInternetPlan(request):
             customerName = request.POST.get("customerName")
             otherField = request.POST.get("otherField")
             amount = Decimal(request.POST.get("amount"))
-            print(f"sent amount is {amount}")
             saveBeneficiary = request.POST.get('saveBeneficiary')
             
             # Get user wallet
@@ -1736,11 +1696,9 @@ def buyInternetPlan(request):
                         # Search of record already exist
                         alreadySaved = False
                         for entry in internetBeneficiary:
-                            # print(entry)
                             # alreadySaved = True
                             if entry['customerID'] == customerID:
                                 alreadySaved = True
-                                print("Record already saved")
                                 break
                         # If rececipient has not been saved before
                         if alreadySaved == False:
@@ -1753,8 +1711,6 @@ def buyInternetPlan(request):
                             ) 
                             userBeneficiaries.internet = internetBeneficiary 
                             userBeneficiaries.save() 
-                            print("New beneficary added")               
-                        print(f"these are the current telecomms beneficiaries 2 {internetBeneficiary}")
                         
                 except ObjectDoesNotExist:
                     newBeneficiary = [{
@@ -1801,7 +1757,6 @@ def buyInternetPlan(request):
 
             response = requests.request('GET', url, headers=headers,)
             responseDetails = response.json()
-            # print(responseDetails)
             
             if responseDetails['responseCode'] == '200':
                 operatorData = responseDetails['data']
@@ -1810,7 +1765,6 @@ def buyInternetPlan(request):
                     if entry['fieldName'] == 'itemId':
                         bouquetList = entry['items']
                         break
-                # print(f"bouquet list is {bouqueList}")
                 if bouquetList !=[]:
                     packageCost = 0
                     for package in bouquetList:
@@ -1900,7 +1854,6 @@ def buyInternetPlan(request):
 
                                     response = requests.request('POST', url, headers=headers, json=payload)
                                     responseData = response.json()
-                                    print(f"9Payment response is {responseData}")
                                     
                                     if responseData['responseCode'] == "200":
                                         paymentData = responseData['data']
@@ -2029,7 +1982,6 @@ def getEducationData(request):
 
         response = requests.request('GET', url, headers=headers,)
         responseDetails = response.json()
-        # print(responseDetails)
         if responseDetails['responseCode'] == '200':
             operatorData = responseDetails['data']
             bouquetList = []
@@ -2037,9 +1989,7 @@ def getEducationData(request):
                 if entry['fieldName'] == 'itemId':
                     bouquetList = entry['items']
                     break
-            # print(f"bouquet list is {bouqueList}")
             if bouquetList !=[]:
-                print(f"bouquet list is {bouquetList}")
                 return JsonResponse({
                     "code":"00",
                     "bouquetList":bouquetList,
@@ -2070,7 +2020,6 @@ def buyEducationPIN(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
-            print(request.POST)
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
             packageName = request.POST.get("packageName")
@@ -2119,7 +2068,6 @@ def buyEducationPIN(request):
 
             response = requests.request('GET', url, headers=headers,)
             responseDetails = response.json()
-            # print(responseDetails)
             
             if responseDetails['responseCode'] == '200':
                 operatorData = responseDetails['data']
@@ -2128,7 +2076,6 @@ def buyEducationPIN(request):
                     if entry['fieldName'] == 'itemId':
                         bouquetList = entry['items']
                         break
-                # print(f"bouquet list is {bouqueList}")
                 if bouquetList !=[]:
                     packageCost = 0
                     for package in bouquetList:
@@ -2218,7 +2165,6 @@ def buyEducationPIN(request):
 
                                     response = requests.request('POST', url, headers=headers, json=payload)
                                     responseData = response.json()
-                                    print(f"9Payment response is {responseData}")
                                     
                                     if responseData['responseCode'] == "200":
                                         paymentData = responseData['data']

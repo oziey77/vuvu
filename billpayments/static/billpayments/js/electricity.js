@@ -35,7 +35,9 @@ $(document).ready(function(){
 
     // Meter selected
     $("#meterType").on("change",function(){
+        console.log("meter type selected")
         meterType = $(this).val()
+        console.log(`meter type is ${meterType}`)
         meterTypeText = $("#meterType option:selected").text()
         inputValid()
     })

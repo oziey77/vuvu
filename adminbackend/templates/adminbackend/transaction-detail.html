@@ -51,7 +51,9 @@
                             <th scope="col">Package</th> -->
                             <th scope="col">Date</th>
                             <th scope="col">Status</th>
+                            {% if user.is_staff %}
                             <th scope="col">Action</th>
+                            {% endif %}
                           </tr>
                     </thead>
                     <tbody>
@@ -74,13 +76,15 @@
                             <td data-label="Package"> {{ transaction.package }}</td> -->
                             <td data-label="Date"> {{ transaction.created }}</td>
                             <td data-label="status"> {{ transaction.status }}</td>
-                            <td data-label="Action" class="">
-                                {% if transaction.refunded == False %}
-                                <a href="{% url 'refund-transaction' transaction.id %}" class="primary-button" id="" style="padding: 6px 12px;border-radius: 4px;">Refund</a>                                
-                                {% else %}
-                                <p><strong>Refunded</strong></p>
-                                {% endif %}
-                              </td>
+                            {% if user.is_staff %}
+                                <td data-label="Action" class="">
+                                    {% if transaction.refunded == False %}
+                                    <a href="{% url 'refund-transaction' transaction.id %}" class="primary-button" id="" style="padding: 6px 12px;border-radius: 4px;">Refund</a>                                
+                                    {% else %}
+                                    <p><strong>Refunded</strong></p>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
                           </tr>
                     </tbody>
                 </table>             

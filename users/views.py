@@ -50,7 +50,6 @@ account_activation_token = TokenGenerator()
 # Register page
 def signupPage(request):
     if is_ajax(request=request) and request.method == "POST":
-        print(request.POST)
         form = MyUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()  
@@ -70,7 +69,6 @@ def signupPage(request):
                 user.save()   
 
             OTPCode = random.randrange(111111, 999999, 5) 
-            print(f"REG OTP is {OTPCode}")   
             confirmationID = reference(16)
             confirmationData = UserConfirmation.objects.create(
                 user = user,
@@ -87,7 +85,6 @@ def signupPage(request):
                 'confirmationID':confirmationData.confirmation_id
             })
         else:
-            print(form.errors)
             formErrors = form.errors.as_json()
             data = json.loads(formErrors)
             registrationError = []
@@ -203,6 +200,8 @@ def loginPage(request):
     if user.is_authenticated:
         if user.is_staff:
             return redirect('overview')
+        elif user.staff == False and user.is_admin:
+            return redirect('all-users')
         else:                        
             return redirect('dashboard')
     else:
@@ -224,7 +223,6 @@ def loginPage(request):
                              
                 
                     if user is not None:
-                        print("Login user is {user}")
                         user.login_attempts_left = 3
                         user.save()
 
@@ -234,6 +232,8 @@ def loginPage(request):
 
                         if user.is_staff:
                             return redirect('overview')
+                        elif user.staff == False and user.is_admin:
+                            return redirect('all-users')
                         else:                                               
                             return redirect('dashboard')
                     
@@ -263,8 +263,7 @@ def sendOTP(request):
         try:
             user = User.objects.get(email=email)
             if user is not None:
-                OTPCode = random.randrange(111111, 999999, 5)    
-                print(f"OTP CODE IS {OTPCode}")
+                OTPCode = random.randrange(111111, 999999, 5)  
                 confirmationID = reference(16)
                 confirmationData = ''
                 try:
@@ -316,7 +315,6 @@ def resetPassword(request):
                     })
                 else:            
                     formErrors = form.errors.as_json()
-                    print(formErrors)
                     data = json.loads(formErrors)
                     errorMessages = {}
                     if 'old_password' in data:    
@@ -358,7 +356,6 @@ def passwordResetSuccessfulPage(request):
 def saveTransactionPin(request):
     user = request.user
     if is_ajax(request=request) and request.method == 'POST':
-        print(f"request POST is {request.POST}")
         pin1 = request.POST['pin1']
         pin2 = request.POST['pin2']
         if isNum(pin1) == isNum(pin2):
@@ -448,7 +445,6 @@ def dashboardPage(request):
     user = request.user
     page = "dashboard"
 
-    print(f"impported offers is {GIVEAWAY_DATA}")
 
     
     period = "Morning"
@@ -473,7 +469,6 @@ def dashboardPage(request):
     giveAwayLevelComplete = False
     giveAwayLevel = user.give_away_level
     currentGiveAway = GIVEAWAY_DATA[f"level{giveAwayLevel}"]
-    print(f"current giveaway is {currentGiveAway}")
     if giveAwayLevel == 1:    
         if totalDataTrans < 10:
             giveAwayProgress = 20 + ((totalDataTrans/10) * 100)
@@ -510,7 +505,6 @@ def dashboardPage(request):
 def claimGiveAway(request):
     user = request.user
     if is_ajax(request) and request.method == "GET":
-        print(request.GET)
         operator = request.GET.get("selectedOperator")
         recipient = request.GET.get("recipient")
 
@@ -553,13 +547,11 @@ def claimGiveAway(request):
                         'Accept': 'application/json'
                     }
             
-            print(f"payload is {payload}")
 
             response = requests.request('POST', url, headers=headers, json=payload)
             data = response.json()
 
             
-            print(f"Twins10 response is {data}")
             if data['status'] == "success" or data['status'] == "processing":
                 user.give_away_level = 2
                 user.save()
@@ -682,7 +674,7 @@ def settingsPage(request):
     except ObjectDoesNotExist:
         pass
 
-    print(f"PIN set is {pinSet}")
+    
     context = {
         "pinSet":pinSet
     }
@@ -702,7 +694,6 @@ def changePassword(request):
             })
         else:            
             formErrors = form.errors.as_json()
-            print(formErrors)
             data = json.loads(formErrors)
             errorMessages = {}
             if 'old_password' in data:    
@@ -783,7 +774,6 @@ def dynamicAccountAmount(request):
             response = requests.request("POST", url, headers=headers, data=payload)
 
             data = json.loads(response.text)
-            print("DATA IS ",data)
 
             if 'access_token' in data:
                 authToken = data['access_token']
@@ -805,8 +795,8 @@ def dynamicAccountAmount(request):
                     },
                     "amountControl": "Fixed",
                     "accountName": user.username,
-                    "callbackUrl": "https://5ae56adb4b7df7096b9be617cb24d53a.serveo.net/safehaven-onetime-webhook",                
-                    # "callbackUrl": "https://webhook.yagapay.io/safehaven-onetime-webhook.php",
+                    # "callbackUrl": "https://5ae56adb4b7df7096b9be617cb24d53a.serveo.net/safehaven-onetime-webhook",                
+                    "callbackUrl": "https://webhook.vuvu.ng/safehaven-onetime-webhook.php",
                     "amount": int(depositAmount),
                     "externalReference": transRef
                 }
@@ -815,7 +805,6 @@ def dynamicAccountAmount(request):
                 response = requests.request("POST", url, headers=headers, json=payload)
                 
                 responseData = json.loads(response.text)
-                print(f"account response is {responseData}")
                 if responseData['statusCode'] == 200:
                     accountDetails = responseData['data']
                     depositAccount = OneTimeDeposit.objects.create(
@@ -856,7 +845,6 @@ def dynamicAccountAmount(request):
 def submitKYC(request):
     user = request.user
     if is_ajax(request=request) and request.method == 'POST':
-        print(f"POST REQUEST IS {request.POST}")
         form = KYCDataForm(request.POST)
         if form.is_valid():
             idType = request.POST.get("id_type")
@@ -938,7 +926,6 @@ def submitKYC(request):
                 response = requests.request("POST", url, headers=headers, data=payload)
                 
                 responseData = json.loads(response.text)
-                # print(f"INITIATION RESPONSE IS: {responseData}")
                 if responseData['statusCode'] == 200: 
                     details = responseData['data']
                     return JsonResponse({
@@ -1042,7 +1029,6 @@ def validateKYC(request):
             if validationData['statusCode'] == 200:
                 
                 details = validationData['data']
-                print(f"VALIDATION DATA IS: {details}")
                 providerData = details['providerResponse']
                 # id = providerData['firstName']
                 idFirstName = providerData['firstName'].strip()
@@ -1054,7 +1040,6 @@ def validateKYC(request):
                 firstName = idData.first_name.upper().strip()
                 lastName = idData.last_name.upper().strip()
                 dob = idData.dob.strip()
-                print(f"Stored DOB is id {dob}")
 
                 if (lastName == idLastName) and (firstName == idFirstName) and (dob == idDOB):
                     
@@ -1091,7 +1076,6 @@ def validateKYC(request):
                     response = json.loads(response.text)
                     if response['statusCode'] == 200:
                         details = response['data']
-                        # print(f"ACCOUNT CREATION DETAILS IS: {details}")
 
                         if user.has_safeHavenAccount == False:
 
@@ -1147,7 +1131,6 @@ def validateKYC(request):
                     
                     # Handle other endpoint errors
                     else:
-                        # print(f"OTHER API RESPONSE IS: {response}")
                         return JsonResponse({
                             'code':'09',
                             'message':f"ERR:{response['statusCode']} {response['message']}",
@@ -1357,10 +1340,8 @@ def submitStory(request):
             newStory = form.save(commit=False)
             newStory.user = user
             newStory.save()
-            print("New story saved")
             return redirect("tell-your-story")
         else:
-            print(form.errors)
             return redirect("tell-your-story")
     
     context = {
