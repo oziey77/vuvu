@@ -98,6 +98,11 @@ class User(AbstractBaseUser):
         return transactions.count()
     
     @property
+    def data_transaction_count(self):
+        transactions = Transaction.objects.filter(user=self,transaction_type="Data")           
+        return transactions.count()
+    
+    @property
     def successful_transaction_value(self):
         total = 0
         transactions = Transaction.objects.filter(user=self,status='Success')

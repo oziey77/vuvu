@@ -645,11 +645,11 @@ def buyData(request):
                     })
 
                 # Process user offers
-                totalTransactions = user.transaction_count
+                totalTransactions = user.data_transaction_count
                 completeOffers = user.completed_offers
                 # If user accept offer
                 if offerStatus == "claimed":                    
-                    if offerType == "storeRating" and (totalTransactions == 78 or totalTransactions == 80 ):
+                    if offerType == "storeRating" and (totalTransactions == 1 or totalTransactions == 4 ):
                         offerDiscount = Decimal(20)
                         if len(completeOffers) == 0:
                             userOffers = []
@@ -686,7 +686,18 @@ def buyData(request):
                                 userOffers.append(offerData)
                                 user.completed_offers = userOffers
                                 user.save()
-
+                    if offerType == "trustPilot" and (totalTransactions == 6):
+                        offerDiscount = Decimal(20)
+                        userOffers = user.completed_offers
+                        offerData = {
+                                "trustPilot":{
+                                    "totalTrial":1,
+                                    "status":"completed"
+                                }
+                            }
+                        userOffers.append(offerData)
+                        user.completed_offers = userOffers
+                        user.save()
                 #If user reject offer                
                 if offerStatus == "rejected":
                     if offerType == "storeRating" and (totalTransactions == 78 or totalTransactions == 80 ):
@@ -1020,20 +1031,20 @@ def getCurrentOffer(request):
 
     # Check if user have ever made a deposit
     if is_ajax(request) and request.method == "GET":  
-        totalTransactions = user.transaction_count
+        totalTransactions = user.data_transaction_count
         # totalTransactions = 90
 
         completeOffers = user.completed_offers
         
         if len(completeOffers) == 0:
-            if totalTransactions ==78 or totalTransactions ==79:
+            if totalTransactions == 1 :
                 return JsonResponse({
                     "code":"00",
                     "currentOffer":"storeRating",
                     "discount":"20"
                 })
         else:
-            if totalTransactions == 78 or totalTransactions == 79:
+            if totalTransactions == 4:
                 offerIndex = 0
                 for offer in completeOffers:
                     for key in offer:
@@ -1052,7 +1063,7 @@ def getCurrentOffer(request):
                                     "message":"on offer found",
                                 })
                             break
-            elif totalTransactions == 80:
+            elif totalTransactions == 6:
                 return JsonResponse({
                     "code":"00",
                     "currentOffer":"trustPilot",
