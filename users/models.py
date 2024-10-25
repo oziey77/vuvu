@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 
 from .managers import CustomUserManager
 
@@ -94,13 +95,25 @@ class User(AbstractBaseUser):
     
     @property
     def transaction_count(self):
-        transactions = Transaction.objects.filter(user=self)           
-        return transactions.count()
+        totalTransactions = 0
+        try:
+            transactions = Transaction.objects.filter(user=self,)   
+            if transactions != None:
+                totalTransactions = transactions.count()   
+        except ObjectDoesNotExist: 
+            pass   
+        return totalTransactions
     
     @property
     def data_transaction_count(self):
-        transactions = Transaction.objects.filter(user=self,transaction_type="Data")           
-        return transactions.count()
+        totalTransactions = 0
+        try:
+            transactions = Transaction.objects.filter(user=self,transaction_type="Data")   
+            if transactions != None:
+                totalTransactions = transactions.count()   
+        except ObjectDoesNotExist: 
+            pass   
+        return totalTransactions
     
     @property
     def successful_transaction_value(self):

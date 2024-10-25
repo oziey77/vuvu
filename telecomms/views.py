@@ -1033,6 +1033,7 @@ def getCurrentOffer(request):
     if is_ajax(request) and request.method == "GET":  
         totalTransactions = user.data_transaction_count
         # totalTransactions = 90
+        print(f"User total transaction is {totalTransactions}")
 
         completeOffers = user.completed_offers
         
@@ -1043,6 +1044,11 @@ def getCurrentOffer(request):
                     "currentOffer":"storeRating",
                     "discount":"20"
                 })
+            elif totalTransactions == 0 :
+                return JsonResponse({
+                        "code":"04",
+                        "message":"on offer found",
+                    })
         else:
             if totalTransactions == 4:
                 offerIndex = 0
@@ -1062,7 +1068,6 @@ def getCurrentOffer(request):
                                     "code":"04",
                                     "message":"on offer found",
                                 })
-                            break
             elif totalTransactions == 6:
                 return JsonResponse({
                     "code":"00",
