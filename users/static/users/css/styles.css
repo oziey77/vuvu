@@ -128,6 +128,11 @@ border-radius:0 !important;
   top: -1px;
 }
 
+.redeem-feedback{
+  color: var(--success1);
+  display: none;
+}
+
 /* .progress .progress-bar:before{
 content:"";
   position: absolute;
@@ -861,7 +866,8 @@ input:checked + .slider:before {
   .main-content.transasction-page .top-section .wallet-group{
     display: flex;
     align-items: center;
-    padding: 6px 10 10px 0;
+    padding: 6px 10px 10px 0;
+    /* padding-top: 0; */
   }
   .main-content.transasction-page .top-section .wallet-group .back-button{
     height: 80px;
@@ -2447,7 +2453,7 @@ input:checked + .slider:before {
 }
 #giveAwayFaq p,
 #referralModal p{
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 #giveAwayFaq .note,
 #referralModal .note{

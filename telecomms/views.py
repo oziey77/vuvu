@@ -554,12 +554,48 @@ def buyData(request):
             operator = request.POST.get('operator')
             recipient = request.POST.get('recipient')
             planID = request.POST.get('planID')
+            safeBeneficiary = request.POST.get('safeBeneficiary')
             offerType = request.POST.get('offerType')
             offerStatus = request.POST.get('offerStatus')
             offerDiscount = Decimal(5)
             
             
             wallet = UserWallet.objects.get(user=user)  
+
+            # Safe Beneficiary Logic
+            if safeBeneficiary == "on":
+                try:
+                    userBeneficiaries = Beneficiary.objects.get(user=user)
+                    if userBeneficiaries is not None:
+                        telecommsBeneficiary = userBeneficiaries.telecomms 
+                        # Search of record already exist
+                        alreadySaved = False
+                        for entry in telecommsBeneficiary:
+                            # alreadySaved = True
+                            if entry['recipient'] == recipient:
+                                alreadySaved = True
+                                break
+                        # If rececipient has not been saved before
+                        if alreadySaved == False:
+                            telecommsBeneficiary.append(
+                                {
+                                    "operator":operator,
+                                    "recipient":recipient,
+                                }
+                            ) 
+                            userBeneficiaries.telecomms = telecommsBeneficiary 
+                            userBeneficiaries.save()
+                        
+                except ObjectDoesNotExist:
+                    newBeneficiary = [{
+                        "operator":operator,
+                        "recipient":recipient,
+                        }]
+                    # Create Beficiaryobject
+                    Beneficiary.objects.create(
+                        user = user,
+                        telecomms = newBeneficiary
+                    )
 
             dataServices = DataServices.objects.get(network_operator=operator)
             if dataServices.available == False:

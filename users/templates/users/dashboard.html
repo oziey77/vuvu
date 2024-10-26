@@ -328,6 +328,7 @@
                     <div class="cashback-action">
                         {% if user.wallet_balances.cashback > 0 %}
                         <a href="javascript:void(0)" class="redeem-cashback redeem-BTN" id="cashback-BTN" onclick="">Add to wallet</a>
+                        <p class="redeem-feedback"id="cashback-Feedback">success</p>
                         {% else %}
                         <a href="javascript:void(0)" class="redeem-cashback disabled"  onclick="">Add to wallet</a>
                         {% endif %}
@@ -349,6 +350,7 @@
                     <div class="cashback-action">
                         {% if user.wallet_balances.referral_bonus > 0 %}
                         <a href="javascript:void(0)" class="redeem-cashback redeem-BTN" id="referral-BTN" onclick="">Add to wallet</a>
+                        <p class="redeem-feedback" id="referral-Feedback">success</p>
                         {% else %}
                         <a href="javascript:void(0)" class="redeem-cashback disabled" onclick="">Add to wallet</a>
                         {% endif %}
@@ -642,7 +644,7 @@
     
     
 
-    <script src="{% static 'users/js/dashboard.js' %}?v=1.04"></script>
+    <script src="{% static 'users/js/dashboard.js' %}?v=1.09"></script>
     <script src="{% static 'users/js/main.js' %}"></script>
     
 </body>

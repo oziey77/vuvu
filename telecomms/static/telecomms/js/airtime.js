@@ -142,7 +142,7 @@ $(document).ready(function(){
         
     })
 
-    // Open Saved Beneficiary
+    // 
     $("#saveBeneficiary").on("click",function(){
         if(safeBeneficiary == "off"){
             safeBeneficiary = "on";

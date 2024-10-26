@@ -8,6 +8,7 @@ $(document).ready(function(){
     var planName;
     var price
     var is_ported = "off"
+    var safeBeneficiary = "off";
 
     // Offer Data
     var offerStatus = "None"
@@ -138,6 +139,7 @@ $(document).ready(function(){
         $(`a[network-data="${beneficiaryData[0]}"]`).trigger('click')
         $("#phone_number").val(beneficiaryData[1])
         $("#beneficiaryModal").css('display','none')
+        inputValid()
     })
 
     // Beneficiary Modal
@@ -417,6 +419,7 @@ $(document).ready(function(){
                 "is_ported":is_ported,
                 "offerStatus":offerStatus,
                 "offerType":offerType,
+                "safeBeneficiary":safeBeneficiary
                 // 'transcationPin':transcationPin,
             },
             success:function(response){

@@ -57,12 +57,19 @@ $(document).ready(function(){
           },
           success:function(response){
             if(response.code == '00'){
-              $(`#${id}-preloader`).css('display','none');
-              $(`#${id}-BTN`).css('display','block');
+                          
               $(`#${id}-BTN`).removeClass('redeem-BTN');
-              $(`#${id}-BTN`).addClass('disabled');
-              $(`#${id}-BTN`).attr("id","");
-              $("#mainBalance").html(Number(response.balance).toLocaleString());
+              $(`#${id}-BTN`).addClass('disabled');              
+              $(`#${id}-preloader`).fadeOut(function(){
+                $(`#${id}-Feedback`).css('display','block');
+              });  
+              setTimeout(function(){
+                $(`#${id}-Feedback`).css('display','none');
+                $(`#${id}-BTN`).css('display','block');
+                $(`#${id}-BTN`).attr("id","");
+              },4000)
+              
+              $("#mainBalance").html(Number(response.balance).toLocaleString(undefined,{minimumFractionDigits:2}));
               $(`#${id}-balance`).html(Number(response.bonusBalance).toLocaleString(undefined,{minimumFractionDigits:2}));
             }
           }
@@ -187,6 +194,9 @@ $(document).ready(function(){
     }
     else if(event.target.id == "giveAwayModal"){
       $("#giveAwayModal").css('display','none')
+    }
+    else if(event.target.id == "referralModal"){
+      $("#referralModal").css('display','none')
   }
   };
 
