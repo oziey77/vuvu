@@ -700,7 +700,7 @@ def buyData(request):
                         user.save()
                 #If user reject offer                
                 if offerStatus == "rejected":
-                    if offerType == "storeRating" and (totalTransactions == 78 or totalTransactions == 80 ):
+                    if offerType == "storeRating" and (totalTransactions == 2 or totalTransactions == 4 ):
                         if len(completeOffers) == 0:
                             userOffers = []
                             offerData = {
@@ -725,7 +725,7 @@ def buyData(request):
                                             user.completed_offers = completeOffers
                                             user.save()
                                         break
-                    elif offerType == "trustPilot" and totalTransactions == 80: 
+                    elif offerType == "trustPilot" and totalTransactions == 6: 
                         offerData = {
                                 "trustPilot":{
                                     "totalTrial":1,
@@ -1036,19 +1036,20 @@ def getCurrentOffer(request):
         print(f"User total transaction is {totalTransactions}")
 
         completeOffers = user.completed_offers
+        print(f"Completed offers is {len(completeOffers)}")
         
         if len(completeOffers) == 0:
-            if totalTransactions == 1 :
+            if totalTransactions == 1:
                 return JsonResponse({
                     "code":"00",
                     "currentOffer":"storeRating",
                     "discount":"20"
                 })
-            elif totalTransactions == 0 :
-                return JsonResponse({
-                        "code":"04",
-                        "message":"on offer found",
-                    })
+            # else:
+            #     return JsonResponse({
+            #             "code":"04",
+            #             "message":"on offer found",
+            #         })
         else:
             if totalTransactions == 4:
                 offerIndex = 0

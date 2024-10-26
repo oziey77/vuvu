@@ -28,7 +28,7 @@ $(document).ready(function(){
           url:"/user-balance/",
           type:"GET",
           success:function(response){
-            $("#mainBalance").html(Number(response.balance).toLocaleString());
+            $("#mainBalance").html(Number(response.balance).toLocaleString(undefined,{minimumFractionDigits:2}));
             // data = JSON.parse(response)
             // $('.balance').text(Number(data['balance']).toLocaleString())
           }

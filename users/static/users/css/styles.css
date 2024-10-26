@@ -2366,7 +2366,7 @@ input:checked + .slider:before {
   display: inline-block;
 }
 .dashboard-container .wallet-container .wallet-info .balance-group #mainBalance{
-  font-size: 1.4em;
+  font-size: 1.53em;
   font-weight: 700;
 }
 .dashboard-container .wallet-container .wallet-info .wallet-action{

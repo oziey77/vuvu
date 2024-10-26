@@ -244,6 +244,9 @@ $(document).ready(function(){
                     }
                 })
             }
+            else{
+                $("#billSummary").css("display",'block');
+            }
             
 
             
@@ -276,6 +279,7 @@ $(document).ready(function(){
     // Reject Offer
     $(".reject-offer").on("click",function(){
         offerStatus = "rejected";
+        console.log(offerStatus)
         $("#offerModal").css("display","none");
         $("#billSummary").css("display",'block');
     })
