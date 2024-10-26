@@ -209,39 +209,42 @@ $(document).ready(function(){
             
             
             // Get available offer
-            $.ajax({
-                url:"/available-offer/",
-                typr:"GET",
-                success:function(response){
-                    console.log(response);
-                    if(response.code == '00'){
-                        offerDiscount = response.discount
-                        offerType = response.currentOffer;
-                        
-                        // Remove
-                        button.attr('disabled',false);
-                        button.removeClass('disabled')
-                        // End Remove
-                        if(offerType == 'storeRating'){                            
-                            if(os == "android"){
-                                $("#playstoreRating").css('display','block');
+            if(os == "android" || os == "ios"){
+                $.ajax({
+                    url:"/available-offer/",
+                    typr:"GET",
+                    success:function(response){
+                        console.log(response);
+                        if(response.code == '00'){
+                            offerDiscount = response.discount
+                            offerType = response.currentOffer;
+                            
+                            // Remove
+                            button.attr('disabled',false);
+                            button.removeClass('disabled')
+                            // End Remove
+                            if(offerType == 'storeRating'){                            
+                                if(os == "android"){
+                                    $("#playstoreRating").css('display','block');
+                                }
+                                else if( os == "ios"){
+                                    $("#appstoreRating").css('display','block');
+                                }
                             }
-                            else if( os == "ios"){
-                                $("#appstoreRating").css('display','block');
+                            else if(offerType == 'trustPilot'){                            
+                                $("#trustPilotRating").css('display','block');
                             }
+                            
+                            $(".offer-amount").html((Number(dataCost) - Number(offerDiscount)).toLocaleString());
+                            $("#offerModal").css("display","block");
                         }
-                        else if(offerType == 'trustPilot'){                            
-                            $("#trustPilotRating").css('display','block');
+                        else if(response.code == '04'){
+                            $("#billSummary").css("display",'block');
                         }
-                        
-                        $(".offer-amount").html((Number(dataCost) - Number(offerDiscount)).toLocaleString());
-                        $("#offerModal").css("display","block");
                     }
-                    else if(response.code == '04'){
-                        $("#billSummary").css("display",'block');
-                    }
-                }
-            })
+                })
+            }
+            
 
             
 

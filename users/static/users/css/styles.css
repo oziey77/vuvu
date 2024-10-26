@@ -1872,7 +1872,7 @@ input:checked + .slider:before {
   animation-duration: 0.4s;
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
-  padding:15px 20px;  
+  padding:20px 20px 50px 20px;  
 }
 /* .setting-modal.feedback .content{
   background-color: #fff;
