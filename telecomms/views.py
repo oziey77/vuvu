@@ -558,6 +558,7 @@ def buyData(request):
             offerType = request.POST.get('offerType')
             offerStatus = request.POST.get('offerStatus')
             offerDiscount = Decimal(5)
+            print(request.POST)
             
             
             wallet = UserWallet.objects.get(user=user)  
@@ -584,8 +585,7 @@ def buyData(request):
                                 }
                             ) 
                             userBeneficiaries.telecomms = telecommsBeneficiary 
-                            userBeneficiaries.save()
-                        
+                            userBeneficiaries.save()                        
                 except ObjectDoesNotExist:
                     newBeneficiary = [{
                         "operator":operator,
@@ -596,6 +596,11 @@ def buyData(request):
                         user = user,
                         telecomms = newBeneficiary
                     )
+                
+            # return JsonResponse({
+            #     'code':'00',   
+            #     'message':"testing save beneficiary"     
+            # })
 
             dataServices = DataServices.objects.get(network_operator=operator)
             if dataServices.available == False:

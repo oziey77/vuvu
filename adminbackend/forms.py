@@ -16,4 +16,4 @@ class NotificationForm(ModelForm):
 class VuvuStoryForm(ModelForm):
     class Meta:
         model = VuvuStory
-        fields = ['youtube_id',]
+        fields = ['youtube_id','description']

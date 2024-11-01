@@ -37,6 +37,8 @@ urlpatterns=[
     path("send-general-notification/",views.sendGeneralNotification,name="send-general-notification"),
 
     path("add-story/",views.vuvuStoryPage,name="add-story"),
+    path("submitted-stories/",views.submittedStories,name="submitted-stories"),
+    path("download-story/<str:pk>",views.downloadUserStory,name="download-story"),
     
     # Ajax
     path("update-services/",views.updateService),

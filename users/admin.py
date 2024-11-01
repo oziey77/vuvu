@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from users.models import Beneficiary, Cashback, KYCData, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
+from users.models import Beneficiary, Cashback, KYCData, SafeHavenAccount, Story, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
 
 # Register your models here.
 
@@ -44,3 +44,4 @@ admin.site.register(SafeHavenAccount,SafeHavenAccountAdmin)
 admin.site.register(TransactionPIN)
 admin.site.register(KYCData)
 admin.site.register(Beneficiary)
+admin.site.register(Story)

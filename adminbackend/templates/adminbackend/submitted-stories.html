@@ -1,0 +1,115 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        {% if user.is_staff %}
+            {% include 'adminbackend/includes/admin-sidebar.html' %}
+        {% elif user.is_staff == False and user.is_admin == True %}
+            {% include 'adminbackend/includes/customer-support-sidebar.html' %}
+        {% endif %}
+
+        <!-- Main content -->
+        <div class="main-content">
+            <!-- Search -->
+            <form action="" method="GET">
+                <div class="input-group">
+                    <input type="text" id="recipient"  placeholder="Search Username/Email" class="input-element" name="search">
+                    <button class="primary-button .search-btn">search</button>
+                </div>
+            </form>
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="feedback-messages {{message.tags}}">
+                        <p>{{message}}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <!-- Table -->
+            <div class="table-container">
+                <p class="sub-info">Total Stories: {{totalStories|intcomma}}</p>
+                <table class="">
+                    <caption>Stories</caption>
+                    <thead>
+                        <tr>
+                        <th scope="col">SN</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Story</th>
+                        <th scope="col">Images</th>
+                        <th scope="col">Submitted On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for story in stories %}
+                        <tr>
+                        <td data-label="SN">{{forloop.counter}}</td>
+                        <td data-label="Username">{{ story.user.username }}</td>
+                        <td data-label="Story"> <a href="{% url 'download-story' story.id %}">Download Text</a></td>
+                        {% if story.image_files != None and story.image_files != '' %}
+                        <td data-label="Images"> <a href="{{story.image_files.url}}">Download Images</a></td>
+                        {% else %}
+                        <td data-label="Images"> No Image</td>
+                        {% endif %}
+                            <!-- {% if story.storyImages %}
+                                <td data-label="Images"> <a href="javascript:void(0)">Download Images</a></td>
+                            {% else %}
+                                <td data-label="Images"> No Image</td>
+                            {% endif %} -->
+                        <td data-label="Submitted On"> {{ story.created }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- <div class="user-data-export">
+                    <p class="header">Export User Data</p>
+                    <div class="flex-links"> 
+                    <a href="">Last transaction ( 11 days ago)</a> 
+                    <a href="">Last transaction ( > 30 days)</a>            
+                    <a href="">Active Users( within 10 days)</a>              
+                    <a href="">Zero Transactions</a>
+                    </div>
+                    
+                </div>    -->                
+            </div>
+            <!-- Paginator -->
+            <div class="paginator">
+                <span>
+                    {% if stories.has_previous %}
+                        <a href="?page={{ stories.previous_page_number }}">Previous</a>
+                    {% else %}
+                        <a>Previous</a>
+                    {% endif %}
+                    
+                    {% for i in stories.paginator.page_range %}
+                        {% if i <= stories.number|add:5 and i >= stories.number|add:-5 %}
+                            {% if stories.number == i %}
+                                <a href="#">{{ i }} </a>
+                            {% else %}
+                                <a href="?page={{ i }}">{{ i }}</a>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if stories.has_next %}
+                        <a href="?page={{ stories.next_page_number }}">Next</a>
+                    {% else %}
+                        <a>Next</a>
+                    {% endif %}
+                </span>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

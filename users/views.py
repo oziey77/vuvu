@@ -25,7 +25,7 @@ from users.forms import KYCDataForm, MyUserCreationForm, StoryForm
 from users.serializers import TransactionSerializer
 from users.tasks import sendConfirmOTP
 from vuvu.custom_functions import GIVEAWAY_DATA, is_ajax, isNum, reference,offers
-from .models import AccountDeleteQueue, KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity
+from .models import AccountDeleteQueue, KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity, ZipFileModel
 
 import uuid
 import random
@@ -37,6 +37,10 @@ from django.utils import  six
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.db.models import Q
+import tempfile
+import os
+import zipfile
+from django.core.files import File
 # Account Activation Token
 class TokenGenerator(PasswordResetTokenGenerator):  
     def _make_hash_value(self, user, timestamp):  
@@ -1312,8 +1316,11 @@ def storiesPage(request):
 def watchStories(request):
     user = request.user
     storiesRaw = VuvuStory.objects.all().order_by("-id")
+    if storiesRaw.count() > 0:
+        recentStory = storiesRaw.first()
+        storiesRaw = storiesRaw.exclude(id=recentStory.id)
 
-    p = Paginator(storiesRaw,1)
+    p = Paginator(storiesRaw,10)
     page_number = request.GET.get('page')
     try:
         stories = p.get_page(page_number)
@@ -1326,7 +1333,8 @@ def watchStories(request):
     
     context = {
         "stories":stories,
-        "totalStories":storiesRaw.count()
+        "totalStories":storiesRaw.count(),
+        "recentStory":recentStory,
     }
     return render(request,'users/watch-stories.html',context)
 
@@ -1340,6 +1348,36 @@ def submitStory(request):
             newStory = form.save(commit=False)
             newStory.user = user
             newStory.save()
+            newStory.refresh_from_db()
+            # imagesForm  = ImagesForm(request.POST, request.FILES)
+            images = request.FILES.getlist('file_field')
+            
+            if len(images) > 0:
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    for uploaded_file in images:
+                        file_path = os.path.join(temp_dir, uploaded_file.name)
+                        with open(file_path, 'wb') as file:
+                            for chunk in uploaded_file.chunks():
+                                file.write(chunk)
+
+                    zip_file_path = os.path.join(temp_dir, 'new.zip')
+                    with zipfile.ZipFile(zip_file_path, 'w') as zip_file:
+                        for uploaded_file in images:
+                            file_path = os.path.join(temp_dir, uploaded_file.name)
+                            zip_file.write(file_path, uploaded_file.name)
+
+                    with open(zip_file_path, 'rb') as zip_file:
+                        # Create a ZipFileModel instance and save the zip file into the database
+                        zip_model = ZipFileModel()
+                        zip_model.file.save(f'{user.username}_{newStory.created}.zip', File(zip_file))
+                        zip_model.save()
+                        newStory.image_files = zip_model.file
+                        newStory.save()
+                
+            messages.success(request,"success")
+            
+            # files = imageForm.cleaned_data["file_field"]
+            # print(imageForm)
             return redirect("tell-your-story")
         else:
             return redirect("tell-your-story")

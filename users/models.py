@@ -336,8 +336,23 @@ class Notifications(models.Model):
 class Story(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     body = models.CharField(max_length=3500)
+    image_files = models.FileField(upload_to='stories_images_zip',blank=True,null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.user.username
+    
+    
+# class StoryImage(models.Model):
+#     story = models.ForeignKey(Story,on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='stories_images')
+#     def __str__(self):
+#         return self.story.user
+    
+class ZipFileModel(models.Model):
+# The upload_to attribute is set to 'zip_files/', which specifies the subdirectory within the media storage where the uploaded zip files will be stored.
+    file = models.FileField(upload_to='zip_files/')
+# return file name
+    def __str__(self):
+        return self.file.name
 

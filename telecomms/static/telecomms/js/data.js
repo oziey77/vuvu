@@ -4,17 +4,17 @@ $(document).ready(function(){
     var operatorImg;
     var selectedOperator;
     var operatorName;
-    var planID;
+    var planID = '';
     var planName;
-    var price
-    var is_ported = "off"
+    var price;
+    var is_ported = "off";
     var safeBeneficiary = "off";
 
     // Offer Data
     var offerStatus = "None"
     var offerType = ''
-    var dataCost
-    var offerDiscount
+    var dataCost;
+    var offerDiscount;
 
     // Network operator validator
     var AirtelInitials = ['0911','0912','0907','0904','0902','0901','0812','0808','0802','0708','0701']
@@ -65,15 +65,15 @@ $(document).ready(function(){
                     "operator":selectedOperator
                 },
                 success:function(response){
-                    console.log(response)
                     if(response.code == "00"){
                         $(".error-message").html();
                         $(".error-feedback").css('display','none');
                         let plans = response.plans;
                         $("#dataPlans").empty();
+                        $("#dataPlans").append(`<option value='' selected disabled>Select Plan</option>`)
                         // Populate Extra Plans
                         if(response.extraPlans != null && response.activeBackend != "ATN" && selectedOperator == "MTN"){
-                            let extraPlans = response.extraPlans;
+                            let extraPlans = response.extraPlans;                            
                             $.each(extraPlans,function(key,value){
                                 let planID = value.package_id;
                                 let package = value.plan;
@@ -128,6 +128,7 @@ $(document).ready(function(){
         else{
             safeBeneficiary = "off"; 
         }
+        console.log(safeBeneficiary)
     })
 
     //Beneficiary clicked
@@ -140,6 +141,7 @@ $(document).ready(function(){
         $("#phone_number").val(beneficiaryData[1])
         $("#beneficiaryModal").css('display','none')
         inputValid()
+
     })
 
     // Beneficiary Modal
@@ -150,11 +152,10 @@ $(document).ready(function(){
 
     // Data plans selected
     $("#dataPlans").on('change',function(){
-        planID = $(this).val();        
-        inputValid()
+        planID = $(this).val();    
+        inputValid()    
         // let planData = planID.split("|");
         // price = Number(planData[3]).toLocaleString()
-        // console.log(`data price is ${price}`)
         // let planPrice = 
         // $("#amount").text(`VP${Number(planData).toLocaleString}`);
     });
@@ -194,7 +195,6 @@ $(document).ready(function(){
             let planDatails = $("#dataPlans option:selected").text().split('|');
             let priceData = planDatails[3].split('₦');
             dataCost = priceData[1]
-            // console.log(`price data ${planDatails}`);
             price = Number(priceData[1]).toLocaleString(undefined, {minimumFractionDigits: 2});
             recipient = $("#phone_number").val();
             planID = $("#dataPlans").val();
@@ -216,7 +216,6 @@ $(document).ready(function(){
                     url:"/available-offer/",
                     typr:"GET",
                     success:function(response){
-                        console.log(response);
                         if(response.code == '00'){
                             offerDiscount = response.discount
                             offerType = response.currentOffer;
@@ -259,11 +258,9 @@ $(document).ready(function(){
 
     // Accept Offer
     $(".accept-offer").on("click",function(){
-        console.log("We enetered here")
         $(".offer-prompt").css("display","none");
         $(".offer-pending").css("display","block");
         setTimeout(function(){
-            console.log("countdown started")
             $(".confirm-offer").css("display","block");
         },20000)
     })
@@ -281,7 +278,6 @@ $(document).ready(function(){
     // Reject Offer
     $(".reject-offer").on("click",function(){
         offerStatus = "rejected";
-        console.log(offerStatus)
         $("#offerModal").css("display","none");
         $("#billSummary").css("display",'block');
     })
@@ -372,12 +368,14 @@ $(document).ready(function(){
         let phoneNum = $("#phone_number").val();
         let planID = $("#dataPlans").val();
         if($(".operator-text").html() != "Select a network"){
-            if(phoneNum.length == 11 && planID != "" ){
+            if(phoneNum.length == 11 && planID != "" && planID != null ){
                 $("#buyData").attr('disabled',false);
+                $("#buyData").removeClass('disabled');
                 return true;
             }
             else{
                 $("#buyData").attr('disabled',true);
+                $("#buyData").addClass('disabled');
                 return false;
                 
             }
@@ -398,7 +396,6 @@ $(document).ready(function(){
               placeholder:'*', // default: '•'
               reset :false,
               complete :function(pin){
-                console.log(pin)
                 buyData(transcationPin=pin)
                   },
             });
@@ -423,8 +420,8 @@ $(document).ready(function(){
                 // 'transcationPin':transcationPin,
             },
             success:function(response){
-                console.log(response)
                 if( response.code == '00' ){ 
+                    console.log(response)
                     $("#PINValidation").css("display","none");
                     $("#billSummary").fadeOut(function(){
                         $(".loader-overlay").css('display','none');
@@ -450,5 +447,17 @@ $(document).ready(function(){
         });
 
     }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target.id == "PINValidation" || event.target.id == 'closePINValidation' || event.target.id == 'transactionFeedback' || event.target.id == 'billSummary') {
+            // $("#PINValidation").css("display","none");
+            // $(".setting-modal").css("display","none");
+            
+        }
+        else if(event.target.id == "beneficiaryModal"){
+            $("#beneficiaryModal").css('display','none')
+        }
+    };
 
 })

@@ -32,7 +32,10 @@
                     {% csrf_token %}
                     <div class="input-group-grid">
                         <label for="title">Youtube Video ID</label><br>
-                        <input type="text" name="youtube_id" placeholder="Youtube Video ID" maxlength="25" required>                                
+                        <input type="text" name="youtube_id" placeholder="Youtube Video ID" maxlength="25" required>
+                    </div>
+                    <div class="input-group">
+                        <textarea name="description" id="" maxlength="96"></textarea>   
                     </div> 
                     <div class="input-group recepient">
                         <input type="submit" name="update" value="Save Story" class="primary-button">

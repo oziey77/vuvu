@@ -13,13 +13,56 @@
     <div class="main-content transasction-page"  style="display: block;">
         
         <div class="write-story">
-            <form action="" method="post">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="feedback-message" style="display: block;">
+                        <div class="transaction-success">
+                            <svg width="24px" height="24px" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M9.5 12.1316L11.7414 14.5L16 10M20.5 12.5C20.5 16.9183 16.9183 20.5 12.5 20.5C8.08172 20.5 4.5 16.9183 4.5 12.5C4.5 8.08172 8.08172 4.5 12.5 4.5C16.9183 4.5 20.5 8.08172 20.5 12.5Z" stroke="#121923" stroke-width="1.2"></path> </g></svg>
+                            <p class="error-message" id="error-message">Your story was submitted successfully</p>
+                        </div>
+                    </div> 
+                {% endfor %}
+            {% endif %}
+            <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="input-container">
                     <textarea name="body" id="result" maxlength="3400" placeholder="Please type here..."></textarea>
+                    <input type="file" name="file_field" id="attachFilles" multiple hidden>
+                    <!-- <input type="file" id="files" name="files" multiple> -->
                     <div class="bottom-section">
                         <hr>
+                        <p class="filesFeedback" style="margin-left:30px; font-size: 0.8em; font-weight: 400; display: none;"><span id="filesCount"></span> file(s) selected</p>
                         <div class="write-option">
+                            <a href="javascript:void(0)" id="selectFiles" onclick="">
+                                <div class="item right">
+                                    <p>Attach Images</p>
+                                    <svg width="24px" height="24px" viewBox="0 0 48 48" id="a" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                                        
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                                        
+                                        <g id="SVGRepo_iconCarrier">
+                                        
+                                        <defs>
+                                        
+                                        <style>.b{fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}</style>
+                                        
+                                        </defs>
+                                        
+                                        <path class="b" d="M29.4995,12.3739c.7719-.0965,1.5437,.4824,1.5437,1.2543h0l2.5085,23.8312c.0965,.7719-.4824,1.5437-1.2543,1.5437l-23.7347,2.5085c-.7719,.0965-1.5437-.4824-1.5437-1.2543h0l-2.5085-23.7347c-.0965-.7719,.4824-1.5437,1.2543-1.5437l23.7347-2.605Z"/>
+                                        
+                                        <path class="b" d="M12.9045,18.9347c-1.7367,.193-3.0874,1.7367-2.8945,3.5699,.193,1.7367,1.7367,3.0874,3.5699,2.8945,1.7367-.193,3.0874-1.7367,2.8945-3.5699s-1.8332-3.0874-3.5699-2.8945h0Zm8.7799,5.596l-4.6312,5.6925c-.193,.193-.4824,.2894-.6754,.0965h0l-1.0613-.8683c-.193-.193-.5789-.0965-.6754,.0965l-5.0171,6.1749c-.193,.193-.193,.5789,.0965,.6754-.0965,.0965,.0965,.0965,.193,.0965l19.9719-2.1226c.2894,0,.4824-.2894,.4824-.5789,0-.0965-.0965-.193-.0965-.2894l-7.8151-9.0694c-.2894-.0965-.5789-.0965-.7719,.0965h0Z"/>
+                                        
+                                        <path class="b" d="M16.2814,13.8211l.6754-6.0784c.0965-.7719,.7719-1.3508,1.5437-1.2543l23.7347,2.5085c.7719,.0965,1.3508,.7719,1.2543,1.5437h0l-2.5085,23.7347c0,.6754-.7719,1.2543-1.5437,1.2543l-6.1749-.6754"/>
+                                        
+                                        <path class="b" d="M32.7799,29.9337l5.3065,.5789c.2894,0,.4824-.193,.5789-.4824,0-.0965,0-.193-.0965-.2894l-5.789-10.5166c-.0965-.193-.4824-.2894-.6754-.193h0l-.3859,.3859"/>
+                                        
+                                        </g>
+                                        
+                                        </svg>
+                                </div>
+                            </a>
                             <div class="item left">
                                 <p>Type</p>
                                 <svg width="24px" height="24px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003">
@@ -30,8 +73,8 @@
                                     </g>
                                 </svg>
                             </div>
-                            <input type="button" id="toggle" value="Loading" onclick="transcribe.toggle()" disabled>
-                            <a href="javascript:void(0)"  >
+                            <!-- <input type="button" id="toggle" value="Loading" onclick="transcribe.toggle()" disabled> -->
+                            <a href="javascript:void(0)">
                                 <div class="item right">
                                     <p>Voice</p>
                                     <svg width="24px" height="24px"  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve" fill="#000000">
@@ -73,7 +116,7 @@
     
     <script src="{% static 'users/js/stories.js' %}?v=1.001"></script>
     <script src="{% static 'users/js/main.js' %}"></script>
-    <script src="{% static 'users/js/transcribe.js' %}?v=1.001"></script>
+    <!-- <script src="{% static 'users/js/transcribe.js' %}?v=1.001"></script> -->
     
 </body>
 </html>

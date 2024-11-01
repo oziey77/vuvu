@@ -14,11 +14,13 @@ from billpayments.models import BillPaymentServices
 from payments.models import WalletFunding
 from telecomms.forms import ATNDataPlanForm, HonourworldDataPlanForm, Twins10DataPlanForm
 from telecomms.models import ATNDataPlans, AirtimeServices, DataServices, HonouworldDataPlans, Twins10DataPlans
-from users.models import Notifications, Transaction, User, UserWallet, WalletActivity
+from users.models import Notifications, Story, Transaction, User, UserWallet, WalletActivity
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from datetime import datetime
 
 from vuvu.custom_functions import is_ajax
+
+import zipfile
 
 # Create your views here.
 
@@ -961,6 +963,50 @@ def vuvuStoryPage(request):
 #         return redirect("notifications-management")
 #     return redirect('login') 
 
+
+#Users  Overview Page
+@login_required(login_url='login')
+def submittedStories(request):
+    user = request.user
+    if user.is_admin:
+        allStoriesRaw = Story.objects.all().order_by('-created')
+
+        if request.GET.get('search'):
+            keyword = request.GET.get('search').strip().lower()
+            try:
+                customer =  User.objects.get(Q(username=keyword)|Q(email=keyword))
+                if customer is not None:
+                    return redirect('user-detail',customer.username)
+            except ObjectDoesNotExist:
+                messages.error(request,f"keyword '{keyword}' did not return any result")
+
+        p = Paginator(allStoriesRaw,10)
+        page_number = request.GET.get('page')
+        try:
+            stories = p.get_page(page_number)
+        except PageNotAnInteger:
+            stories = p.page(1)
+        except EmptyPage:
+            stories = p.page(p.num_pages)
+
+
+        context = {
+           'stories':stories,
+           'totalStories':allStoriesRaw.count()
+        }
+        return render(request,'adminbackend/submitted-stories.html',context)
+    else:
+        return HttpResponse("Invalid credentials")
+    
+# Export story
+def downloadUserStory(request,pk):
+    story = Story.objects.get(id=pk)
+    response = HttpResponse(content_type='text/plain')  
+    response['Content-Disposition'] = f'attachment; filename="{story.user.username}-{story.created}.txt"'
+
+    response.write(story.body)
+
+    return response
 
 
 
