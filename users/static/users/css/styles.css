@@ -2232,21 +2232,21 @@ input:checked + .slider:before {
   font-weight: 600;
 }
 
-/* .account-container .account-info .right button{
+.account-container .account-info .right button{
   font-weight: 600;
   padding: 10px 20px;
   background-color: var(--primary-color);
   color: white;
   border-radius: 24px;
-} */
-/* .account-container .bank-details{
+}
+.account-container .bank-details{
   background-color: var(--bg-color1);
   padding: 20px 15px;
   margin-top: 20px;
   border-radius: 18px;
-} */
+}
 
-/* .account-container .bank-details .item{
+.account-container .bank-details .item{
   display: flex;
   align-items: center;
   margin-bottom: 20px;
@@ -2263,7 +2263,7 @@ input:checked + .slider:before {
   font-size: 1.1em;
   font-weight: 600;
   margin-top: 10px;
-} */
+}
 
 .setting-modal .feedback-container{
   display: none;
