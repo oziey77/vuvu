@@ -25,6 +25,23 @@ def sendConfirmOTP(username,email,otp):
     msg.send()
 
 @shared_task
+def sendPasswordOTP(username,email,otp):
+    context = {
+        'username':username,
+        'otp':otp,
+    }
+    message = get_template('users/email/password-otp.html').render(context)
+    subject = 'Reset Your Password'
+    msg = EmailMessage(
+        subject,
+        message,
+        'Vuvu <no-reply@vuvu.ng>',
+        [email],
+    )
+    msg.content_subtype ="html"# Main content is now text/html
+    msg.send()
+
+@shared_task
 def updateOnetimeDeposit():
     created_time = datetime.now() - timedelta(minutes=15)
     failedTransactions = OneTimeDeposit.objects.filter(created__lte=created_time,status='Pending')

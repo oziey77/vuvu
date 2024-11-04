@@ -23,7 +23,7 @@ from telecomms.models import ATNDataPlans, DataServices
 from telecomms.serializers import ATNDataPlanSerializer
 from users.forms import KYCDataForm, MyUserCreationForm, StoryForm
 from users.serializers import TransactionSerializer
-from users.tasks import sendConfirmOTP
+from users.tasks import sendConfirmOTP, sendPasswordOTP
 from vuvu.custom_functions import GIVEAWAY_DATA, is_ajax, isNum, reference,offers
 from .models import AccountDeleteQueue, KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity, ZipFileModel
 
@@ -285,6 +285,8 @@ def sendOTP(request):
                     )
                     confirmationData.refresh_from_db()
                 # IMPLEMENT EMAIL SEND
+                sendPasswordOTP.delay(username=user.username,email=user.email,otp=OTPCode) 
+
                 return JsonResponse({
                     "code":"00",
                     "confirmCode":confirmationData.confirmation_id
