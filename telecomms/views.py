@@ -1080,7 +1080,12 @@ def getCurrentOffer(request):
         print(f"Completed offers is {len(completeOffers)}")
         
         if len(completeOffers) == 0:
-            if totalTransactions == 1:
+            if totalTransactions == 0:
+                return JsonResponse({
+                    "code":"04",
+                    "message":"on offer found",
+                })
+            elif totalTransactions == 1:
                 return JsonResponse({
                     "code":"00",
                     "currentOffer":"storeRating",
