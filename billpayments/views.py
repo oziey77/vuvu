@@ -173,6 +173,7 @@ def buyElectricity(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
+            print(f"request post is {request.POST}")
             meterNumber = request.POST.get("meterNumber")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
@@ -196,7 +197,7 @@ def buyElectricity(request):
                         alreadySaved = False
                         for entry in electricityBeneficiary:
                             # alreadySaved = True
-                            if entry['meterNumber'] == meterNumber:
+                            if entry['meterNum'] == meterNumber:
                                 alreadySaved = True
                                 break
                         # If rececipient has not been saved before
@@ -224,7 +225,11 @@ def buyElectricity(request):
                         user = user,
                         electricity = newBeneficiary
                     )
-
+            # return JsonResponse({
+            #         "code":"09",
+            #         "message":"testing electrcity save beneficiary"
+            #     })
+            
             # Todo Integrate electricity Services
             # airtimeServices = AirtimeServices.objects.get(network_operator=operator)
             # if airtimeServices.available == False:
@@ -755,6 +760,7 @@ def buyCable(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
+            print(request.POST)
             smartcardNumber = request.POST.get("smartcardNumber")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
@@ -804,6 +810,10 @@ def buyCable(request):
                         user = user,
                         cable = newBeneficiary
                     )
+            # return JsonResponse({
+            #         "code":"09",
+            #         "message":"testing electrcity save beneficiary"
+            #     })
 
             # Todo Integrate electricity Services
             # airtimeServices = AirtimeServices.objects.get(network_operator=operator)

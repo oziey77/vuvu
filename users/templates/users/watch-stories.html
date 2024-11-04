@@ -10,28 +10,37 @@
 <body>
     <!-- Transaction Form -->
      {% csrf_token %}
-    <div class="main-content transasction-page"  style="display: block;">
+    <div class="main-content transasction-page"  style="display: block;margin-bottom: 200px;">
+        <div class="top-section">
+            <div class="services-header" >
+                {% csrf_token %}               
+                <div class="service-info">
+                    <p>Exclusives</p>
+                </div>            
+            </div>
+        </div>
         
-        <div class="stories-list">
+        <div class="stories-list" style="margin-top: 70px;">
             {% if totalStories > 0 %}
                 <!-- Recent Story -->
                 <div class="story-item">
                     <iframe width="100%" height="240"
-                    src="https://www.youtube.com/embed/{{recentStory.youtube_id}}?controls=1">
+                    src="https://www.youtube.com/embed/{{recentStory.youtube_id}}?controls=1" allow="fullscreen;">
                     </iframe>
                     <!-- <div class="overly"></div> -->
                 </div>
                 <hr>
                 {% for story in stories %}
                     <div class="stories-data">
-                        <div class="left">
-                            {{story.description}}
-                        </div>
                         <div class="right">
                             <iframe width="100%" height="100%"
-                                src="https://www.youtube.com/embed/{{story.youtube_id}}?controls=1">
+                                src="https://www.youtube.com/embed/{{story.youtube_id}}?controls=1" allow="fullscreen;">
                             </iframe>
                         </div>
+                        <div class="left">
+                            <p>{{story.description}}</p>   
+                            <small>{{story.created|timesince}} ago</small>                         
+                        </div>                        
                     </div>
                     <hr class="stories-hr">                
                 {% endfor %}  

@@ -40,6 +40,22 @@ $(document).ready(function(){
         inputValid()
     })
 
+    // Drop
+    var acc = document.getElementsByClassName("multilevel-drop");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+        } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+        }
+    });
+    }
+
     // Toggle Password field
     $('.password-reveal').on('click',function(){
         let btn = $(this)

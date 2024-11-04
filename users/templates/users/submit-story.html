@@ -12,26 +12,28 @@
      {% csrf_token %}
     <div class="main-content transasction-page"  style="display: block;">
         
-        <div class="write-story">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="feedback-message" style="display: block;">
-                        <div class="transaction-success">
-                            <svg width="24px" height="24px" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M9.5 12.1316L11.7414 14.5L16 10M20.5 12.5C20.5 16.9183 16.9183 20.5 12.5 20.5C8.08172 20.5 4.5 16.9183 4.5 12.5C4.5 8.08172 8.08172 4.5 12.5 4.5C16.9183 4.5 20.5 8.08172 20.5 12.5Z" stroke="#121923" stroke-width="1.2"></path> </g></svg>
-                            <p class="error-message" id="error-message">Your story was submitted successfully</p>
-                        </div>
-                    </div> 
-                {% endfor %}
-            {% endif %}
+        <div class="write-story">            
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="input-container">
-                    <textarea name="body" id="result" maxlength="3400" placeholder="Please type here..."></textarea>
+                    <div class="type-story">
+                        <textarea name="body" id="result" maxlength="3400" placeholder="Please type here..."></textarea>
+                    </div>
+                    <div class="speak-story" style="display: none;">
+                        <div class="section-container">
+                            <div class="svgIcon">
+                                <svg fill="#858181e0" width="92px" height="92px" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" stroke="#858181e0"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M 24.5898 49.5742 C 25.5508 49.5742 26.2539 48.8477 26.2539 47.9336 L 26.2539 8.0664 C 26.2539 7.1524 25.5508 6.4258 24.5898 6.4258 C 23.6524 6.4258 22.9492 7.1524 22.9492 8.0664 L 22.9492 47.9336 C 22.9492 48.8477 23.6524 49.5742 24.5898 49.5742 Z M 38.2305 44.8867 C 39.1680 44.8867 39.8711 44.1367 39.8711 43.2227 L 39.8711 12.7773 C 39.8711 11.8633 39.1680 11.1133 38.2305 11.1133 C 37.2930 11.1133 36.5664 11.8633 36.5664 12.7773 L 36.5664 43.2227 C 36.5664 44.1367 37.2930 44.8867 38.2305 44.8867 Z M 17.7930 41.0898 C 18.7305 41.0898 19.4336 40.3633 19.4336 39.4492 L 19.4336 16.5508 C 19.4336 15.6367 18.7305 14.9102 17.7930 14.9102 C 16.8320 14.9102 16.1289 15.6367 16.1289 16.5508 L 16.1289 39.4492 C 16.1289 40.3633 16.8320 41.0898 17.7930 41.0898 Z M 31.4102 38.5586 C 32.3476 38.5586 33.0742 37.8320 33.0742 36.9180 L 33.0742 19.0820 C 33.0742 18.1680 32.3476 17.4414 31.4102 17.4414 C 30.4727 17.4414 29.7695 18.1680 29.7695 19.0820 L 29.7695 36.9180 C 29.7695 37.8320 30.4727 38.5586 31.4102 38.5586 Z M 45.0508 34.3633 C 45.9883 34.3633 46.6914 33.6133 46.6914 32.6992 L 46.6914 23.3008 C 46.6914 22.3867 45.9883 21.6367 45.0508 21.6367 C 44.0898 21.6367 43.3867 22.3867 43.3867 23.3008 L 43.3867 32.6992 C 43.3867 33.6133 44.0898 34.3633 45.0508 34.3633 Z M 10.9727 32.5117 C 11.9102 32.5117 12.6133 31.7851 12.6133 30.8711 L 12.6133 25.1289 C 12.6133 24.2149 11.9102 23.4883 10.9727 23.4883 C 10.0117 23.4883 9.3086 24.2149 9.3086 25.1289 L 9.3086 30.8711 C 9.3086 31.7851 10.0117 32.5117 10.9727 32.5117 Z"></path></g></svg>
+                            </div>
+                            
+                            <p>Coming soon!</p>
+                        </div>
+                    </div>
+                    
                     <input type="file" name="file_field" id="attachFilles" multiple hidden>
                     <!-- <input type="file" id="files" name="files" multiple> -->
                     <div class="bottom-section">
                         <hr>
-                        <p class="filesFeedback" style="margin-left:30px; font-size: 0.8em; font-weight: 400; display: none;"><span id="filesCount"></span> file(s) selected</p>
+                        <p class="filesFeedback" style="margin-left:30px; font-size: 0.8em; font-weight: 400; display: none; color: var(--success1);"><span id="filesCount"></span> images(s) selected</p>
                         <div class="write-option">
                             <a href="javascript:void(0)" id="selectFiles" onclick="">
                                 <div class="item right">
@@ -63,18 +65,14 @@
                                         </svg>
                                 </div>
                             </a>
-                            <div class="item left">
-                                <p>Type</p>
-                                <svg width="24px" height="24px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M19.186 2.09c.521.25 1.136.612 1.625 1.101.49.49.852 1.104 1.1 1.625.313.654.11 1.408-.401 1.92l-7.214 7.213c-.31.31-.688.541-1.105.675l-4.222 1.353a.75.75 0 0 1-.943-.944l1.353-4.221a2.75 2.75 0 0 1 .674-1.105l7.214-7.214c.512-.512 1.266-.714 1.92-.402zm.211 2.516a3.608 3.608 0 0 0-.828-.586l-6.994 6.994a1.002 1.002 0 0 0-.178.241L9.9 14.102l2.846-1.496c.09-.047.171-.107.242-.178l6.994-6.994a3.61 3.61 0 0 0-.586-.828zM4.999 5.5A.5.5 0 0 1 5.47 5l5.53.005a1 1 0 0 0 0-2L5.5 3A2.5 2.5 0 0 0 3 5.5v12.577c0 .76.082 1.185.319 1.627.224.419.558.754.977.978.442.236.866.318 1.627.318h12.154c.76 0 1.185-.082 1.627-.318.42-.224.754-.559.978-.978.236-.442.318-.866.318-1.627V13a1 1 0 1 0-2 0v5.077c0 .459-.021.571-.082.684a.364.364 0 0 1-.157.157c-.113.06-.225.082-.684.082H5.923c-.459 0-.57-.022-.684-.082a.363.363 0 0 1-.157-.157c-.06-.113-.082-.225-.082-.684V5.5z" fill="#000000"></path>
-                                    </g>
-                                </svg>
-                            </div>
+                            <a href="javascript:void(0)" class="input-method active" onclick="" id="textInput">
+                                <div class="item left">
+                                    <p>Type</p>
+                                    <svg version="1.1" id="Uploaded to svgrepo.com" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="16px" viewBox="0 0 32 32" xml:space="preserve" fill="#000000" stroke="#000000" stroke-width="0.00032"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .dashing_een{fill:#0B1719;} </style> <path class="dashing_een" d="M22,18h-2c-0.276,0-0.5-0.224-0.5-0.5S19.724,17,20,17h2c0.276,0,0.5,0.224,0.5,0.5S22.276,18,22,18z M17.5,17.5c0-0.276-0.224-0.5-0.5-0.5h-2c-0.276,0-0.5,0.224-0.5,0.5S14.724,18,15,18h2C17.276,18,17.5,17.776,17.5,17.5z M12.5,17.5c0-0.276-0.224-0.5-0.5-0.5h-2c-0.276,0-0.5,0.224-0.5,0.5S9.724,18,10,18h2C12.276,18,12.5,17.776,12.5,17.5z M22.5,22.5c0-0.276-0.224-0.5-0.5-0.5h-2c-0.276,0-0.5,0.224-0.5,0.5S19.724,23,20,23h2C22.276,23,22.5,22.776,22.5,22.5z M17.5,22.5c0-0.276-0.224-0.5-0.5-0.5h-2c-0.276,0-0.5,0.224-0.5,0.5S14.724,23,15,23h2C17.276,23,17.5,22.776,17.5,22.5z M12.5,22.5c0-0.276-0.224-0.5-0.5-0.5h-2c-0.276,0-0.5,0.224-0.5,0.5S9.724,23,10,23h2C12.276,23,12.5,22.776,12.5,22.5z M22.5,12.5c0-0.276-0.224-0.5-0.5-0.5h-2c-0.276,0-0.5,0.224-0.5,0.5S19.724,13,20,13h2C22.276,13,22.5,12.776,22.5,12.5z M17.5,12.5c0-0.276-0.224-0.5-0.5-0.5h-2c-0.276,0-0.5,0.224-0.5,0.5S14.724,13,15,13h2C17.276,13,17.5,12.776,17.5,12.5z M12.5,12.5c0-0.276-0.224-0.5-0.5-0.5h-2c-0.276,0-0.5,0.224-0.5,0.5S9.724,13,10,13h2C12.276,13,12.5,12.776,12.5,12.5z M22.5,7.5 C22.5,7.224,22.276,7,22,7h-2c-0.276,0-0.5,0.224-0.5,0.5S19.724,8,20,8h2C22.276,8,22.5,7.776,22.5,7.5z M17.5,7.5 C17.5,7.224,17.276,7,17,7h-2c-0.276,0-0.5,0.224-0.5,0.5S14.724,8,15,8h2C17.276,8,17.5,7.776,17.5,7.5z M12.5,7.5 C12.5,7.224,12.276,7,12,7h-2C9.724,7,9.5,7.224,9.5,7.5S9.724,8,10,8h2C12.276,8,12.5,7.776,12.5,7.5z M28,0.5v31 c0,0.276-0.224,0.5-0.5,0.5h-17c-0.133,0-0.26-0.053-0.354-0.146l-6-6C4.053,25.76,4,25.633,4,25.5v-25C4,0.224,4.224,0,4.5,0h23 C27.776,0,28,0.224,28,0.5z M10,26H5.707L10,30.293V26z M27,1H5v24h5.5c0.276,0,0.5,0.224,0.5,0.5V31h16V1z"></path> </g></svg>
+                                </div>
+                            </a>
                             <!-- <input type="button" id="toggle" value="Loading" onclick="transcribe.toggle()" disabled> -->
-                            <a href="javascript:void(0)">
+                            <a href="javascript:void(0)" class="input-method" onclick="" id="voiceInput">
                                 <div class="item right">
                                     <p>Voice</p>
                                     <svg width="24px" height="24px"  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve" fill="#000000">
@@ -92,6 +90,16 @@
                         </div>
                     </div>   
                 </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="feedback-message" style="display: block;">
+                            <div class="transaction-success">
+                                <svg width="24px" height="24px" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M9.5 12.1316L11.7414 14.5L16 10M20.5 12.5C20.5 16.9183 16.9183 20.5 12.5 20.5C8.08172 20.5 4.5 16.9183 4.5 12.5C4.5 8.08172 8.08172 4.5 12.5 4.5C16.9183 4.5 20.5 8.08172 20.5 12.5Z" stroke="#121923" stroke-width="1.2"></path> </g></svg>
+                                <p class="error-message" id="error-message">Your story was submitted successfully</p>
+                            </div>
+                        </div> 
+                    {% endfor %}
+                {% endif %}
                 <button href="javascript:void(0)" class="secondary-btn-2 disabled" style="margin-top: 80px;" id="">Submit Here</button>
             </form>
             
@@ -114,7 +122,7 @@
     </div>
 
     
-    <script src="{% static 'users/js/stories.js' %}?v=1.001"></script>
+    <script src="{% static 'users/js/stories.js' %}?v=1.006"></script>
     <script src="{% static 'users/js/main.js' %}"></script>
     <!-- <script src="{% static 'users/js/transcribe.js' %}?v=1.001"></script> -->
     

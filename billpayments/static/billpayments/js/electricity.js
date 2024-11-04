@@ -74,12 +74,15 @@ $(document).ready(function(){
     //Beneficiary clicked
     $(".save-beneficiary").on('click',function(){
         let beneficiaryData = $(this).attr('data').split('|');
-        iconBox = $("#network-selector").find('#selectedOperatorImg')[0];
-        operatorImg = $("#network-selector").find('img')[0];
-        operatorName = $("#network-selector").find('p')[0];
-        $(`a[network-data="${beneficiaryData[0]}"]`).trigger('click')
-        $("#phone_number").val(beneficiaryData[1]);
+        console.log(beneficiaryData)
+        iconBox = $("#operator-selector").find('#selectedOperatorImg')[0];
+        operatorImg = $("#operator-selector").find('img')[0];
+        operatorName = $("#operator-selector").find('p')[0];
+        $(`a[disco="${beneficiaryData[0]}"]`).trigger('click')
+        meterNumber = beneficiaryData[1]
+        $("#meterNumber").val(meterNumber);
         $("#beneficiaryModal").css('display','none');
+        // $("#meterType").children(`option[text=${beneficiaryData[2]}]`).attr("selected", "selected");           
     })
 
     // Buy electricity

@@ -1086,11 +1086,12 @@ def getCurrentOffer(request):
                     "currentOffer":"storeRating",
                     "discount":"20"
                 })
-            # else:
-            #     return JsonResponse({
-            #             "code":"04",
-            #             "message":"on offer found",
-            #         })
+            elif totalTransactions > 1:
+                return JsonResponse({
+                        "code":"00",
+                        "currentOffer":"storeRating",
+                        "discount":"20"
+                    })
         else:
             if totalTransactions == 4:
                 offerIndex = 0
@@ -1114,7 +1115,7 @@ def getCurrentOffer(request):
                 return JsonResponse({
                     "code":"00",
                     "currentOffer":"trustPilot",
-                    "discount":"20"
+                    "discount":"30"
                 })
             else:
                 return JsonResponse({

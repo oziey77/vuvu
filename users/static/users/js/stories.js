@@ -26,6 +26,23 @@ $(document).ready(function(){
         $(".feedback-message").css("display","none")
     },2000)
 
+    // 
+    $(".input-method").on("click",function(){
+        $(".input-method").removeClass("active")
+        $(this).addClass("active")
+        let inputMode = $(this).attr('id')
+        if(inputMode == "textInput"){
+            $(".speak-story").fadeOut(function(){
+                $(".type-story").css("display","block") 
+            })
+        }
+        else if(inputMode == "voiceInput"){
+            $(".type-story").fadeOut(function(){
+                $(".speak-story").css("display","block") 
+            })
+        }
+    })
+
     
 
 });
