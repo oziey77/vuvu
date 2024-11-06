@@ -79,6 +79,7 @@ def buyAirtime(request):
             operator = request.POST.get('operator')
             recipient = request.POST.get('recipient')
             amount = Decimal(request.POST.get('amount'))
+            airtimeAmount = amount 
             wallet = UserWallet.objects.get(user=user)
             safeBeneficiary = request.POST.get('safeBeneficiary')
 
@@ -151,6 +152,15 @@ def buyAirtime(request):
             
             # Check if user has enough balance
             if amount > 0 and amount <= wallet.balance:
+                # calculate Discount/cashback
+                airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
+                discountRate = airtimeDiscount.rate
+                calculatedDiscount = Decimal((amount * discountRate) / Decimal(100))
+                user.discount_genarated += calculatedDiscount
+                user.save()
+
+                amount = (amount - calculatedDiscount)#Remove discount from total amount
+
                 balanceBefore = wallet.balance
                 wallet.balance -= amount
                 wallet.save()
@@ -171,7 +181,7 @@ def buyAirtime(request):
                     event_type = "Debit",
                     transaction_type = "Airtime",
                     comment = f"Airtime {transRef}",
-                    amount = Decimal(amount),
+                    amount = amount,
                     balanceBefore = balanceBefore,
                     balanceAfter = wallet.balance,
                 )
@@ -183,7 +193,9 @@ def buyAirtime(request):
                                 recipient = recipient,
                                 reference = transRef,
                                 package = f"{operator} VTU",
+                                unit_cost = airtimeAmount,
                                 amount = amount,
+                                discount = calculatedDiscount,
                                 balanceBefore = balanceBefore,
                                 balanceAfter = wallet.balance,
                             )
@@ -214,7 +226,7 @@ def buyAirtime(request):
                         payload = {
                             "network_operator": operator,
                             "phone": recipient,
-                            "amount": str(amount),
+                            "amount": str(airtimeAmount),
                             "customer_reference": transRef,
                             "callback_url": callBackUrl,
                             }
@@ -228,22 +240,9 @@ def buyAirtime(request):
                         data = response.json()
                         
                         if data['success'] == True:
-                            # calculate Discount/cashback
-                            airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
-                            discountRate = airtimeDiscount.rate
-                            calculatedDiscount = Decimal((transaction.amount * discountRate) / Decimal(100))
-                            Cashback.objects.create(
-                                user = user,
-                                transaction_type = 'Airtime',
-                                message = f"Airtime {transaction.reference}",
-                                amount = calculatedDiscount
-                            )
-                            wallet.cashback += calculatedDiscount
-                            wallet.save()
 
 
-                            transaction.status = "Success"
-                            transaction.discount = calculatedDiscount
+                            transaction.status = "Success"                            
                             transaction.message = "Transaction successful"
                             transaction.APIreference = data['details']['reference']
                             transaction.save()                    
@@ -259,6 +258,9 @@ def buyAirtime(request):
                             balanceBefore = wallet.balance
                             wallet.balance += transaction.amount
                             wallet.save()
+
+                            user.discount_genarated -= calculatedDiscount  
+                            user.save()   
 
                             # Create wallet Activity
                             WalletActivity.objects.create(
@@ -292,7 +294,7 @@ def buyAirtime(request):
 
                         payload = {
                                     "plan_type":"VTU",
-                                    "amount":str(amount),
+                                    "amount":str(airtimeAmount),
                                     "network": networkID,
                                     "phone":recipient,
                                     "bypass":False,
@@ -317,21 +319,20 @@ def buyAirtime(request):
                     
                         if airtimeDetails['status'] == "success" or airtimeDetails['status'] == "processing" or airtimeDetails['status'] == "Processing":
                             # calculate Discount/cashback
-                            airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
-                            discountRate = airtimeDiscount.rate
-                            calculatedDiscount = Decimal((transaction.amount * discountRate) / Decimal(100))
-                            Cashback.objects.create(
-                                user = user,
-                                transaction_type = 'Airtime',
-                                message = f"Airtime {transaction.reference}",
-                                amount = calculatedDiscount
-                            )
-                            wallet.cashback += calculatedDiscount
-                            wallet.save()
+                            # airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
+                            # discountRate = airtimeDiscount.rate
+                            # calculatedDiscount = Decimal((transaction.amount * discountRate) / Decimal(100))
+                            # Cashback.objects.create(
+                            #     user = user,
+                            #     transaction_type = 'Airtime',
+                            #     message = f"Airtime {transaction.reference}",
+                            #     amount = calculatedDiscount
+                            # )
+                            # wallet.cashback += calculatedDiscount
+                            # wallet.save()
 
 
                             transaction.status = "Success"
-                            transaction.discount = calculatedDiscount
                             transaction.message = "Transaction successful"
                             transaction.APIreference = transRef
                             transaction.save()                    
@@ -347,6 +348,9 @@ def buyAirtime(request):
                             balanceBefore = wallet.balance
                             wallet.balance += transaction.amount
                             wallet.save()
+
+                            user.discount_genarated -= calculatedDiscount  
+                            user.save()   
 
                             # Create wallet Activity
                             WalletActivity.objects.create(
@@ -370,7 +374,7 @@ def buyAirtime(request):
                         payload = {
                                 "network": operator.upper(),
                                 "phone": recipient,
-                                "amount": str(amount),
+                                "amount": str(airtimeAmount),
                                 # "max_amount": 5000,
                                 # "callback_url": "https://webhook.site/f4e6022a-5f36-4f43-aba3-fb8419ca6b63"
                                 }
@@ -385,21 +389,20 @@ def buyAirtime(request):
 
                         if 'data' in responseDetails and responseDetails['data']['code'] == 200:
                             # calculate Discount/cashback
-                            airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
-                            discountRate = airtimeDiscount.rate
-                            calculatedDiscount = Decimal((transaction.amount * discountRate) / Decimal(100))
-                            Cashback.objects.create(
-                                user = user,
-                                transaction_type = 'Airtime',
-                                message = f"Airtime {transaction.reference}",
-                                amount = calculatedDiscount
-                            )
-                            wallet.cashback += calculatedDiscount
-                            wallet.save()
+                            # airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
+                            # discountRate = airtimeDiscount.rate
+                            # calculatedDiscount = Decimal((transaction.amount * discountRate) / Decimal(100))
+                            # Cashback.objects.create(
+                            #     user = user,
+                            #     transaction_type = 'Airtime',
+                            #     message = f"Airtime {transaction.reference}",
+                            #     amount = calculatedDiscount
+                            # )
+                            # wallet.cashback += calculatedDiscount
+                            # wallet.save()
 
 
                             transaction.status = "Success"
-                            transaction.discount = calculatedDiscount
                             transaction.message = "Transaction successful"
                             transaction.APIreference = responseDetails['data']['reference']
                             transaction.save()                    
@@ -416,6 +419,9 @@ def buyAirtime(request):
                             balanceBefore = wallet.balance
                             wallet.balance += transaction.amount
                             wallet.save()
+
+                            user.discount_genarated -= calculatedDiscount  
+                            user.save()   
 
                             # Create wallet Activity
                             WalletActivity.objects.create(
@@ -767,6 +773,7 @@ def buyData(request):
                                             user.save()
                                         break
                     elif offerType == "trustPilot" and totalTransactions == 6: 
+                        userOffers = user.completed_offers
                         offerData = {
                                 "trustPilot":{
                                     "totalTrial":1,
@@ -788,8 +795,13 @@ def buyData(request):
                 # Check if user has enough balance to make purchase
                 if selectedPlan.price <= wallet.balance:
                     balanceBefore = wallet.balance
-                    wallet.balance -= selectedPlan.price
+                    user.discount_genarated += offerDiscount                    
+                    deductedAmount = Decimal(selectedPlan.price - offerDiscount)
+                    wallet.balance -= deductedAmount
                     wallet.save()
+                    user.save()
+
+                    
 
                     # Generate transaction reference
                     transRef = reference(26)
@@ -799,7 +811,7 @@ def buyData(request):
                         event_type = "Debit",
                         transaction_type = "Data",
                         comment = f"Data {transRef}",
-                        amount = selectedPlan.price,
+                        amount = deductedAmount,                        
                         balanceBefore = balanceBefore,
                         balanceAfter = wallet.balance,
                     )
@@ -811,7 +823,9 @@ def buyData(request):
                             recipient = recipient,
                             reference = transRef,
                             package = selectedPlan.plan,
-                            amount = selectedPlan.price,
+                            unit_cost = selectedPlan.price,
+                            amount = deductedAmount,
+                            discount = offerDiscount,
                             balanceBefore = balanceBefore,
                             balanceAfter = wallet.balance,
                         )
@@ -851,18 +865,8 @@ def buyData(request):
                         
 
                         if data['success'] == True:
-                            Cashback.objects.create(
-                                user = user,
-                                transaction_type = 'Data',
-                                message = f"Data {transaction.reference}",
-                                amount = offerDiscount
-                            )
-                            wallet.cashback += offerDiscount
-                            wallet.save()
-
 
                             transaction.status = "Success"
-                            transaction.discount = offerDiscount
                             transaction.message = "Transaction successful"
                             transaction.APIreference = data['details']['reference']
                             transaction.save()                    
@@ -878,6 +882,9 @@ def buyData(request):
                             balanceBefore = wallet.balance
                             wallet.balance += transaction.amount
                             wallet.save()
+
+                            user.discount_genarated -= offerDiscount  
+                            user.save()     
 
                             # Create wallet Activity
                             WalletActivity.objects.create(
@@ -917,18 +924,9 @@ def buyData(request):
                         
 
                         if data['code'] == 200:
-                            Cashback.objects.create(
-                                user = user,
-                                transaction_type = 'Data',
-                                message = f"Data {transaction.reference}",
-                                amount = offerDiscount
-                            )
-                            wallet.cashback += offerDiscount
-                            wallet.save()
                             
                             # Update transaction
                             transaction.status = "Success"
-                            transaction.discount = offerDiscount
                             transaction.message = "Transaction successful"
                             transaction.APIreference = data['data']['reference']
                             transaction.save()                    
@@ -945,6 +943,9 @@ def buyData(request):
                             balanceBefore = wallet.balance
                             wallet.balance += transaction.amount
                             wallet.save()
+
+                            user.discount_genarated -= offerDiscount  
+                            user.save()   
 
                             # Create wallet Activity
                             WalletActivity.objects.create(
@@ -991,18 +992,9 @@ def buyData(request):
 
                         
                         if data['status'] == "success" or data['status'] == "processing":
-                            Cashback.objects.create(
-                                user = user,
-                                transaction_type = 'Data',
-                                message = f"Data {transaction.reference}",
-                                amount = offerDiscount
-                            )
-                            wallet.cashback += offerDiscount
-                            wallet.save()
                             
                             # Update transaction
                             transaction.status = "Success"
-                            transaction.discount = offerDiscount
                             transaction.message = "Transaction successful"
                             transaction.APIreference = transRef
                             transaction.save()                    
@@ -1018,6 +1010,9 @@ def buyData(request):
                             balanceBefore = wallet.balance
                             wallet.balance += transaction.amount
                             wallet.save()
+
+                            user.discount_genarated -= offerDiscount  
+                            user.save()   
 
                             # Create wallet Activity
                             WalletActivity.objects.create(

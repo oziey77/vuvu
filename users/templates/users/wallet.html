@@ -144,7 +144,7 @@
                             </div>
                         </div>
                     </div> -->
-                    <p class="charges-note">A fee of <span style="text-decoration: underline;">1.5%</span> applies on all deposit.</p>                    
+                    <p class="charges-note">A fee of <span style="text-decoration: underline;">{{dynamicAccount.deposit_charges}}</span>% applies on all deposit.</p>                    
                     <p class="receive-amount"><strong class="success">&#8358;<span  id="creditAmount">500</span></strong> will be credited to your wallet</p>
                     
                     <div class="copy-container">
@@ -212,11 +212,8 @@
                             <!-- Generate Account -->
                             <div class="generate-account" id="generateAccount" style="display: block;">
                                 <div class="note">
-                                    <p class="stamp-duty">Stamp duty of &#8358;50 applies on all deposits</p>
-                                    <!-- A fee of <span style="text-decoration: underline;">1.1%</span> applies on all deposit. -->
-                                    <!-- <p class="stamp-duty">Deposits below &#8358;1,000: &#8358;10 stamp duty</p>
-                                    <p class="stamp-duty">Deposits between &#8358;1,000 - 5000: &#8358;25 stamp duty</p>
-                                    <p class="stamp-duty">Deposits &#8358;5,000 above : &#8358;50 stamp duty</p> -->
+                                    <p class="stamp-duty">A fee of <span style="text-decoration: underline;">{{dynamicAccount.deposit_charges}}</span>% applies on all deposit.</p>
+                                    
                                 </div>
                                 {% if user.has_safeHavenAccount == False %}
                                 <button class="primary-btn" id="generate-sfb">Proceed</button>
@@ -249,7 +246,7 @@
                                             </div>
                                             <div class="details">
                                                 <p class="title">Account Name</p>
-                                                <p class="data">VUVU Checkout</p>
+                                                <p class="data">{{safeHavenAccName}}</p>
                                             </div>
                                         </div>
                                     </div>

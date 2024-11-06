@@ -152,7 +152,7 @@ $(document).ready(function(){
 
     // Data plans selected
     $("#dataPlans").on('change',function(){
-        planID = $(this).val();    
+        planID = $(this).val();   
         inputValid()    
         // let planData = planID.split("|");
         // price = Number(planData[3]).toLocaleString()
@@ -194,11 +194,22 @@ $(document).ready(function(){
             button.addClass('disabled')
             let planDatails = $("#dataPlans option:selected").text().split('|');
             let priceData = planDatails[3].split('₦');
-            dataCost = priceData[1]
+            dataCost = Number(priceData[1])
             price = Number(priceData[1]).toLocaleString(undefined, {minimumFractionDigits: 2});
             recipient = $("#phone_number").val();
             planID = $("#dataPlans").val();
             planName = `${planDatails[0]}|${planDatails[1]} for ${planDatails[2]}`  
+
+            if (planName.includes("AWOOF") && selectedOperator == 'MTN'){
+                console.log("AwooF plan selected");
+                $("#defaultPromt").css("display","none");
+                $("#awoofPromt").css("display","block");
+                
+            }
+            else{
+                $("#defaultPromt").css("display","block");
+                $("#awoofPromt").css("display","none");
+            }
 
             // TODO Evaluate Billsummary
 
@@ -207,7 +218,7 @@ $(document).ready(function(){
             $("#plan").html(planName);
             $("#dataAmount").html(price);
             $("#cashback").html(5.00);  
-            $("#total").html(price);        
+            $("#total").html(Number(dataCost - 5.00).toLocaleString(undefined,{maximumFractionDigits:2}));        
             
             
             // Get available offer

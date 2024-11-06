@@ -325,8 +325,8 @@
             <!-- Cashback / withdrawal -->
             <div class="cashback-section">
                 <div class="item">
-                    <p>Discount Generated: N<span id="cashback-balance">{{user.wallet_balances.cashback|intcomma}}</span></p>
-                    <div class="cashback-action">
+                    <p>Discount Generated: N<span id="cashback-balance">{{user.discount_genarated|intcomma}}</span></p>
+                    <!-- <div class="cashback-action">
                         {% if user.wallet_balances.cashback > 0 %}
                         <a href="javascript:void(0)" class="redeem-cashback redeem-BTN" id="cashback-BTN" onclick="">Add to wallet</a>
                         <p class="redeem-feedback"id="cashback-Feedback">success</p>
@@ -336,7 +336,7 @@
                         <div class="preloader" id="cashback-preloader">
                             <div class="loader-inline"></div>
                         </div>                        
-                    </div>                    
+                    </div>                     -->
                 </div>
                 <hr>
                 <div class="item">

@@ -15,6 +15,7 @@ $(document).ready(function(){
     var bouquetList
     var saveBeneficiary = "off";
     var cableBackend
+    var cableDiscount = Number($("#cableDiscount").val())
     // Operator Selector
     $("#operator-selector").on('click',function(){
         // $("#network-dropdown").css("display","block");
@@ -43,6 +44,7 @@ $(document).ready(function(){
             },
             success:function(response){
                 $("#mainLoader").css('display','none');
+                $(".error-feedback").css('display','none');
                 if(response.code == '00'){
                     bouquetList = response.bouquetList
                     console.log(bouquetList)
@@ -199,12 +201,17 @@ $(document).ready(function(){
                     // Format Address                     
                     // let addressData = (response.address).split('Address:')
                     // $(".recipientMeterAddress").html(addressData[1]);
-                    $(".billAmount").html(Number(response.amount).toLocaleString(undefined,{maximumFractionDigits:2}));
+                    $("#billAmount").html(Number(response.amount).toLocaleString(undefined,{maximumFractionDigits:2}));
                     
                     // TODO calculate discount
-                    $("#total").html(Number(response.amount).toLocaleString(undefined,{maximumFractionDigits:2}));
+                    console.log(`amount is ${amount}`)
+                    console.log(`amount is ${amount}`)
+                    let calculatedDiscount = (Number(response.amount) * cableDiscount) / 100.00
+                    $("#cashback").html(Number(calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:2}));
+                    $("#total").html(Number(amount - calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:2}));
                     $("#mainLoader").css('display','none')
-                    $("#billSummary").css("display",'block');                    
+                    $("#billSummary").css("display",'block');       
+                    $(".error-feedback").css('display','none');               
                 }
                 else if(response.code == '09'){
                     $(".error-message").html(response.message);

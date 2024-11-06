@@ -13,6 +13,8 @@ $(document).ready(function(){
     var meterNumber;
     var otherData;
     var saveBeneficiary = "off";
+    var electricityDiscount = Number($("#electricityDiscount").val())
+    console.log(`Electricity discount is ${electricityDiscount}`)
     // Operator Selector
     $("#operator-selector").on('click',function(){
         // $("#network-dropdown").css("display","block");
@@ -118,10 +120,12 @@ $(document).ready(function(){
                         $(".recipientMeterAddress").html(response.address);
                     }
                     
-                    $(".billAmount").html(Number(response.amount).toLocaleString(undefined,{maximumFractionDigits:2}));
+                    $("#billAmount").html(Number(response.amount).toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:2}));
                     
                     // TODO calculate discount
-                    $("#total").html(Number(response.amount).toLocaleString(undefined,{maximumFractionDigits:2}));
+                    let calculatedDiscount = (amount * electricityDiscount) / 100.00
+                    $("#cashback").html(Number(calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:2}));
+                    $("#total").html(Number(amount - calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:2}));
                     $("#mainLoader").css('display','none')
                     $("#billSummary").css("display",'block');   
                     $(".error-feedback").css('display','none');                 

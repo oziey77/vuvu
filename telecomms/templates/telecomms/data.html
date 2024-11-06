@@ -226,7 +226,7 @@
                         <p class="offer-header">Congrats<span style="font-family: Noto Emoji, sans-serif;">🎉</span>!</p>
                         <p class="offer-note">Pay <strong>#<span class="offer-amount"></span></strong> for this transaction. <br>Kindly rate us on TrustPilot to claim this offer.!</p>                        
                         <div class="button-group">                        
-                            <a class="primary-btn accept-offer" href="" onclick="" >Rate us on TrustPilot</a>
+                            <a class="primary-btn accept-offer" href="https://www.trustpilot.com/evaluate/vuvu.ng" onclick="" >Rate us on TrustPilot</a>
                             <button class="secondary-btn reject-offer" href="javascript:void(0)" onclick="" >Miss out on Offer</button>
                         </div>
                     </div>
@@ -325,7 +325,8 @@
                 </div>
                 <div class="feedback">
                     <p>Your Data Purchase<br>Was Successful</p>
-                    <small>Your data bundle should be received<br>within a few seconds.</small>
+                    <small id="defaultPromt">Your data bundle should be received<br>within a few seconds.</small>
+                    <small id="awoofPromt" style="display:none">Please use <strong>*323*4# to</strong><br>check Awoof balance</small>
                 </div>
     
                 <div class="button-group">
@@ -419,7 +420,7 @@
 
     
 
-    <script src="{% static 'telecomms/js/data.js' %}?v=1.024"></script>
+    <script src="{% static 'telecomms/js/data.js' %}?v=1.025"></script>
     <script src="{% static 'telecomms/js/simple.money.format.js' %}"></script>
     <script type="text/javascript">
 		$('.money').simpleMoneyFormat();

@@ -8,10 +8,10 @@ from django.contrib import messages
 from django.conf import settings
 import requests
 import json
-from adminbackend.forms import AirtimeDiscountForm, NotificationForm, VuvuStoryForm
-from adminbackend.models import AirtimeBackend, AirtimeDiscount, CableBackend, DataBackend, ElectricityBackend
+from adminbackend.forms import AirtimeDiscountForm, BankChargesForm, BillDiscountForm, NotificationForm, VuvuStoryForm
+from adminbackend.models import AirtimeBackend, AirtimeDiscount, BillServicesDiscount, CableBackend, DataBackend, ElectricityBackend
 from billpayments.models import BillPaymentServices
-from payments.models import WalletFunding
+from payments.models import PartnerBank, WalletFunding
 from telecomms.forms import ATNDataPlanForm, HonourworldDataPlanForm, Twins10DataPlanForm
 from telecomms.models import ATNDataPlans, AirtimeServices, DataServices, HonouworldDataPlans, Twins10DataPlans
 from users.models import Notifications, Story, Transaction, User, UserWallet, WalletActivity
@@ -1008,6 +1008,65 @@ def downloadUserStory(request,pk):
 
     return response
 
+
+# Bank Deposit Charges Page
+@login_required(login_url='login')
+def depositChargesPage(request):
+    user = request.user
+    
+    if user.is_staff:
+        partnerBanks = PartnerBank.objects.all().order_by('id')
+        context = {
+            'partnerBanks':partnerBanks,
+        }
+        return render(request,'adminbackend/deposit-charges.html',context)
+    return redirect ('login')
+
+#Update Band Deposit Charges
+@login_required(login_url='login')
+def updateBankCharges(request):
+    user = request.user
+
+    if request.method == 'POST' and user.is_staff:
+        bank = request.POST['bank']
+        try:
+            instance = PartnerBank.objects.get(bank_name=bank)
+            if instance is not None:
+                form = BankChargesForm(request.POST,instance=instance)
+                form.save()
+                messages.success(request,f"deposit charges for {bank} successfully updated")
+        except:
+            pass
+        return redirect('deposit-charges')
+
+# Bill Payment Discount Page
+@login_required(login_url='login')
+def billPaymentDiscount(request):
+    user = request.user
+    
+    if user.is_staff:
+        billServices = BillServicesDiscount.objects.all().order_by('id')
+        context = {
+            'billServices':billServices,
+        }
+        return render(request,'adminbackend/bill-payment-discount.html',context)
+    
+#Update Bill Payment Discount
+@login_required(login_url='login')
+def updatebillPaymentDiscount(request):
+    user = request.user
+
+    if request.method == 'POST' and user.is_staff:
+        service_type = request.POST['service_type']
+        try:
+            instance = BillServicesDiscount.objects.get(service_type=service_type)
+            if instance is not None:
+                form = BillDiscountForm(request.POST,instance=instance)
+                form.save()
+                messages.success(request,f"deposit charges for {service_type} successfully updated")
+        except:
+            pass
+        return redirect('bill-discounts')
 
 
 

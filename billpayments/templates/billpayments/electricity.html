@@ -46,6 +46,7 @@
                 <p class="tag">Please, fill the details below <span style="font-family: Noto Emoji, sans-serif;">😉</span></p>
                 <form action="">
                     <input type="text" name="network" hidden>
+                    <input type="text" id="electricityDiscount" value="{{electricityDiscount}}" hidden>
                     <!-- Operator -->
                     <div class="operator-container">
                         <a href="javascript:void(0)" onclick="" id="operator-selector">
@@ -422,16 +423,16 @@
                         </div>
                         <div class="data">
                             <p class="info">Amount</p>
-                            <p class="value billAmount">&#8358;<span id="billAmount">1,000</span></p>
+                            <p class="value billAmount">&#8358;<span id="billAmount"></span></p>
                         </div>
                         <div class="data">
                             <p class="info">Discount Generated</p>
-                            <p class="value">&#8358;<span id="cashback">14</span></p>
+                            <p class="value">&#8358;<span id="cashback"></span></p>
                         </div>
                         <hr>
                         <div class="data">
                             <p class="info">Total</p>
-                            <p class="value total" >&#8358;<span id="total">1,200</span></p>
+                            <p class="value total" >&#8358;<span id="total"></span></p>
                         </div>
                     </div>
                     <div class="details beneficiary">
@@ -642,7 +643,7 @@
     </div>
     
 
-    <script src="{% static 'billpayments/js/electricity.js' %}?v=1.026"></script>
+    <script src="{% static 'billpayments/js/electricity.js' %}?v=1.027"></script>
     <!-- <script type="text/javascript">
 		$('.money').simpleMoneyFormat();
 	</script> -->

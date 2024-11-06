@@ -39,6 +39,12 @@ urlpatterns=[
     path("add-story/",views.vuvuStoryPage,name="add-story"),
     path("submitted-stories/",views.submittedStories,name="submitted-stories"),
     path("download-story/<str:pk>",views.downloadUserStory,name="download-story"),
+
+    path('deposit-charges/',views.depositChargesPage,name='deposit-charges'), 
+    path("update-bank-charges/",views.updateBankCharges,name="update-bank-charges"),  
+
+    path('bill-discounts/',views.billPaymentDiscount,name='bill-discounts'), 
+    path("update-bill-discounts/",views.updatebillPaymentDiscount,name="update-bill-discounts"), 
     
     # Ajax
     path("update-services/",views.updateService),

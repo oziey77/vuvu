@@ -46,6 +46,7 @@ class User(AbstractBaseUser):
 
     completed_offers = models.JSONField(default=list,blank=True)
     give_away_level = models.IntegerField(default=1)
+    discount_genarated = models.DecimalField(max_digits=12,decimal_places=2,default=0.00)
 
 
     USERNAME_FIELD = 'username'
@@ -109,6 +110,17 @@ class User(AbstractBaseUser):
         totalTransactions = 0
         try:
             transactions = Transaction.objects.filter(user=self,transaction_type="Data")   
+            if transactions != None:
+                totalTransactions = transactions.count()   
+        except ObjectDoesNotExist: 
+            pass   
+        return totalTransactions
+    
+    @property
+    def successfull_data_transaction_count(self):
+        totalTransactions = 0
+        try:
+            transactions = Transaction.objects.filter(user=self,transaction_type="Data",status='Success')   
             if transactions != None:
                 totalTransactions = transactions.count()   
         except ObjectDoesNotExist: 
@@ -256,6 +268,7 @@ class Transaction(models.Model):
     APIreference = models.CharField(max_length=50,default='-')
     reference = models.CharField(max_length=26)
     package = models.CharField(max_length=100)
+    unit_cost = models.CharField(max_length=20)
     amount = models.DecimalField(max_digits=10,decimal_places=2)
     discount = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)
     balanceBefore = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)

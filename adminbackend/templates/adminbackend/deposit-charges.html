@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Airtime Discounts</title>
+    <title>Deposit Charges</title>
     {% include 'adminbackend/includes/header.html' %}
 </head>
 <body>
@@ -31,38 +31,38 @@
                 {% endfor %}
                 {% endif %}
                 <table>
-                  <caption>Airtime Discount</caption>
+                  <caption>Deposit Charges</caption>
                   <thead>
                     <tr>
-                      <th scope="col">Operator</th>
-                      <th scope="col">Discount</th>
+                      <th scope="col">Bank</th>
+                      <th scope="col">Charges(%)</th>
                     </tr>
                   </thead>
                   <tbody>
-                  {% for discount in airtimeDiscounts %}
+                  {% for bank in partnerBanks %}
                     <tr>
-                      <td data-label="Operator">{{ discount.networkOperator }}</td>
-                      <td data-label="Discount">{{ discount.rate }}%</td>
+                      <td data-label="Bank">{{ bank.bank_name }}</td>
+                      <td data-label="Charges(%)">{{ bank.deposit_charges }}%</td>
                     </tr>
                   {% endfor %}
                   </tbody>
                 </table> 
                 
                 <div class="update-form-container">
-                  <p class="header"> Update Airtime Discount</p>
-                  <form method="POST" action="{% url 'update-airtime-discount' %}">
+                  <p class="header"> Update Bank Charges</p>
+                  <form method="POST" action="{% url 'update-bank-charges' %}">
                       {% csrf_token %}
                       <div class="input-group-grid">
-                          <label for="networkOperator">Select Operator</label><br>
-                          <select name="networkOperator" id="" required>
-                              {% for discount in airtimeDiscounts %}
-                              <option value="{{ discount.networkOperator }}">{{ discount.networkOperator }}</option>
+                          <label for="bank">Select bank</label><br>
+                          <select name="bank" id="" required>
+                              {% for bank in partnerBanks %}
+                              <option value="{{ bank.bank_name }}">{{ bank.bank_name }}</option>
                               {% endfor %}
                           </select>
                       </div>  
                       <div class="input-group-grid">
-                          <label for="discount">Discount</label><br>
-                          <input type="text" id="discount" name="rate" required>                                
+                          <label for="discount">Charges(%)</label><br>
+                          <input type="text" id="discount" name="deposit_charges" required>                                
                       </div> 
                       <div class="input-group-grid" style="margin-top: 40px;">
                           <input type="submit" name="update" value="Update" class="primary-button">

@@ -25,7 +25,7 @@ from users.forms import KYCDataForm, MyUserCreationForm, StoryForm
 from users.serializers import TransactionSerializer
 from users.tasks import sendConfirmOTP, sendPasswordOTP
 from vuvu.custom_functions import GIVEAWAY_DATA, is_ajax, isNum, reference,offers
-from .models import AccountDeleteQueue, KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity, ZipFileModel
+from .models import AccountDeleteQueue, Cashback, KYCData, Notifications, SafeHavenAccount, Transaction, TransactionPIN, User, UserConfirmation, UserWallet, WalletActivity, ZipFileModel
 
 import uuid
 import random
@@ -468,8 +468,10 @@ def dashboardPage(request):
 
     # Get Data transaction for progress
     transYear = datetime.now().date().year
-    totalDataTrans = Transaction.objects.filter(user=user,transaction_type="Data",created__year=transYear).count()
+    totalDataTrans = Transaction.objects.filter(user=user,transaction_type="Data",status='Success',created__year=transYear).count()
     giveAwayProgress = 0
+    
+    
 
     # Give away progress
     giveAwayLevelComplete = False
@@ -740,6 +742,13 @@ def walletPage(request):
             })
     except ObjectDoesNotExist:
         pass
+
+    # Get SafeHaven Account Details
+    if user.has_safeHavenAccount == True:
+        safeHavenAccName = SafeHavenAccount.objects.get(user=user).account_name
+        context.update({
+                "safeHavenAccName":safeHavenAccName
+            })
 
 
 

@@ -76,3 +76,17 @@ class VuvuStory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.youtube_id
+    
+
+BILL_SERVICES=(
+    ("Electricity","Electricity"),
+    ("Cable","Cable"),
+    ("Education","Education"),
+    ("Betting","Betting"),
+    )
+class BillServicesDiscount(models.Model):
+    service_type = models.CharField(max_length=25,choices=BILL_SERVICES)
+    rate = models.DecimalField(max_digits=6,decimal_places=2)
+
+    def __str__(self):
+        return self.service_type

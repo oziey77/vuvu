@@ -28,7 +28,7 @@ $(document).ready(function(){
                         $('.transaction-type').html(data.transaction_type);
                         $('#operator').html(data.operator);
                         $('#recipient').html(data.recipient);
-                        $('#transAmount').html(data.amount);
+                        $('#transAmount').html(data.unit_cost);
                         $('#cashback').html(data.discount);
                         $('#status').html(data.status);
                         $('#date').html(data.created);
@@ -50,7 +50,7 @@ $(document).ready(function(){
                     }
                     else if(data.transaction_type == 'Electricity'){
                         $("#paymentDiscoImage").attr('src',$(operatorImg).attr('src'));
-                        $('#paymentAmount').html(Number(data.amount).toLocaleString());
+                        $('#paymentAmount').html(Number(data.unit_cost).toLocaleString());
                         $('#paymentToken').html(data.token)
                         $('#paymentReference').html(data.reference)
                         $('#paymentUnits').html(data.electricity_units)
@@ -70,7 +70,7 @@ $(document).ready(function(){
                         $('#cableOperator').html(data.operator);
                         $('#smartcardNo').html(data.recipient);
                         $('#cablePackage').html(data.package); 
-                        $('#cableTransAmount').html(Number(data.amount).toLocaleString());
+                        $('#cableTransAmount').html(Number(data.unit_cost).toLocaleString());
                         $('.cashback').html(data.discount);
                         $('#cableTranStatus').html(data.status);
                         $('#cableTransDate').html(data.created);

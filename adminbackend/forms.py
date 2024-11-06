@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 
-from adminbackend.models import AirtimeDiscount, VuvuStory
+from adminbackend.models import AirtimeDiscount, BillServicesDiscount, VuvuStory
+from payments.models import PartnerBank
 from users.models import Notifications
 
 class AirtimeDiscountForm(ModelForm):
@@ -17,3 +18,13 @@ class VuvuStoryForm(ModelForm):
     class Meta:
         model = VuvuStory
         fields = ['youtube_id','description']
+
+class BankChargesForm(ModelForm):
+    class Meta:
+        model = PartnerBank
+        fields = ['deposit_charges']
+
+class BillDiscountForm(ModelForm):
+    class Meta:
+        model = BillServicesDiscount
+        fields = ['rate']

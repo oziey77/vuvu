@@ -131,7 +131,7 @@
                         </div>
                         <div class="right">
                             <div class="data">
-                                <p class="header">&#8358;{{transaction.amount|intcomma}}</p>
+                                <p class="header">&#8358;{{transaction.unit_cost|intcomma}}</p>
                                 <p class="tag {{transaction.status|lower}}">{{transaction.status}}</p>
                             </div>
                         </div>
@@ -260,7 +260,7 @@
                         </div>
                         <div class="info">
                             <div class="left">
-                                <p>Cashback</p>
+                                <p>Discount</p>
                             </div>
                             <div class="right">
                                 <p id="operator">&#8358;<span id="cashback"></span></p>
@@ -353,7 +353,7 @@
                         </div>
                         <div class="info">
                             <div class="left">
-                                <p>Cashback</p>
+                                <p>Discount</p>
                             </div>
                             <div class="right">
                                 <p id="operator">&#8358;<span class="cashback"></span></p>
@@ -505,7 +505,7 @@
         <div class="loader"></div>
     </div>
 
-    <script src="{% static 'users/js/transaction-history.js' %}?v=1.003"></script>
+    <script src="{% static 'users/js/transaction-history.js' %}?v=1.004"></script>
     
 </body>
 </html>

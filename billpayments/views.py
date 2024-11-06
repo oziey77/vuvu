@@ -8,7 +8,7 @@ from django.conf import settings
 import requests
 from django.core.exceptions import ObjectDoesNotExist
 
-from adminbackend.models import CableBackend, EPINBackend, ElectricityBackend
+from adminbackend.models import BillServicesDiscount, CableBackend, EPINBackend, ElectricityBackend
 from billpayments.models import BillPaymentServices
 from users.models import Beneficiary, Transaction, UserWallet, WalletActivity
 from vuvu.custom_functions import is_ajax, reference
@@ -21,6 +21,8 @@ from datetime import datetime, timedelta
 def electricityPage(request):
     user = request.user
     wallet = UserWallet.objects.get(user=user)
+
+    electricityDiscount = BillServicesDiscount.objects.get(service_type='Electricity').rate
     # Electricity Beneficiary
     electricityBackend = ElectricityBackend.objects.get(name='Main')
     electricityBeneficiaries = None
@@ -34,6 +36,7 @@ def electricityPage(request):
         'mainBalance':wallet.balance,
         'electricityBeneficiaries':electricityBeneficiaries,
         'electricityBackend':electricityBackend,
+        'electricityDiscount':electricityDiscount,
     }
     return render(request,'billpayments/electricity.html',context)
 
@@ -173,7 +176,6 @@ def buyElectricity(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
-            print(f"request post is {request.POST}")
             meterNumber = request.POST.get("meterNumber")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
@@ -225,21 +227,10 @@ def buyElectricity(request):
                         user = user,
                         electricity = newBeneficiary
                     )
-            # return JsonResponse({
-            #         "code":"09",
-            #         "message":"testing electrcity save beneficiary"
-            #     })
             
-            # Todo Integrate electricity Services
-            # airtimeServices = AirtimeServices.objects.get(network_operator=operator)
-            # if airtimeServices.available == False:
-            #     return JsonResponse({
-            #         "code":"09",
-            #         "message":f"{operator} airtime is currently unavailable"
-            #     }) 
 
 
-            # Todo First Check for duplicate transaction  
+            # duplicate transaction  
             existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=meterNumber,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
             if existingTran.count() > 0:
                 return JsonResponse({
@@ -250,9 +241,15 @@ def buyElectricity(request):
             
             # Check if user has enough balance
             if amount > 0 and amount <= wallet.balance:
+                electricityDiscount = BillServicesDiscount.objects.get(service_type='Electricity').rate
+                calculatedDiscount = Decimal((amount * electricityDiscount) / Decimal(100.00))
+                electricityAmount = amount
+                amount = amount - calculatedDiscount
+                user.discount_genarated += calculatedDiscount   
                 balanceBefore = wallet.balance
                 wallet.balance -= amount
                 wallet.save()
+                user.save()
                 
                 transRef = reference(25)
                 try:
@@ -270,7 +267,7 @@ def buyElectricity(request):
                     event_type = "Debit",
                     transaction_type = "Electricity",
                     comment = f"Electricity {transRef}",
-                    amount = Decimal(amount),
+                    amount = amount,
                     balanceBefore = balanceBefore,
                     balanceAfter = wallet.balance,
                 )
@@ -283,6 +280,8 @@ def buyElectricity(request):
                     reference = transRef,
                     package = meterType,
                     amount = amount,
+                    discount = calculatedDiscount,
+                    unit_cost = electricityAmount,
                     balanceBefore = balanceBefore,
                     balanceAfter = wallet.balance,
                 )
@@ -305,6 +304,8 @@ def buyElectricity(request):
                     
                     # Buy from 9Payment Backend
                     if electricityBackend == "9Payment":
+                        transaction.APIBackend = '9Payment'
+                        transaction.save()
                         # Remove temp API KEY
                         APIKEY = "eyJ0eXAiOiJKV1QiLCJrZXlJZCI6InZhc19qd3QiLCJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6WyJCSUxMU19QQVlNRU5UIiwiVE9QX1VQIl0sInN1YiI6IlZVVlUiLCJpc3MiOiI5cHNiLmNvbS5uZyIsImlhdCI6MTcyODA4NjY5OSwianRpIjoiMGNkYjMxY2YtNjNlYy00NDM1LWE3NzQtY2FmMDVkMTAzYjA5IiwiZXhwIjoxNzI4MDkzODk5fQ.z1SAlWhnY8T83XO8RUHf1q_12hhLCTYs_aq73JjqHhaGCSmzq3nYv7DoLcYHGZrboJ4EbOM8Vf29LyD6yc_PmA"
                         # END of remove
@@ -352,7 +353,6 @@ def buyElectricity(request):
 
                             transaction.status = "Success"
                             transaction.APIBackend = "9Payment"
-                            # transaction.discount = calculatedDiscount
                             transaction.message = "Transaction successful"
                             transaction.customerName = customerName
                             transaction.customerAddress = otherField #other field is customer address passed from frontend
@@ -398,6 +398,8 @@ def buyElectricity(request):
                                 "message":responseData['message']
                             })
                     elif electricityBackend == "SafeHaven":
+                        transaction.APIBackend = 'SafeHaven'
+                        transaction.save()
                         # Get Access token
                         clientID = settings.SAFEH_CLIENT_ID
                         clientAssertion = settings.SAFEH_CLIENT_ASSERTION
@@ -453,7 +455,6 @@ def buyElectricity(request):
 
                                 transaction.status = "Success"
                                 transaction.APIBackend = "SafeHaven"
-                                # transaction.discount = calculatedDiscount
                                 transaction.message = "Transaction successful"
                                 transaction.customerName = customerName
                                 transaction.customerAddress = otherField #other field is customer address passed from frontend
@@ -529,6 +530,7 @@ def cablePage(request):
     wallet = UserWallet.objects.get(user=user)
     # Cable Beneficiary
     cableBeneficiaries = None
+    cableDiscount = BillServicesDiscount.objects.get(service_type='Cable').rate
     try:
         userBeneficiaries = Beneficiary.objects.get(user=user)
         if userBeneficiaries is not None:
@@ -540,7 +542,8 @@ def cablePage(request):
     context = {
         'mainBalance':wallet.balance,
         'cableBeneficiaries':cableBeneficiaries,
-        'cableBackend':cableBackend
+        'cableBackend':cableBackend,
+        'cableDiscount':cableDiscount,
     }
     return render(request,'billpayments/cable.html',context)
 
@@ -869,9 +872,15 @@ def buyCable(request):
                             if packageCost == amount:
                                 # Check if user has enough balance
                                 if amount > 0 and amount <= wallet.balance:
+                                    cableDiscount = BillServicesDiscount.objects.get(service_type='Cable').rate
+                                    calculatedDiscount = Decimal((amount * cableDiscount) / Decimal(100.00))
+                                    cableAmount = amount
+                                    amount = amount - calculatedDiscount
+                                    user.discount_genarated += calculatedDiscount 
                                     balanceBefore = wallet.balance
                                     wallet.balance -= amount
                                     wallet.save()
+                                    user.save()
                                     
                                     transRef = reference(25)
                                     try:
@@ -889,7 +898,7 @@ def buyCable(request):
                                         event_type = "Debit",
                                         transaction_type = "Cable",
                                         comment = f"Cable {transRef}",
-                                        amount = Decimal(amount),
+                                        amount = amount,
                                         balanceBefore = balanceBefore,
                                         balanceAfter = wallet.balance,
                                     )
@@ -902,6 +911,8 @@ def buyCable(request):
                                         reference = transRef,
                                         package = packageName,
                                         amount = amount,
+                                        unit_cost = cableAmount,
+                                        discount = calculatedDiscount,
                                         balanceBefore = balanceBefore,
                                         balanceAfter = wallet.balance,
                                     )
@@ -949,23 +960,10 @@ def buyCable(request):
                                             paymentData = responseData['data']
                                             isToken = paymentData['isToken']
                                             
-                                            #Todo calculate Discount/cashback
-                                            # airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
-                                            # discountRate = airtimeDiscount.rate
-                                            # calculatedDiscount = Decimal((transaction.amount * discountRate) / Decimal(100))
-                                            # Cashback.objects.create(
-                                            #     user = user,
-                                            #     transaction_type = 'Airtime',
-                                            #     message = f"Airtime {transaction.reference}",
-                                            #     amount = calculatedDiscount
-                                            # )
-                                            # wallet.cashback += calculatedDiscount
-                                            # wallet.save()
-
+                                            
 
                                             transaction.status = "Success"
                                             transaction.APIBackend = "9Payment"
-                                            # transaction.discount = calculatedDiscount
                                             transaction.message = "Transaction successful"
                                             transaction.customerName = customerName
                                             transaction.customerAddress = otherField #other field is customer address passed from frontend
@@ -1064,9 +1062,15 @@ def buyCable(request):
                             bouquetName = selectedBouquet["name"]
 
                             if amount > 0 and amount <= wallet.balance:
+                                cableDiscount = BillServicesDiscount.objects.get(service_type='Cable').rate
+                                calculatedDiscount = Decimal((amount * cableDiscount) / Decimal(100.00))
+                                cableAmount = amount
+                                amount = amount - calculatedDiscount
+                                user.discount_genarated += calculatedDiscount
                                 balanceBefore = wallet.balance
                                 wallet.balance -= amount
                                 wallet.save()
+                                user.save()
                                 
                                 transRef = reference(25)
 
@@ -1087,7 +1091,7 @@ def buyCable(request):
                                     event_type = "Debit",
                                     transaction_type = "Cable",
                                     comment = f"Cable {transRef}",
-                                    amount = Decimal(amount),
+                                    amount = amount,
                                     balanceBefore = balanceBefore,
                                     balanceAfter = wallet.balance,
                                 )
@@ -1100,6 +1104,8 @@ def buyCable(request):
                                     reference = transRef,
                                     package = packageName,
                                     amount = amount,
+                                    unit_cost = cableAmount,
+                                    discount = calculatedDiscount,
                                     balanceBefore = balanceBefore,
                                     balanceAfter = wallet.balance,
                                 )
@@ -1118,7 +1124,7 @@ def buyCable(request):
                                         "message":"Duplicate transaction wait 1 minute"
                                     })
                                 else:                                            
-                                    transaction.APIBackend = '9Payment'
+                                    transaction.APIBackend = 'SafeHaven'
                                     transaction.save()
 
 

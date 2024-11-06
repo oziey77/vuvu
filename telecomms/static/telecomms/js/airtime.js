@@ -136,7 +136,7 @@ $(document).ready(function(){
             $("#recipient").html(recipient);
             $("#airtimeAmount").html(Number(amount).toLocaleString());
             $("#cashback").html(Number(calculatedDiscount).toLocaleString());  
-            $("#total").html(Number(amount).toLocaleString());        
+            $("#total").html(Number(amount - calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2}));        
             $("#billSummary").css("display",'block');
         }
         
@@ -297,7 +297,7 @@ $(document).ready(function(){
     function buyAirtime(){   
         // $("#PINValidationError").html('')
         // $("#PINValidationError").css('display','none');     
-        $(".loader-overlay").css('display','flex');
+        $("#main-loader").css('display','flex');
         $.ajax({
             url:'/purchase-airtime/',
             type:'POST',
