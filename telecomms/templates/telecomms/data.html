@@ -26,7 +26,7 @@
                             <path d="M16.807 19.0112C15.4398 19.9504 13.7841 20.5 12 20.5C10.2159 20.5 8.56023 19.9503 7.193 19.0111C6.58915 18.5963 6.33109 17.8062 6.68219 17.1632C7.41001 15.8302 8.90973 15 12 15C15.0903 15 16.59 15.8303 17.3178 17.1632C17.6689 17.8062 17.4108 18.5964 16.807 19.0112Z" fill="#FC846B"/>
                             <path d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3432 6 9.00004 7.34315 9.00004 9C9.00004 10.6569 10.3432 12 12 12Z" fill="#FC846B"/>
                         </svg> -->
-                        <a href="{% url 'dashboard' %}" onclick="">
+                        <a class="link-nav" href="{% url 'dashboard' %}" onclick="">
                             <svg fill="#fc846b" height="32px" width="32px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" stroke="#fc846b">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"/>                                
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>                                
@@ -330,8 +330,8 @@
                 </div>
     
                 <div class="button-group">
-                    <a class="secondary-btn" href="{% url 'buy-data' %}" onclick="">Buy Again</a>
-                    <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
+                    <a class="secondary-btn link-nav" href="{% url 'buy-data' %}" onclick="">Buy Again</a>
+                    <a class="primary-btn link-nav" href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
                 </div>
             </div>
         
@@ -374,9 +374,18 @@
         
         </div>
 
-        <!-- preloader -->
-        <div class="loader-overlay">
+        <!-- Page Preloader -->
+        <div class="loader-overlay" id="main-loader">
             <div class="loader"></div>
+        </div>
+        
+        <!-- Offer Preloader -->
+        <div class="loader-overlay" id="offer-loader" style="display: none;">
+            <div class="loading-progress">
+                <div class="loader"></div>
+                <p class="discount" id="discountLoader">Generating discount</p>
+                <p class="offers" id="offerLoader">Looking for offers</p>
+            </div>            
         </div>
           
 
@@ -420,7 +429,7 @@
 
     
 
-    <script src="{% static 'telecomms/js/data.js' %}?v=1.025"></script>
+    <script src="{% static 'telecomms/js/data.js' %}?v=1.026"></script>
     <script src="{% static 'telecomms/js/simple.money.format.js' %}"></script>
     <script type="text/javascript">
 		$('.money').simpleMoneyFormat();

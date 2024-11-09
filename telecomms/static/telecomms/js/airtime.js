@@ -30,6 +30,10 @@ $(document).ready(function(){
         }
     },3000)
 
+    $(".link-nav").on("click",function(){
+        $("#main-loader").css("display","flex")
+      })
+
     // Network operator validator
     var AirtelInitials = ['0911','0912','0907','0904','0902','0901','0812','0808','0802','0708','0701']
     var MTNInitials = ['0916','0913','0906','0903','0816','0814','0813','0810','0806','0803','0706','0704','0703','0702','0702']

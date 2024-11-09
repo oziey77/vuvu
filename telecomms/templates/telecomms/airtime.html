@@ -35,7 +35,7 @@
                                 </g>
                             </svg>
                         </a> -->
-                        <a href="{% url 'dashboard' %}" onclick="">
+                        <a class="link-nav" href="{% url 'dashboard' %}" onclick="">
                             <svg fill="#fc846b" height="32px" width="32px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" stroke="#fc846b">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"/>                                
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>                                
@@ -272,8 +272,8 @@
                 </div>
                 
                 <div class="button-group">
-                    <a class="secondary-btn " href="{% url 'buy-airtime' %}" onclick="">Buy Again</a>
-                    <a class="primary-btn " href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
+                    <a class="secondary-btn link-nav" href="{% url 'buy-airtime' %}" onclick="">Buy Again</a>
+                    <a class="primary-btn link-nav" href="{% url 'dashboard' %}" onclick="">Go to Dashboard</a>
                 </div> 
             </div>
         
@@ -327,13 +327,13 @@
                 <div class="loader"></div>
                 <p class="discount" id="discountLoader">Generating discount</p>
                 <p class="offers" id="offerLoader">Looking for offers</p>
-            </div>
-            
+            </div>            
         </div>
+        
     </div>
     
 
-    <script src="{% static 'telecomms/js/airtime.js' %}?v=1.027"></script>
+    <script src="{% static 'telecomms/js/airtime.js' %}?v=1.028"></script>
     <script src="{% static 'telecomms/js/simple.money.format.js' %}"></script>
     <script type="text/javascript">
 		$('.money').simpleMoneyFormat();

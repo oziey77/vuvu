@@ -16,6 +16,11 @@ $(document).ready(function(){
     var saveBeneficiary = "off";
     var cableBackend
     var cableDiscount = Number($("#cableDiscount").val())
+
+    $(".link-nav").on("click",function(){
+        $("#main-loader").css("display","flex")
+      })
+      
     // Operator Selector
     $("#operator-selector").on('click',function(){
         // $("#network-dropdown").css("display","block");

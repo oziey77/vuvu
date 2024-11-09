@@ -35,6 +35,10 @@ $(document).ready(function(){
 
     var os = androidOrIOS()
 
+    $(".link-nav").on("click",function(){
+        $("#main-loader").css("display","flex")
+      })
+
 
     // network selector
     $("#network-selector").on('click',function(){
@@ -56,7 +60,7 @@ $(document).ready(function(){
         $("#selectedOperatorImg").css('display','block');
         $("#phone_number").val('')
         $("#network-dropdown").fadeOut(function(){
-            $(".loader-overlay").css("display","flex");
+            $("#main-loader").css("display","flex");
             // Ajax call to fetch data plans
             $.ajax({
                 url:"/fetch-data-plans/",
@@ -103,7 +107,7 @@ $(document).ready(function(){
                         // $(".error-feedback").slideUp()
                         $(".error-feedback").css('display','block');
                     };
-                    $(".loader-overlay").fadeOut();
+                    $("#main-loader").fadeOut();
                 }
             })
         });
@@ -415,7 +419,7 @@ $(document).ready(function(){
     function buyData(){
         $("#PINValidationError").html('')
         $("#PINValidationError").css('display','none');     
-        $(".loader-overlay").css('display','flex');
+        $("#main-loader").css('display','flex');
         $.ajax({
             url:'/purchase-data/',
             type:'POST',

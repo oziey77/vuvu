@@ -33,7 +33,11 @@ $(document).ready(function(){
             // $('.balance').text(Number(data['balance']).toLocaleString())
           }
         })          
-      }, 6000, 2);
+      }, 3000, 2);
+
+      $(".dash-nav").on("click",function(){
+        $("#linkLoading").css("display","flex")
+      })
 
     // Give Away 
     let giveAwayProgress = $("#userGiveAwayProgress").val()

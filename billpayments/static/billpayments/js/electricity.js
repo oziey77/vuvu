@@ -15,6 +15,11 @@ $(document).ready(function(){
     var saveBeneficiary = "off";
     var electricityDiscount = Number($("#electricityDiscount").val())
     console.log(`Electricity discount is ${electricityDiscount}`)
+
+    $(".link-nav").on("click",function(){
+        $("#main-loader").css("display","flex")
+      })
+
     // Operator Selector
     $("#operator-selector").on('click',function(){
         // $("#network-dropdown").css("display","block");

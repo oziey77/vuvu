@@ -522,11 +522,13 @@ input:checked + .slider:before {
   }
   .main-container form .forgot-password{    
     margin-left: 10px;  
-    font-size: 0.9em;  
+    font-size: 0.8em;  
+    margin-top: 20px;
   }
   .main-container form .forgot-password a{
     text-decoration: underline;
-    color: rgba(9, 108, 207, 0.608);    
+    /* color: rgba(9, 108, 207, 0.608);     */
+    color: var(--primary-color);
   }
 
   .main-container form .login-group{
@@ -536,7 +538,8 @@ input:checked + .slider:before {
     font-weight: 600;
   }
   .main-container form .login-group button{
-    font-weight: 600;
+    font-size: 1.1em;
+    font-weight: 700;
   }
   
   .main-container .svg-container,
