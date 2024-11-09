@@ -34,6 +34,22 @@ $(document).ready(function(){
     }
 
     var os = androidOrIOS()
+    var currentOfferText = 'discount';
+
+    setInterval(function(){
+        if(currentOfferText == 'discount'){
+            $("#discountLoader").fadeOut(function(){
+                $("#offerLoader").css('display','block');
+                currentOfferText = 'offer';
+            })
+        }
+        else{
+            $("#offerLoader").fadeOut(function(){
+                $("#discountLoader").css('display','block')
+                currentOfferText = 'discount';
+            }) 
+        }
+    },1500)
 
     $(".link-nav").on("click",function(){
         $("#main-loader").css("display","flex")
@@ -224,7 +240,7 @@ $(document).ready(function(){
             $("#cashback").html(5.00);  
             $("#total").html(Number(dataCost - 5.00).toLocaleString(undefined,{maximumFractionDigits:2}));        
             
-            
+            $("#offer-loader").css("display",'flex');
             // Get available offer
             if(os == "android" || os == "ios"){
                 $.ajax({
@@ -252,16 +268,28 @@ $(document).ready(function(){
                             }
                             
                             $(".offer-amount").html((Number(dataCost) - Number(offerDiscount)).toLocaleString());
-                            $("#offerModal").css("display","block");
+                            
+                            setTimeout(function(){                
+                                $("#offer-loader").css("display",'none');
+                                $("#offerModal").css("display","block");
+                            },4000) 
                         }
                         else if(response.code == '04'){
-                            $("#billSummary").css("display",'block');
+                            // $("#offer-loader").css("display",'none');
+                            // $("#billSummary").css("display",'block');
+                            setTimeout(function(){                
+                                $("#offer-loader").css("display",'none');
+                                $("#billSummary").css("display",'block');
+                            },4000) 
                         }
                     }
                 })
             }
-            else{
-                $("#billSummary").css("display",'block');
+            else{                
+                setTimeout(function(){                
+                    $("#offer-loader").css("display",'none');
+                    $("#billSummary").css("display",'block');
+                },4000) 
             }
             
 

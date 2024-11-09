@@ -16,6 +16,21 @@ $(document).ready(function(){
     var electricityDiscount = Number($("#electricityDiscount").val())
     console.log(`Electricity discount is ${electricityDiscount}`)
 
+    setInterval(function(){
+        if(currentOfferText == 'discount'){
+            $("#discountLoader").fadeOut(function(){
+                $("#offerLoader").css('display','block');
+                currentOfferText = 'offer';
+            })
+        }
+        else{
+            $("#offerLoader").fadeOut(function(){
+                $("#discountLoader").css('display','block')
+                currentOfferText = 'discount';
+            }) 
+        }
+    },1500)
+
     $(".link-nav").on("click",function(){
         $("#main-loader").css("display","flex")
       })
@@ -95,7 +110,7 @@ $(document).ready(function(){
     // Buy electricity
     $("#buyElectricity").on('click',function(e){
         e.preventDefault()
-        $("#mainLoader").css('display','flex')
+        $("#offer-loader").css('display','flex')
         // Ajax to validate meter
         $.ajax({
             url:"/validate-meter/",
@@ -131,7 +146,7 @@ $(document).ready(function(){
                     let calculatedDiscount = (amount * electricityDiscount) / 100.00
                     $("#cashback").html(Number(calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:2}));
                     $("#total").html(Number(amount - calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:2}));
-                    $("#mainLoader").css('display','none')
+                    $("#offer-loader").css('display','none')
                     $("#billSummary").css("display",'block');   
                     $(".error-feedback").css('display','none');                 
                 }
@@ -140,7 +155,7 @@ $(document).ready(function(){
                     $(".error-feedback").css('display','block');
                     $("#buyElectricity").attr('disabled',false);
                     $("#buyElectricity").addClass('disabled');
-                    $("#mainLoader").css('display','none')
+                    $("#offer-loader").css('display','none')
                 };
             }
         })

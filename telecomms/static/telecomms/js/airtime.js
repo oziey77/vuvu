@@ -28,7 +28,7 @@ $(document).ready(function(){
                 currentOfferText = 'discount';
             }) 
         }
-    },3000)
+    },1500)
 
     $(".link-nav").on("click",function(){
         $("#main-loader").css("display","flex")
@@ -140,8 +140,13 @@ $(document).ready(function(){
             $("#recipient").html(recipient);
             $("#airtimeAmount").html(Number(amount).toLocaleString());
             $("#cashback").html(Number(calculatedDiscount).toLocaleString());  
-            $("#total").html(Number(amount - calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2}));        
-            $("#billSummary").css("display",'block');
+            $("#total").html(Number(amount - calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2})); 
+            $("#offer-loader").css("display",'flex');
+            setTimeout(function(){                
+                $("#offer-loader").css("display",'none');
+                $("#billSummary").css("display",'block');
+            },4000)       
+            
         }
         
     })
