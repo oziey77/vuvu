@@ -835,7 +835,11 @@ def dynamicAccountAmount(request):
                     bankData = PartnerBank.objects.get(bank_name="SafeHaven MFB")
                     transferCharges = bankData.deposit_charges
                     depositAmount = Decimal(depositAmount)
-                    creditAmount = (depositAmount - (depositAmount * (transferCharges/100)))
+                    if depositAmount <= 10000:
+                        creditAmount = (depositAmount - (depositAmount * (transferCharges/100)))
+                    elif depositAmount > 10000:
+                        creditAmount = depositAmount - Decimal(50)
+
 
                     return JsonResponse({
                         "code":"00",

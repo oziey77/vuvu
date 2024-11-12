@@ -82,15 +82,12 @@ def safeHavenWebhook(request):
 
                     amount = Decimal(transferData['amount'])
 
-                    settledAmount = amount - Decimal(amount * (depositCharges/100))
-
-
-                    # if amount <= Decimal(1000):
-                    #     settledAmount = amount - Decimal(10) #Backend Settled amount
-                    # elif amount > Decimal(1000) and amount <= Decimal(5000):
-                    #     settledAmount = amount - Decimal(25) #Backend Settled amount
-                    # elif amount > Decimal(5000):
-                    #     settledAmount = amount - Decimal(50) #Backend Settled amount
+                    
+                    settledAmount = Decimal(0)
+                    if amount <= Decimal(10000):
+                        settledAmount = amount - Decimal(amount * (depositCharges/Decimal(100)))
+                    elif amount > Decimal(10000):
+                        settledAmount = amount - Decimal(50) #Backend Settled amount
 
                     # Get savehaven account 
                     account = ''
@@ -237,15 +234,13 @@ def safeHavenOneTimeWebhook(request):
                             amount = Decimal(transferData['amount'])
                             partnerBank = PartnerBank.objects.get(bank_name='SafeHaven MFB')
                             depositCharges = partnerBank.deposit_charges
-                            settledAmount = amount - Decimal(amount * (depositCharges/Decimal(100)))
                             
-
-                            # if amount <= Decimal(1000):
-                            #     settledAmount = amount - Decimal(10) #Backend Settled amount
-                            # elif amount > Decimal(1000) and amount <= Decimal(5000):
-                            #     settledAmount = amount - Decimal(25) #Backend Settled amount
-                            # elif amount > Decimal(5000):
-                            #     settledAmount = amount - Decimal(50) #Backend Settled amount
+                            
+                            settledAmount = Decimal(0)
+                            if amount <= Decimal(10000):
+                                settledAmount = amount - Decimal(amount * (depositCharges/Decimal(100)))
+                            elif amount > Decimal(10000):
+                                settledAmount = amount - Decimal(50) #Backend Settled amount
 
                             # Get savehaven account 
                             account = ''
@@ -270,6 +265,7 @@ def safeHavenOneTimeWebhook(request):
                                         paymentReference = transferData['paymentReference'],
                                         narration = transferData['narration'],
                                         transactionAmount = transferData['amount'],
+                                        # settledAmount = settledAmount,
                                         settledAmount = transferData['amount'] - transferData['fees'],
                                         feeAmount = transferData['fees'],
                                         vatAmount = transferData['vat'],

@@ -1067,12 +1067,18 @@ def getCurrentOffer(request):
 
     # Check if user have ever made a deposit
     if is_ajax(request) and request.method == "GET":  
+        # Remove after store upload
+        return JsonResponse({
+            "code":"04",
+            "message":"on offer found",
+        })
+        # Remove end 
         totalTransactions = user.data_transaction_count
         # totalTransactions = 90
-        print(f"User total transaction is {totalTransactions}")
+        # print(f"User total transaction is {totalTransactions}")
 
         completeOffers = user.completed_offers
-        print(f"Completed offers is {len(completeOffers)}")
+        # print(f"Completed offers is {len(completeOffers)}")
         
         if len(completeOffers) == 0:
             if totalTransactions == 0:

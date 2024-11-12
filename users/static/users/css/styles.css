@@ -2023,10 +2023,9 @@ input:checked + .slider:before {
 
 /* Wallet page */
 .main-content.transasction-page #bankSection{
-  margin-top: 40px;
   width: 90%;
   margin:20px auto;
-  margin-top: 40px;
+  margin-top: 200px;
 }
 .main-content.transasction-page #bankSection hr{
   border: 1.1px solid #9d9d9d24;
@@ -2215,6 +2214,14 @@ input:checked + .slider:before {
   font-size: 0.8em;
   line-height: 1.2;
 }
+.account-container .charges-note.l2{
+  margin-top: 0;
+  margin-bottom: 10px
+}
+
+.account-container .charges-note span{
+  font-weight: 600;
+}
 .account-container .receive-amount{
   margin-top: 3px;
   font-size: 0.9em;
@@ -2277,7 +2284,7 @@ input:checked + .slider:before {
 .setting-modal .virtual-account-container{
   width: 100%;
   background-color: var(--bg-color1);
-  padding-bottom: 20px;
+  /* padding-bottom: 20px; */
 }
 .vacc .header{
   margin-top: 20px !important;
@@ -2322,7 +2329,11 @@ input:checked + .slider:before {
 .setting-modal .virtual-account-container .sfb-container .note .stamp-duty{
   font-size: 0.9em;
   line-height: 1.3em;
-  margin: 30px 0 40px 10px;
+  /* margin: 30px 0 0 10px; */
+}
+.setting-modal .virtual-account-container .sfb-container .note .stamp-duty span{
+  font-weight: 600;
+
 }
 .virtual-account-container .sfb-container  .date-of-birth{
   display: flex;
@@ -2360,6 +2371,10 @@ input:checked + .slider:before {
 .security-agent p{
   font-size: 0.8em;
   font-weight: 600;
+}
+
+#virtuaAccModal .content{
+  padding-bottom: 10px;
 }
 
 
@@ -2852,7 +2867,7 @@ input:checked + .slider:before {
 /* Stories */
 .stories-container{
   height: 100vh;
-  padding: 100px 60px;
+  padding: 80px 60px;
 }
 .stories-container .navigation{
   width: 220px;
@@ -2860,8 +2875,8 @@ input:checked + .slider:before {
   background-color: #FFF;
   border-radius: 12px;
   margin: 10px auto;
-  padding: 10px;
-  padding-bottom: 20px;
+  padding: 80px 10px;
+  /* padding-bottom: 20px; */
 }
 .stories-container .navigation svg{
   margin: 0 auto;
