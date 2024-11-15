@@ -3,6 +3,7 @@
   https://www.joshwcomeau.com/css/custom-css-reset/
 */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 :root{
   --white-bg: #FFF;
   --bg-color1:#FFEAEA;
@@ -24,6 +25,7 @@
   --overlay-bg-1:#49494932;
   --overlay-bg-2:#272727a7;
   --placeholder-color:#858181b0;
+  --placeholder-color2:#8581812f;
   --gray-1:gray;
   --box-shadow1: 0 1px 1px rgba(0,0,0,0.12), 0 2px 2px rgba(0,0,0,0.12);
   --color-variant-1: #FFF;
@@ -41,7 +43,8 @@
   body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    /* font-family: 'Plus Jakarta Sans', sans-serif; */
+    font-family: "Poppins", sans-serif;
     /* color: #4C4E52; */
     background-color: var(--main-bg);
     color: var(--text-color);
@@ -63,6 +66,9 @@
   }
   .custom-select{
     position: relative;
+  }
+  .custom-select select{
+    color: var(--placeholder-color);
   }
   .custom-select svg{
     position: absolute;
@@ -378,6 +384,12 @@ input:checked + .slider:before {
     padding: 0;
     position: relative;
   }
+  .main-container.auth{
+    background-color: #FFF;
+    margin-top: 0;
+    padding-top: 40px;   
+  }
+  
   .main-content{
     position: relative;
     /* overflow-y: scroll; */
@@ -387,22 +399,45 @@ input:checked + .slider:before {
     margin-left: 20px;
     margin-top: 90px;
   }
+  .main-container.auth .auth-header-container{
+    margin-top: 0;
+  }
+  .main-container .auth-header-container h2{
+    font-weight: 600;
+  }
 
   .main-container .auth-header{
     margin-top: 40px;
-    font-size: 1.2em;
-    color: var(--primary-color);
+    font-size: 1.8em;
+    color: var(--button-bg);
+    text-align: center;
+  }
+  .main-container.auth .auth-header{
+    margin-top: 0;
+    /* padding-top: 10px; */
+    transform: translateX(-3%);
   }
 
   .main-container .brand-image{
-    width: 72px;
-    height: 72px;
+    width: 100px;
+    height: 100px;
     margin: 30px auto;
     margin-top: 120px;
+    /* background-color: green; */
     /* overflow: hidden; */
   }
   .main-container .brand-image img{
-    width: 80px;
+    width: 100%;
+  }
+  .main-container.auth .brand-image{
+    margin-top: 0;
+    /* padding-top: 60px; */
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
 
@@ -415,6 +450,7 @@ input:checked + .slider:before {
   .main-container .auth-header-container .tagline{
     line-height: 1.2;
     font-size: 0.8em;
+    text-align: center;
   }
   #lognForm,
   #signup-form,
@@ -422,6 +458,9 @@ input:checked + .slider:before {
     width: 90%;
     margin: 0 auto;
     margin-top: 50px;
+  }
+  #lognForm{
+    margin-top: 20px;
   }
   .forget-password-container{
     margin-top: 90px;
@@ -457,6 +496,9 @@ input:checked + .slider:before {
   }
   .main-content form .input-group input{
     margin-bottom: 0;
+  }
+  .main-container.auth form .input-group input{
+    background-color: var(--bg-color1);
   }
   .main-container form .input-group.left-float input{
     padding-left: 54px;
@@ -498,6 +540,16 @@ input:checked + .slider:before {
   .main-content form .input-group.right-float svg polygon{
     fill: var(--primary-color);
   }
+  form .input-group.icon input{
+    padding-left: 38px !important;
+  }
+  form .input-group.icon svg{
+    position: absolute;
+    left: 8;
+    top: 16;
+  }
+
+  
    
   .main-container form input[type=submit]{
     border-radius: 56px;
@@ -774,7 +826,7 @@ input:checked + .slider:before {
 
   form input::placeholder{
     font-size: 0.9em;
-    font-weight: 600;
+    /* font-weight: 600; */
     color: var(--placeholder-color);
   }
 

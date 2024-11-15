@@ -7,24 +7,38 @@
     {% include 'users/includes/header.html' %}
 </head>
 <body>
-    <div class="main-container">
-        <!-- <div class="brand-image">
-            <img src="{% static 'users/images/vuvu-logo-small.png' %}" alt="">
-        </div> -->
+    <div class="main-container auth">
+        <div class="brand-image">
+            <img src="{% static 'users/images/logonew2.jpg' %}" alt="">
+        </div>
         <div class="auth-header-container">
             <h2 class="auth-header">Login</h2>
-            <p class="tagline">Start enjoying discounts</p>
+            <!-- <p class="tagline">Start enjoying discounts</p> -->
             <!-- <p class="tagline">Please enter username and password <br>to login to your account</p> -->
         </div>
         
         <form action="" method="post" id="lognForm">
             {% csrf_token %}
-            <div class="input-group">
-                <input type="text" name="username" id="username" placeholder="Enter username" required>
+            <div class="input-group icon">
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>                    
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>                    
+                    <g id="SVGRepo_iconCarrier"> <circle cx="12" cy="6" r="4" fill="var(--placeholder-color2)" stroke-width="1.5"/> 
+                        <path d="M19.9975 18C20 17.8358 20 17.669 20 17.5C20 15.0147 16.4183 13 12 13C7.58172 13 4 15.0147 4 17.5C4 19.9853 4 22 12 22C14.231 22 15.8398 21.8433 17 21.5634" fill="var(--placeholder-color2)" stroke-width="1.5" stroke-linecap="round"/> </g>                    
+                </svg>
+                <input type="text" name="username" id="username" placeholder="Username" required>
             </div>
             
-            <div class="input-group right-float">
-                <input type="password" class="passwordInput" name="password" id="password" placeholder="Enter password" required>
+            <div class="input-group right-float icon">
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier"> 
+                        <path d="M8.18164 10.7027C8.18164 10.7027 8.18168 8.13513 8.18164 6.59459C8.1816 4.74571 9.70861 3 11.9998 3C14.291 3 15.8179 4.74571 15.8179 6.59459C15.8179 8.13513 15.8179 10.7027 15.8179 10.7027" stroke="var(--placeholder-color2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> 
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.50005 11.3932C4.50001 13.1319 4.49995 16.764 4.50007 19.1988C4.5002 21.8911 8.66375 22.5 12.0001 22.5C15.3364 22.5 19.5 21.8911 19.5 19.1988L19.5 11.3932C19.5 10.8409 19.0523 10.3957 18.5 10.3957H5.50004C4.94777 10.3957 4.50006 10.8409 4.50005 11.3932ZM10.5 16.0028C10.5 16.4788 10.7069 16.9065 11.0357 17.2008V18.7529C11.0357 19.3051 11.4834 19.7529 12.0357 19.7529H12.1786C12.7309 19.7529 13.1786 19.3051 13.1786 18.7529V17.2008C13.5074 16.9065 13.7143 16.4788 13.7143 16.0028C13.7143 15.1152 12.9948 14.3957 12.1072 14.3957C11.2195 14.3957 10.5 15.1152 10.5 16.0028Z" fill="var(--placeholder-color2)"></path> 
+                    </g>
+                </svg>
+                <input type="password" class="passwordInput" name="password" id="password" placeholder="Password" required>
                 <a class="password-reveal" href="javascript:void(0)">Show</a>
             </div>
             <p class="forgot-password"><a href="{% url 'forgot-password' %}" onclick="">Forgot Password?</a></p>
