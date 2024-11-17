@@ -385,7 +385,9 @@ input:checked + .slider:before {
     position: relative;
   }
   .main-container.auth{
-    background-color: #FFF;
+    /* background-color: #FFF; */
+    /* background-color: #FFF; */
+    
     margin-top: 0;
     padding-top: 40px;   
   }
@@ -498,7 +500,8 @@ input:checked + .slider:before {
     margin-bottom: 0;
   }
   .main-container.auth form .input-group input{
-    background-color: var(--bg-color1);
+    /* background-color: var(--bg-color1); */
+    background-color: #FFF;
   }
   .main-container form .input-group.left-float input{
     padding-left: 54px;
@@ -2197,12 +2200,12 @@ input:checked + .slider:before {
 .account-container{
   padding-bottom: 40px;
 }
-.account-container.virtual{
+/* .account-container.virtual{
   border: 1px solid var(--primary-color);
   border-radius: 24px;
   margin: 20px 0 30px 0;
   box-shadow: var(--box-shadow1);
-}
+} */
 .account-container .copy-indicator{
   width: fit-content;
   padding: 10px 16px;
@@ -2335,7 +2338,7 @@ input:checked + .slider:before {
 /* Wallet Page Virtual Account */
 .setting-modal .virtual-account-container{
   width: 100%;
-  background-color: var(--bg-color1);
+  /* background-color: var(--bg-color1); */
   /* padding-bottom: 20px; */
 }
 .vacc .header{
@@ -2343,6 +2346,11 @@ input:checked + .slider:before {
   font-weight: 600;
 }
  .vacc .tag{
+  margin-bottom: 30px;
+}
+.vacc .tag2{
+  font-size: 0.8em;
+  text-align: center;
   margin-bottom: 30px;
 }
 .setting-modal .virtual-account-container .nav-tabs{
@@ -2378,14 +2386,22 @@ input:checked + .slider:before {
   display: none;
 }
 
-.setting-modal .virtual-account-container .sfb-container .note .stamp-duty{
-  font-size: 0.9em;
+.setting-modal .virtual-account-container .note .stamp-duty{
+  font-size: 0.8em;
   line-height: 1.3em;
+  /* color: var(--text-color); */
   /* margin: 30px 0 0 10px; */
+ 
 }
-.setting-modal .virtual-account-container .sfb-container .note .stamp-duty span{
+.setting-modal .virtual-account-container .note2 .stamp-duty{
+  font-size: 0.8em;
+  line-height: 1.3em;
+  /* color: var(--text-color); */
+  /* margin: 30px 0 0 10px; */
+ 
+}
+.setting-modal .virtual-account-container .note2 .stamp-duty span{
   font-weight: 600;
-
 }
 .virtual-account-container .sfb-container  .date-of-birth{
   display: flex;
@@ -2410,6 +2426,25 @@ input:checked + .slider:before {
   margin-bottom: 20px;
 }
 
+.virtual-account-container .account-container .account-info .title{
+  font-size: 0.8em;
+  margin-bottom: 8px;
+}
+.virtual-account-container .account-container .account-info .account-number{
+  font-size: 1.2em;
+  font-weight: 600;
+}
+.virtual-account-container .account-container .bank-details .icon-box{
+  width: 40px;
+  height: 40px;
+}
+.virtual-account-container .account-container .bank-details .title{
+  font-size: 0.8em;
+}
+.virtual-account-container .account-container .bank-details .data{
+  font-weight: 600 !important;
+  font-size: 0.8em !important;
+}
 
 .security-agent{
   margin-top: 10px;

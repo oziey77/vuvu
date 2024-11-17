@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="nav-container settings">            
-            <a href="{% url 'notifications' %}" class="setting-nav-link" onclick="">
+            <a href="{% url 'notifications' %}" class="setting-nav-link link-nav" onclick="">
                 <div class="settings-nav">
                     <div class="icon-box">
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -99,12 +99,12 @@
                 </a>
                 <div class="level" id="legalDrop"> 
                     <hr>                   
-                    <a href="https://vuvu.ng/privacy-policy" onclick=""><p>Privacy Policy</p></a>
-                    <a href="https://vuvu.ng/terms-and-condition"onclick><p>Terms & Conditions</p></a>
+                    <a href="https://vuvu.ng/privacy-policy" class="link-nav" onclick=""><p>Privacy Policy</p></a>
+                    <a href="https://vuvu.ng/terms-and-condition" class="link-nav" onclick><p>Terms & Conditions</p></a>
                     <hr> 
                 </div>
             </div>
-            <a href="{% url 'delete-account' %}" class="setting-nav-link" onclick="">
+            <a href="{% url 'delete-account' %}" class="setting-nav-link link-nav" onclick="">
                 <div class="settings-nav">
                     <div class="icon-box">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +118,7 @@
                     <p>Delete Account</p>
                 </div>
             </a>
-            <a href="{% url 'logout' %}" class="setting-nav-link">
+            <a href="{% url 'logout' %}" class="setting-nav-link link-nav">
                 <div class="settings-nav">
                     <div class="icon-box">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -239,10 +239,10 @@
                         <lottie-player src="https://lottie.host/a4b16f7e-e9e7-4cc1-8f34-54f435ea80c5/FmzCUPyAsk.json" background="transparent" speed="1" style="width: 180px; height: 180px" loop autoplay direction="1" mode="normal"></lottie-player>
                     </div>
                     <div class="reset-feedback" id="">
-                        <p>You have transaction PIN was <br>saved successfully</p>
+                        <p>Your transaction PIN was <br>saved successfully</p>
                         <!-- <small>Kindly check you email inbox or <br>spam for confirmation email.</small> -->
                     </div> 
-                    <a href="{% url 'settings' %}" class="primary-btn" id="closePasswordChange"> Close</a>
+                    <a href="{% url 'settings' %}" class="primary-btn link-nav" id="closePasswordChange"> Close</a>
                  </div>
 
 
@@ -338,6 +338,10 @@
 
     <!-- Page Preloader -->
     <div class="loader-overlay">
+        <div class="loader"></div>
+    </div>
+
+    <div class="loader-overlay" id="linkLoading">
         <div class="loader"></div>
     </div>
 

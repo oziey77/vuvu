@@ -13,7 +13,7 @@
     <div class="main-content transasction-page"  style="display: block;">
         
         <div class="stories-container">
-            <a href="{% url 'watch-stories' %}" onclick="">
+            <a href="{% url 'watch-stories' %}" class="link-nav" onclick="">
                 <div class="navigation">
                     <svg width="66px" height="48px" fill="#000000" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -31,7 +31,7 @@
             </a>
             
             <hr>
-            <a href="{% url 'tell-your-story' %}" onclick="">
+            <a href="{% url 'tell-your-story' %}" class="link-nav" onclick="">
                 <div class="navigation">
                     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48px" height="48px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve" fill="#000000">
     
@@ -61,6 +61,10 @@
 
     <!-- Page Preloader -->
     <div class="loader-overlay">
+        <div class="loader"></div>
+    </div>
+
+    <div class="loader-overlay" id="linkLoading">
         <div class="loader"></div>
     </div>
 

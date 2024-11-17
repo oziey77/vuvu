@@ -27,7 +27,7 @@
                         <path d="M16.807 19.0112C15.4398 19.9504 13.7841 20.5 12 20.5C10.2159 20.5 8.56023 19.9503 7.193 19.0111C6.58915 18.5963 6.33109 17.8062 6.68219 17.1632C7.41001 15.8302 8.90973 15 12 15C15.0903 15 16.59 15.8303 17.3178 17.1632C17.6689 17.8062 17.4108 18.5964 16.807 19.0112Z" fill="#FC846B"/>
                         <path d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3432 6 9.00004 7.34315 9.00004 9C9.00004 10.6569 10.3432 12 12 12Z" fill="#FC846B"/>
                     </svg> -->
-                    <a href="{% url 'dashboard' %}" onclick="">
+                    <a href="{% url 'dashboard' %}" class="link-nav" onclick="">
                         <svg fill="#fc846b" height="32px" width="32px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" stroke="#fc846b">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"/>                                
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>                                
@@ -50,12 +50,16 @@
                 </div>
                 <hr>
                 <div class="funding-option">
-                    <p>Fund your wallet with a PERMANENT account <br>BVN needed to create account number</p>            
-                    <button class="secondary-btn " onclick="" id="virtualAccBTN">Generate Permanent Account</button>
+                    <p>Fund your wallet with a PERMANENT account <br>BVN needed to create account number</p> 
+                    {% if hasVirtualAcc == False %}           
+                        <button class="secondary-btn " onclick="" id="virtualAccBTN">Generate Permanent Account</button>
+                    {% else %}
+                        <button class="secondary-btn " onclick="" id="virtualAccBTN">Fund Wallet Here</button>
+                    {% endif %}
                 </div>
             </div>   
             <!-- Recent Activities -->
-            <p class="section-header" style="font-size: .8em; margin-top: 0px;">Recent Activities</p>
+            <p class="section-header" style="font-size: .8em; margin-top: 36px;">Recent Activities</p>
             <div class="recent-activity-container">
                 {% for activity in walletActivities%}
                 <div class="activity-container credit" >
@@ -146,8 +150,8 @@
                             </div>
                         </div>
                     </div> -->
-                    <p class="charges-note">A fee of <span >{{dynamicAccount.deposit_charges}}</span><span>%</span> applies on &#8358;10,000 and below.</p>  
-                    <p class="charges-note l2">A fee of <span >&#8358;50</span> applies on deposit above &#8358;10,000.</p>                  
+                    <p class="charges-note">Fee of <span >{{dynamicAccount.deposit_charges}}</span><span>%</span> applies below &#8358;10,000</p>  
+                    <p class="charges-note l2">Fee of <span >&#8358;50</span> applies above &#8358;10,000.</p>                  
                     <p class="receive-amount"><strong class="success">&#8358;<span  id="creditAmount">500</span></strong> will be credited to your wallet</p>
                     
                     <div class="copy-container">
@@ -204,7 +208,7 @@
             <div class="content vacc">   
                 <div class="modal-indicator"></div>
                 <p class="header">Permanent Account Details</p> 
-                <p class="tag">Kindly choose any of the banks below.</p> 
+                <p class="tag2">Kindly choose any of the banks below.</p> 
                 <div class="form-container" id="" style="display: block;">                                      
                     <div class="virtual-account-container">                         
                         <div class="nav-tabs">                            
@@ -214,9 +218,9 @@
                         <div class="sfb-container">
                             <!-- Generate Account -->
                             <div class="generate-account" id="generateAccount" style="display: block;">
-                                <div class="note">
-                                    <p class="stamp-duty">A fee of <span >{{dynamicAccount.deposit_charges}}%</span> applies on &#8358;10,000 <br>and below.</p>  
-                                    <p class="stamp-duty l2">A fee of <span >&#8358;50</span> applies on deposit above &#8358;10,000.</p>
+                                <div class="note2">
+                                    <p class="stamp-duty">Fee of <span >{{dynamicAccount.deposit_charges}}%</span> applies below &#8358;10,000</p>  
+                                    <p class="stamp-duty l2">Fee of <span >&#8358;50</span> applies above &#8358;10,000.</p>
                                 </div>
                                 {% if user.has_safeHavenAccount == False %}
                                 <button class="primary-btn" id="generate-sfb">Proceed</button>
@@ -245,7 +249,7 @@
                                         </div>
                                         <div class="item">
                                             <div class="icon-box">
-                                                <img src="{% static 'users/images/vuvu-logo.png' %}" alt="">
+                                                <!-- <img src="{% static 'users/images/vuvu-logo.png' %}" alt=""> -->
                                             </div>
                                             <div class="details">
                                                 <p class="title">Account Name</p>
@@ -410,6 +414,10 @@
         <div class="loader-overlay">
             <div class="loader"></div>
         </div>
+
+        <div class="loader-overlay" id="linkLoading">
+            <div class="loader"></div>
+        </div>
     </div>
 
     
@@ -420,6 +428,7 @@
 
     <script src="{% static 'users/js/wallet.js' %}?v=1.0005"></script>
     <script src="{% static 'users/js/virtual-account.js' %}?v=1.0005"></script>
+    <script src="{% static 'users/js/main.js' %}"></script>
     
 </body>
 </html>

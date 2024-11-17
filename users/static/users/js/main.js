@@ -22,6 +22,11 @@ $(document).ready(function(){
         updateTransactionPIN()
     });
 
+    // Link Loading
+    $(".link-nav").on("click",function(){
+      $("#linkLoading").css("display","flex")
+    })
+
     // Set PIN Function
     window.setTransactionPIN = function(){
         let pin1 = ''

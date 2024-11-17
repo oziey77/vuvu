@@ -35,9 +35,7 @@ $(document).ready(function(){
         })          
       }, 3000, 2);
 
-      $(".dash-nav").on("click",function(){
-        $("#linkLoading").css("display","flex")
-      })
+      
 
     // Give Away 
     let giveAwayProgress = $("#userGiveAwayProgress").val()

@@ -451,7 +451,6 @@ def dashboardPage(request):
     user = request.user
     page = "dashboard"
 
-
     
     period = "Morning"
     hourOfDay= datetime.now().time().hour
@@ -729,14 +728,15 @@ def changePassword(request):
 def walletPage(request):
     user = request.user
     walletActivities = WalletFunding.objects.filter(user=user).order_by("-id")[:2]
+    hasVirtualAcc = False
     context = {
-        "walletActivities":walletActivities,
+        "walletActivities":walletActivities,       
     }
 
-    # Dynamic account partner
+    # Dynamic account partner    
     try:
         safeHavenDynamic = PartnerBank.objects.get(bank_name="SafeHaven MFB",status='Active')
-        if safeHavenDynamic is not None:
+        if safeHavenDynamic is not None:            
             context.update({
                 "dynamicAccount":safeHavenDynamic
             })
@@ -746,9 +746,16 @@ def walletPage(request):
     # Get SafeHaven Account Details
     if user.has_safeHavenAccount == True:
         safeHavenAccName = SafeHavenAccount.objects.get(user=user).account_name
+        hasVirtualAcc = True
         context.update({
-                "safeHavenAccName":safeHavenAccName
+                "safeHavenAccName":safeHavenAccName,
             })
+    
+    context.update({
+                "hasVirtualAcc":hasVirtualAcc,
+            })
+    
+
 
 
 
