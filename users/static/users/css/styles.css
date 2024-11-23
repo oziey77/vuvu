@@ -420,6 +420,21 @@ input:checked + .slider:before {
     transform: translateX(-3%);
   }
 
+  .remember-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .remember-container .data{
+    display: flex;
+    align-items: center;
+  }
+  .remember-container .data p{
+    font-size: 0.8em;
+    margin-right: 5px;
+  }
+
   .main-container .brand-image{
     width: 100px;
     height: 100px;
@@ -578,7 +593,8 @@ input:checked + .slider:before {
   .main-container form .forgot-password{    
     margin-left: 10px;  
     font-size: 0.8em;  
-    margin-top: 20px;
+    /* margin-top: 20px; */
+    float: right;
   }
   .main-container form .forgot-password a{
     text-decoration: underline;
@@ -1950,7 +1966,7 @@ input:checked + .slider:before {
   color: var(--text-color);
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  /* left: 0; */
+  left: 0;
   top: 0;
   width: 100%; /* Full width */
   max-width: 480px;

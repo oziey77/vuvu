@@ -1067,11 +1067,7 @@ def getCurrentOffer(request):
 
     # Check if user have ever made a deposit
     if is_ajax(request) and request.method == "GET":  
-        # Remove after store upload
-        return JsonResponse({
-            "code":"04",
-            "message":"on offer found",
-        })
+        
         # Remove end 
         totalTransactions = user.data_transaction_count
         # totalTransactions = 90

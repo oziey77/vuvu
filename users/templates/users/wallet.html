@@ -44,14 +44,16 @@
         <div style="margin-bottom: 120px; overflow-y:scroll;">
             <!-- Generate Account  -->
             <div class="bank-section" id="bankSection">
+                {% if hasVirtualAcc == False %} 
                 <div class="funding-option">
                     <p>Fund your wallet with a TEMPORARY account <br>Account number valid for ONLY <strong>15 minutes</strong>!</p>            
                     <button class="primary-btn outline" onclick="" id="oneTimeBTN">Get Temporary Account</button>
                 </div>
                 <hr>
-                <div class="funding-option">
-                    <p>Fund your wallet with a PERMANENT account <br>BVN needed to create account number</p> 
-                    {% if hasVirtualAcc == False %}           
+                {% endif %}
+                <div class="funding-option">                     
+                    {% if hasVirtualAcc == False %}  
+                        <p>Fund your wallet with a PERMANENT account <br>BVN needed to create account number</p>         
                         <button class="secondary-btn " onclick="" id="virtualAccBTN">Generate Permanent Account</button>
                     {% else %}
                         <button class="secondary-btn " onclick="" id="virtualAccBTN">Fund Wallet Here</button>

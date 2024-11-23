@@ -212,7 +212,11 @@ def loginPage(request):
         if request.method == 'POST':
             username = request.POST['username'].lower().strip()
             password = request.POST['password']
+            remember = request.POST.get('remember',None)
             # remember = request.POST.get('remember',None)
+
+            # print(f"Login Data is {request.POST}")
+            # return redirect("login")
 
 
             try:
@@ -231,8 +235,8 @@ def loginPage(request):
                         user.save()
 
                         login(request,user)
-                        # if remember == None:
-                        #     request.session.set_expiry(0)
+                        if remember == None:
+                            request.session.set_expiry(0)
 
                         if user.is_staff:
                             return redirect('overview')

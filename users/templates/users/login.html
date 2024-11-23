@@ -12,7 +12,7 @@
             <img src="{% static 'users/images/logonew2.jpg' %}" alt="">
         </div>
         <div class="auth-header-container">
-            <h2 class="auth-header">Login</h2>
+            <h2 class="auth-header" style="font-size: 0.9em; font-weight: 600;">Sign in to your account</h2>
             <!-- <p class="tagline">Start enjoying discounts</p> -->
             <!-- <p class="tagline">Please enter username and password <br>to login to your account</p> -->
         </div>
@@ -41,7 +41,20 @@
                 <input type="password" class="passwordInput" name="password" id="password" placeholder="Password" required>
                 <a class="password-reveal" href="javascript:void(0)">Show</a>
             </div>
+            <div class="remember-container">
+                <div class="data">
+                    <p class="info">Keep me logged in</p>
+                    <!-- <p class="value" id="">Airtime</p> -->
+                    <div class="service-item">
+                        <label class="switch">
+                          <input class="checkbox" name="remember" type="checkbox" id="saveBeneficiary" >
+                          <span class="slider round"></span>
+                        </label>                        
+                    </div>
+                </div>                
+            </div>
             <p class="forgot-password"><a href="{% url 'forgot-password' %}" onclick="">Forgot Password?</a></p>
+            
 
             <div class="login-group">
                 <p class="auth-prompt">New user? <a href="{% url 'signup' %}" onclick="">Create Account</a></p>
