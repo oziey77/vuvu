@@ -23,9 +23,9 @@ $(document).ready(function(){
     });
 
     // Link Loading
-    $(".link-nav").on("click",function(){
-      $("#linkLoading").css("display","flex")
-    })
+    // $(".link-nav").on("click",function(){
+    //   $("#linkLoading").css("display","flex")
+    // })
 
     // Set PIN Function
     window.setTransactionPIN = function(){

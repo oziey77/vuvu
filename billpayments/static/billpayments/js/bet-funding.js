@@ -12,9 +12,9 @@ $(document).ready(function(){
     var otherData;
     var saveBeneficiary = "off";
 
-    $(".link-nav").on("click",function(){
-        $("#main-loader").css("display","flex")
-      })
+    // $(".link-nav").on("click",function(){
+    //     $("#main-loader").css("display","flex")
+    //   })
     // Operator Selector
     $("#operator-selector").on('click',function(){
         // $("#network-dropdown").css("display","block");

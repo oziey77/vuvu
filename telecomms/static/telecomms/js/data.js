@@ -51,9 +51,9 @@ $(document).ready(function(){
         }
     },1500)
 
-    $(".link-nav").on("click",function(){
-        $("#main-loader").css("display","flex")
-      })
+    // $(".link-nav").on("click",function(){
+    //     $("#main-loader").css("display","flex")
+    //   })
 
 
     // network selector

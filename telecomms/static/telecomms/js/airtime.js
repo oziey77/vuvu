@@ -30,9 +30,9 @@ $(document).ready(function(){
         }
     },1500)
 
-    $(".link-nav").on("click",function(){
-        $("#main-loader").css("display","flex")
-      })
+    // $(".link-nav").on("click",function(){
+    //     $("#main-loader").css("display","flex")
+    //   })
 
     // Network operator validator
     var AirtelInitials = ['0911','0912','0907','0904','0902','0901','0812','0808','0802','0708','0701']

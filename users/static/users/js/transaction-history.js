@@ -34,11 +34,11 @@ $(document).ready(function(){
                         $('#date').html(data.created);
                         $('.telTransRef').html(data.reference);
                         // $('#supportDefault').attr('href',`https://wa.me/2349063942497?text=Hello%2CI+have+an+issue+with+this+Airtime+Purchase%3A${data.reference}`)
-                        $('.supportDefault').attr('href',`https://wa.me/2349063942497?text=Hello%2C+I+have+an+issue+with+this+Airtime+Purchase%3A+${data.reference}`)
+                        $('.supportDefault').attr('href',`https://wa.me/2349166466849?text=Hello%2C+I+have+an+issue+with+this+Airtime+Purchase%3A+${data.reference}`)
                         if(data.transaction_type == 'Data'){
                             $('#package').html(data.package); 
                             $('#dataPackage').css('display','flex') 
-                            $('.supportDefault').attr('href',`https://wa.me/2349063942497?text=Hello%2C+I+have+an+issue+with+this+Data+Purchase%3A+${data.reference}`)                          
+                            $('.supportDefault').attr('href',`https://wa.me/2349166466849?text=Hello%2C+I+have+an+issue+with+this+Data+Purchase%3A+${data.reference}`)                          
                         }
                         $("#operatorImg").attr('src',$(operatorImg).attr('src'));
                         $("#cableDetails").css('display','none');
@@ -60,7 +60,7 @@ $(document).ready(function(){
                         $('#recipientMeterAddress').html(data.customerAddress)
                         $('#paymentDate').html(data.created)
                         $('.transStatus').html(data.status)
-                        $('.supportDefault').attr('href',`https://wa.me/2349063942497?text=Hello%2C+I+have+an+issue+with+this+Data+Electricity%3A+${data.reference}`)
+                        $('.supportDefault').attr('href',`https://wa.me/2349166466849?text=Hello%2C+I+have+an+issue+with+this+Data+Electricity%3A+${data.reference}`)
                         $(".loader-overlay").fadeOut(function(){
                             $("#billsFeedback").css('display','block');
                         });
@@ -77,7 +77,7 @@ $(document).ready(function(){
                         $('.cableTransRef').html(data.reference);
                         
                         // $('#supportDefault').attr('href',`https://wa.me/2349063942497?text=Hello%2CI+have+an+issue+with+this+Airtime+Purchase%3A${data.reference}`)
-                        $('.supportDefault').attr('href',`https://wa.me/2349063942497?text=Hello%2C+I+have+an+issue+with+this+Airtime+Purchase%3A+${data.reference}`)                        
+                        $('.supportDefault').attr('href',`https://wa.me/2349166466849?text=Hello%2C+I+have+an+issue+with+this+Airtime+Purchase%3A+${data.reference}`)                        
                         $("#cableOperatorImg").attr('src',$(operatorImg).attr('src'));
                         $("#airtimeDetails").css('display','none');
                         $("#cableDetails").css('display','block');
