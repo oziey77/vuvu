@@ -1069,7 +1069,7 @@ def getCurrentOffer(request):
     if is_ajax(request) and request.method == "GET":  
         
         # Remove end 
-        totalTransactions = user.data_transaction_count
+        totalTransactions = user.transaction_count
         # totalTransactions = 90
         # print(f"User total transaction is {totalTransactions}")
 
