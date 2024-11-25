@@ -28,9 +28,12 @@ $(document).ready(function(){
         if(/android/i.test(userAgent)){
             return 'android';
         }
-        if(/iPad|iPhone|iPod/i.test(userAgent)){
-            return 'ios';
-        }
+        else{
+            const iosuserAgent = window.navigator.userAgent.toLowerCase()
+            if(/iPad|iPhone|iPod/i.test(iosuserAgent)){
+                return 'ios';
+            }
+        } 
     }
 
     var os = androidOrIOS()
@@ -128,14 +131,7 @@ $(document).ready(function(){
             })
         });
 
-        // Set Operator discount
-        // $.each(discountData,function(key,value){
-        //     if(value.networkOperator == selectedOperator){
-        //         discountRate = Number(value.rate)
-        //         console.log(discountRate);
-        //     };
-            
-        // });
+        
 
         
     });
@@ -148,7 +144,7 @@ $(document).ready(function(){
         else{
             safeBeneficiary = "off"; 
         }
-        console.log(safeBeneficiary)
+        
     })
 
     //Beneficiary clicked
@@ -220,8 +216,7 @@ $(document).ready(function(){
             planID = $("#dataPlans").val();
             planName = `${planDatails[0]}|${planDatails[1]} for ${planDatails[2]}`  
 
-            if (planName.includes("AWOOF") && selectedOperator == 'MTN'){
-                console.log("AwooF plan selected");
+            if (planName.includes("AWOOF") && selectedOperator == 'MTN'){               
                 $("#defaultPromt").css("display","none");
                 $("#awoofPromt").css("display","block");
                 
@@ -304,6 +299,8 @@ $(document).ready(function(){
         $(".offer-prompt").css("display","none");
         $(".offer-pending").css("display","block");
         setTimeout(function(){
+            $(".offer-note").css("display","none");
+            $(".confirmHeader").css("display","block"); 
             $(".confirm-offer").css("display","block");
         },20000)
     })
@@ -464,13 +461,11 @@ $(document).ready(function(){
             },
             success:function(response){
                 if( response.code == '00' ){ 
-                    console.log(response)
                     $("#PINValidation").css("display","none");
                     $("#billSummary").fadeOut(function(){
                         $(".loader-overlay").css('display','none');
                         $("#transactionFeedback").css("display",'block');
-                    });
-                    
+                    });                    
 
                 }
                 else if(response.code == '01'){

@@ -468,7 +468,7 @@
         </div>
 
         <!-- Referral Modal-->
-        <div class="setting-modal" id="referralModal" style="display: none;">
+        <div class="setting-modal" id="referralModal" style="display: none;" onclick="">
             <div class="content">
                 <div class="modal-indicator"></div>
                 <h5 class="title">Vuvu Referral Program👩🏽‍❤️‍👨🏽</h5>
@@ -480,8 +480,8 @@
                     <textarea name="" id="referral-mssg" cols="30" rows="10" value="" hidden>Buy data at #230 per gig on Vuvu. 
                         You will love it! 
                         Use my promo code:{{user.referral_code}}
-                        App Store:
-                        Playstore:
+                        App Store:https://apps.apple.com/ng/app/vuvu/id6738325760
+                        Playstore:https://play.google.com/store/apps/details?id=com.Vuvu.Vuvu
                     </textarea>
 
                     <p style="font-size: 1em !important; "><strong>Referral Code: {{user.referral_code}}</strong>
@@ -499,7 +499,7 @@
         </div>
 
         <!-- Offer modal -->
-        <div class="setting-modal billSummary" id="giveAwayModal" style="display: none;">
+        <div class="setting-modal billSummary" id="giveAwayModal" style="display: none;" onclick="">
             {% csrf_token %}  
             <div class="content vacc">   
                 <div class="modal-indicator"></div>

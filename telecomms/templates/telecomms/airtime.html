@@ -191,6 +191,85 @@
             </div>
         </div>
 
+        <!-- Offer modal -->
+        <div class="setting-modal billSummary" id="offerModal" style="display: none;">
+            {% csrf_token %}  
+            <div class="content vacc">   
+                <div class="modal-indicator"></div>
+                <!-- Store Rating-->
+
+                <!-- Android -->
+                <div class="offer-details" id="playstoreRating" style="display: none;">
+                    <!-- Offer Prompt -->
+                    <div class="offer-prompt" style="display: block;">
+                        <p class="offer-header">Congrats<span style="font-family: Noto Emoji, sans-serif;">🎉</span>!</p>
+                        <p class="offer-note">Pay <strong>#<span class="offer-amount"></span></strong> for this transaction. <br>Kindly rate us on Playstore to claim this offer.!</p>                        
+                        <div class="button-group">                        
+                            <a class="primary-btn accept-offer" href="https://play.google.com/store/apps/details?id=com.Vuvu.Vuvu" onclick="" >Rate us on Playstore</a>
+                            <button class="secondary-btn reject-offer" href="javascript:void(0)" onclick="">Miss out on Offer</button>
+                        </div>
+                    </div>
+                    <!-- offer-pending -->
+                    <div class="offer-pending" style="display: none;" id="offer-pending">
+                        <p class="offer-note">Kindly complete your rating on 
+                            <br>Playstore to continue. Thank you! 
+                        </p>
+                        <p class="offer-header confirmHeader" style="display: none;margin-bottom: 30px;">Congrats<span style="font-family: Noto Emoji, sans-serif;">🎉</span>!</p>
+                        <div class="button-group confirm-offer" style="display: none;">                        
+                            <button class="primary-btn continue-offer"  onclick="">Continue</button>
+                            <!-- <a class="secondary-btn " href="javascript:void(0)" onclick="">Miss out on Offer</a> -->
+                        </div>
+                    </div>                     
+                </div>
+                <!-- IOS -->
+                <div class="offer-details" id="appstoreRating" style="display: none;">
+                    <!-- Offer Prompt -->
+                    <div class="offer-prompt" style="display: block;">
+                        <p class="offer-header">Congrats<span style="font-family: Noto Emoji, sans-serif;">🎉</span>!</p>
+                        <p class="offer-note">Pay <strong>#<span class="offer-amount"></span></strong> for this transaction. <br>Kindly rate us on Appstore to claim this offer.!</p>                        
+                        <div class="button-group">                        
+                            <a class="primary-btn accept-offer" href="https://apps.apple.com/ng/app/vuvu/id6738325760" onclick="" >Rate us on Appstore</a>
+                            <button class="secondary-btn reject-offer" href="javascript:void(0)" onclick="" style="margin-top: 10px;">Miss out on Offer</button>
+                        </div>
+                    </div>
+                    <!-- offer-pending -->
+                    <div class="offer-pending" style="display: none;" id="offer-pending">
+                        <p class="offer-note">Kindly complete your rating on 
+                            <br>Appstore to continue. Thank you! 
+                        </p>
+                        <p class="offer-header confirmHeader" style="display: none; margin-bottom: 30px;">Congrats<span style="font-family: Noto Emoji, sans-serif;">🎉</span>!</p>
+                        <div class="button-group confirm-offer" style="display: none;">                        
+                            <button class="primary-btn continue-offer"  onclick="">Buy Now</button>
+                            <!-- <a class="secondary-btn " href="javascript:void(0)" onclick="">Miss out on Offer</a> -->
+                        </div>
+                    </div>                     
+                </div>
+                <!-- TrustPilot -->
+                <div class="offer-details" id="trustPilotRating" style="display: none;">
+                    <!-- Offer Prompt -->
+                    <div class="offer-prompt" style="display: block;">
+                        <p class="offer-header">Congrats<span style="font-family: Noto Emoji, sans-serif;">🎉</span>!</p>
+                        <p class="offer-note">Pay <strong>#<span class="offer-amount"></span></strong> for this transaction. <br>Kindly rate us on TrustPilot to claim this offer.!</p>                        
+                        <div class="button-group">                        
+                            <a class="primary-btn accept-offer" href="https://www.trustpilot.com/evaluate/vuvu.ng" onclick="" >Rate us on TrustPilot</a>
+                            <button class="secondary-btn reject-offer" href="javascript:void(0)" onclick="" >Miss out on Offer</button>
+                        </div>
+                    </div>
+                    <!-- offer-pending -->
+                    <div class="offer-pending" style="display: none;" id="offer-pending">
+                        <p class="offer-note">Kindly complete your rating on 
+                            <br>TrustPilot to continue. Thank you! 
+                        </p>
+                        <div class="button-group confirm-offer" style="display: none;">                        
+                            <button class="primary-btn continue-offer"  onclick="">Buy Now</button>
+                            <!-- <a class="secondary-btn " href="javascript:void(0)" onclick="">Miss out on Offer</a> -->
+                        </div>
+                    </div>                     
+                </div>
+            </div>        
+        </div>
+
+
         <!-- Sumamry modal -->
         <div class="setting-modal billSummary" id="billSummary" style="display: none;">
             {% csrf_token %}  
@@ -333,7 +412,7 @@
     </div>
     
 
-    <script src="{% static 'telecomms/js/airtime.js' %}?v=1.0230"></script>
+    <script src="{% static 'telecomms/js/airtime.js' %}?v=1.0231"></script>
     <script src="{% static 'telecomms/js/simple.money.format.js' %}"></script>
     <script type="text/javascript">
 		$('.money').simpleMoneyFormat();

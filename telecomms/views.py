@@ -82,6 +82,10 @@ def buyAirtime(request):
             airtimeAmount = amount 
             wallet = UserWallet.objects.get(user=user)
             safeBeneficiary = request.POST.get('safeBeneficiary')
+            offerType = request.POST.get('offerType')
+            offerStatus = request.POST.get('offerStatus')
+
+            
 
             today = datetime.now(timezone.utc)
 
@@ -156,6 +160,102 @@ def buyAirtime(request):
                 airtimeDiscount = AirtimeDiscount.objects.get(networkOperator=operator)
                 discountRate = airtimeDiscount.rate
                 calculatedDiscount = Decimal((amount * discountRate) / Decimal(100))
+                # user.discount_genarated += calculatedDiscount
+                # user.save()
+
+                # Process user offers
+                totalTransactions = user.transaction_count
+                completeOffers = user.completed_offers
+                # If user accept offer
+                if offerStatus == "claimed":                    
+                    if offerType == "storeRating" and (totalTransactions == 1 or totalTransactions == 4 ):
+                        calculatedDiscount = Decimal(20)
+                        if len(completeOffers) == 0:
+                            userOffers = []
+                            offerData = {
+                                "storeRating":{
+                                    "totalTrial":1,
+                                    "status":"completed"
+                                }
+                            }
+                            userOffers.append(offerData)
+                            user.completed_offers = userOffers
+                            user.save()
+                        else:
+                            if offerType == "storeRating":
+                                offerIndex = 0
+                                for offer in completeOffers:
+                                    for key in offer:
+                                        if key == 'storeRating':
+                                            offerIndex = completeOffers.index(offer)
+                                            rejectCount = completeOffers[offerIndex]['storeRating']['totalTrial']
+                                            if rejectCount == 1:
+                                                completeOffers[offerIndex]['storeRating']['totalTrial'] = 2
+                                                completeOffers[offerIndex]['storeRating']['status'] = 'completed'
+                                                user.completed_offers = completeOffers
+                                                user.save()
+                                            break
+                            elif offerType == "trustPilot":
+                                offerData = {
+                                        "trustPilot":{
+                                            "totalTrial":1,
+                                            "status":"completed"
+                                        }
+                                    }
+                                userOffers.append(offerData)
+                                user.completed_offers = userOffers
+                                user.save()
+                    if offerType == "trustPilot" and (totalTransactions == 6):
+                        calculatedDiscount = Decimal(30)
+                        userOffers = user.completed_offers
+                        offerData = {
+                                "trustPilot":{
+                                    "totalTrial":1,
+                                    "status":"completed"
+                                }
+                            }
+                        userOffers.append(offerData)
+                        user.completed_offers = userOffers
+                        user.save()
+                #If user reject offer                
+                if offerStatus == "rejected":
+                    if offerType == "storeRating" and (totalTransactions == 2 or totalTransactions == 4 ):
+                        if len(completeOffers) == 0:
+                            userOffers = []
+                            offerData = {
+                                "storeRating":{
+                                    "totalTrial":1,
+                                    "status":"pending"
+                                }
+                            }
+                            userOffers.append(offerData)
+                            user.completed_offers = userOffers
+                            user.save()
+                        else:
+                            offerIndex = 0
+                            for offer in completeOffers:
+                                for key in offer:
+                                    if key == 'storeRating':
+                                        offerIndex = completeOffers.index(offer)
+                                        rejectCount = completeOffers[offerIndex]['storeRating']['totalTrial']
+                                        if rejectCount == 1:
+                                            completeOffers[offerIndex]['storeRating']['totalTrial'] = 2
+                                            completeOffers[offerIndex]['storeRating']['status'] = 'completed'
+                                            user.completed_offers = completeOffers
+                                            user.save()
+                                        break
+                    elif offerType == "trustPilot" and totalTransactions == 6: 
+                        userOffers = user.completed_offers
+                        offerData = {
+                                "trustPilot":{
+                                    "totalTrial":1,
+                                    "status":"completed"
+                                }
+                            }
+                        userOffers.append(offerData)
+                        user.completed_offers = userOffers
+                        user.save()
+
                 user.discount_genarated += calculatedDiscount
                 user.save()
 
@@ -692,7 +792,7 @@ def buyData(request):
                     })
 
                 # Process user offers
-                totalTransactions = user.data_transaction_count
+                totalTransactions = user.transaction_count
                 completeOffers = user.completed_offers
                 # If user accept offer
                 if offerStatus == "claimed":                    

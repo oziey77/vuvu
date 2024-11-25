@@ -70,7 +70,19 @@ def signupPage(request):
                 # Set user referral  codes and create wallet
                 user.is_active = False
                 user.referral_code = refCode
-                user.save()   
+                user.save() 
+                code =  request.POST['referral_code']  
+                if code !='':
+                    try:
+                        referrer = User.objects.get(referral_code=code)
+                        if referrer is not None:
+                            user.referred_by = code
+                            user.save()
+                            # referrer.totalReferred += 1
+                            # referrer.save()
+                            # messages.success(request, "success" )
+                    except ObjectDoesNotExist:
+                        pass
 
             OTPCode = random.randrange(111111, 999999, 5) 
             confirmationID = reference(16)

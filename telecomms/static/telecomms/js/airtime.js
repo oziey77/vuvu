@@ -12,8 +12,31 @@ $(document).ready(function(){
     var is_ported = "off";
     var safeBeneficiary = "off";
 
+    // IOS/Android Offer
+    function androidOrIOS() {
+        const userAgent = navigator.userAgent;
+        if(/android/i.test(userAgent)){
+            return 'android';
+        }   
+        else{
+            const iosuserAgent = window.navigator.userAgent.toLowerCase()
+            if(/iPad|iPhone|iPod/i.test(iosuserAgent)){
+                return 'ios';
+            }
+        }     
+        
+    }
+
+    var os = androidOrIOS()
+
     // Offer loader text
     var currentOfferText = 'discount';
+
+    // Offer Data
+    var offerStatus = "None"
+    var offerType = ''
+    var dataCost;
+    var offerDiscount;
 
     setInterval(function(){
         if(currentOfferText == 'discount'){
@@ -135,20 +158,93 @@ $(document).ready(function(){
             $(this).attr('disabled',true);
             amount = $("#amount").val();
             recipient = $("#phone_number").val();
+            let button  = $(this)
+            button.attr('disabled',true);
+            button.addClass('disabled')
 
             $("#networOperator").html(selectedOperator.toUpperCase())
             $("#recipient").html(recipient);
             $("#airtimeAmount").html(Number(amount).toLocaleString());
-            $("#cashback").html(Number(calculatedDiscount).toLocaleString());  
-            $("#total").html(Number(amount - calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2})); 
+            
             $("#offer-loader").css("display",'flex');
-            setTimeout(function(){                
-                $("#offer-loader").css("display",'none');
-                $("#billSummary").css("display",'block');
-            },4000)       
+            
+            if(os == "android" || os == "ios"){
+                $.ajax({
+                    url:"/available-offer/",
+                    typr:"GET",
+                    success:function(response){
+                        if(response.code == '00'){
+                            offerDiscount = response.discount
+                            offerType = response.currentOffer;
+                            
+                            // Remove
+                            button.attr('disabled',false);
+                            button.removeClass('disabled')
+                            // End Remove
+                            if(offerType == 'storeRating'){                            
+                                if(os == "android"){
+                                    $("#playstoreRating").css('display','block');
+                                }
+                                else if( os == "ios"){
+                                    $("#appstoreRating").css('display','block');
+                                }
+                            }
+                            else if(offerType == 'trustPilot'){                            
+                                $("#trustPilotRating").css('display','block');
+                            }
+                            
+                            $(".offer-amount").html((Number(amount) - Number(offerDiscount)).toLocaleString());
+                            
+                            
+                            setTimeout(function(){                
+                                $("#offer-loader").css("display",'none');
+                                $("#offerModal").css("display","block");
+                            },4000) 
+                        }
+                        else if(response.code == '04'){
+                            // $("#offer-loader").css("display",'none');
+                            // $("#billSummary").css("display",'block');
+                            $("#cashback").html(Number(calculatedDiscount).toLocaleString());  
+                            $("#total").html(Number(amount - calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2})); 
+                            setTimeout(function(){                
+                                $("#offer-loader").css("display",'none');
+                                $("#billSummary").css("display",'block');
+                            },4000) 
+                        }
+                    }
+                })
+            }
+            else{                
+                setTimeout(function(){                
+                    $("#offer-loader").css("display",'none');
+                    $("#billSummary").css("display",'block');
+                },4000) 
+            }      
             
         }
         
+    })
+
+    // Accept Offer
+    $(".accept-offer").on("click",function(){
+        $(".offer-prompt").css("display","none");
+        $(".offer-pending").css("display","block");
+        setTimeout(function(){
+            $(".offer-note").css("display","none");
+            $(".confirmHeader").css("display","block");            
+            $(".confirm-offer").css("display","block");
+        },20000)
+    })
+
+    // Confirm Offer
+    $(".continue-offer").on("click",function(){
+        // $("#dataAmount").html(price);
+        // $("#cashback").html(offerDiscount);  
+        $("#cashback").html(Number(offerDiscount).toLocaleString());  
+        $("#total").html(Number(amount - offerDiscount).toLocaleString(undefined,{maximumFractionDigits:2})); 
+        offerStatus = "claimed";
+        $("#offerModal").css("display","none");
+        $("#billSummary").css("display",'block');
     })
 
     // 
@@ -197,7 +293,6 @@ $(document).ready(function(){
 
     // Operator Validation
     function recipientValid(){
-        console.log("function called");
         let pNum = $('#phone_number').val().substring(0,4)
         if (selectedOperator == 'Airtel'){
             if(jQuery.inArray(pNum, AirtelInitials) == -1) {
@@ -296,7 +391,6 @@ $(document).ready(function(){
               placeholder:'*', // default: '•'
               reset :false,
               complete :function(pin){
-                console.log(pin)
                 buyAirtime(transcationPin=pin)
                   },
             });
@@ -315,10 +409,11 @@ $(document).ready(function(){
                 "operator":selectedOperator,
                 "recipient":recipient,
                 "amount":amount,
-                "safeBeneficiary":safeBeneficiary
+                "safeBeneficiary":safeBeneficiary,
+                "offerStatus":offerStatus,
+                "offerType":offerType,
             },
             success:function(response){
-                console.log(response)
                 if( response.code == '00' ){  
                     // $("#PINValidation").css("display","none");                  
                     $("#billSummary").fadeOut(function(){
