@@ -23,15 +23,32 @@ $(document).ready(function(){
     var N9MobileInitials = ['0908','0909','0818','0817','0809']
 
     // IOS/Android Offer
+    // function androidOrIOS() {
+    //     const userAgent = navigator.userAgent;
+    //     if(/android/i.test(userAgent)){
+    //         return 'android';
+    //     }
+    //     else{
+    //         const iosuserAgent = window.navigator.userAgent.toLowerCase()
+    //         if(/iPad|iPhone|iPod/i.test(iosuserAgent)){
+    //             return 'ios';
+    //         }
+    //     } 
+    // }
+
     function androidOrIOS() {
-        const userAgent = navigator.userAgent;
-        if(/android/i.test(userAgent)){
-            return 'android';
-        }
+        const userAgent = navigator.userAgent;  
+        let altIOSAgent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.6167.164 Mobile Safari/537.36"      
+        
+         
+        if((/iPad|iPhone|iPod/i.test(iosuserAgent)) || iosuserAgent == altIOSAgent){
+            console.log(`ios user agent ${iosuserAgent}`)
+            return 'ios';
+        }  
         else{
-            const iosuserAgent = window.navigator.userAgent.toLowerCase()
-            if(/iPad|iPhone|iPod/i.test(iosuserAgent)){
-                return 'ios';
+            if((/android/i.test(userAgent))){
+                console.log(`Andriod user agent ${userAgent}`)
+                return 'android';
             }
         } 
     }

@@ -13,20 +13,34 @@ $(document).ready(function(){
     var safeBeneficiary = "off";
 
     // IOS/Android Offer
-    function androidOrIOS() {
-        const userAgent = navigator.userAgent;
-        if(/android/i.test(userAgent)){
-            return 'android';
-        }   
-        else{
-            const iosuserAgent = window.navigator.userAgent.toLowerCase()
-            if(/iPad|iPhone|iPod/i.test(iosuserAgent)){
-                return 'ios';
-            }
-        }     
-        
-    }
 
+    function testSafari(){
+        const testUserAgent = navigator.userAgent;
+        if(/Safari/i.test(testUserAgent)){
+            console.log(`Safari found user agent ${testUserAgent}`)
+            return true;
+        } 
+        else{
+            return false
+        }
+    }
+    function androidOrIOS() {
+        const userAgent = navigator.userAgent;  
+        let altIOSAgent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.6167.164 Mobile Safari/537.36"      
+        
+         
+        if((/iPad|iPhone|iPod/i.test(iosuserAgent)) || iosuserAgent == altIOSAgent){
+            console.log(`ios user agent ${iosuserAgent}`)
+            return 'ios';
+        }  
+        else{
+            if((/android/i.test(userAgent))){
+                console.log(`Andriod user agent ${userAgent}`)
+                return 'android';
+            }
+        } 
+    }
+    androidOrIOS()
     var os = androidOrIOS()
 
     // Offer loader text
