@@ -26,7 +26,7 @@ $(document).ready(function(){
     }
     function androidOrIOS() {
         const userAgent = navigator.userAgent;  
-        let altIOSAgent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.6167.164 Mobile Safari/537.36"      
+        let altIOSAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/131.0.6778.73 Mobile/15E148 Safari/604.1"      
         
          
         if((/iPad|iPhone|iPod/i.test(userAgent)) || userAgent == altIOSAgent){
