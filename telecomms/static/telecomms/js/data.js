@@ -46,7 +46,7 @@ $(document).ready(function(){
             return 'ios';
         }  
         else{
-            if((/android/i.test(userAgent))){
+            if((/android/i.test(userAgent)) && userAgent != altIOSAgent){
                 console.log(`Andriod user agent ${userAgent}`)
                 return 'android';
             }
