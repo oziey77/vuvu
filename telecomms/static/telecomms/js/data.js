@@ -41,8 +41,8 @@ $(document).ready(function(){
         let altIOSAgent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.6167.164 Mobile Safari/537.36"      
         
          
-        if((/iPad|iPhone|iPod/i.test(iosuserAgent)) || iosuserAgent == altIOSAgent){
-            console.log(`ios user agent ${iosuserAgent}`)
+        if((/iPad|iPhone|iPod/i.test(userAgent)) || userAgent == altIOSAgent){
+            console.log(`ios user agent ${userAgent}`)
             return 'ios';
         }  
         else{
