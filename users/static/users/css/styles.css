@@ -91,7 +91,8 @@
   }
 /* progress-bar test */
 .progress{
-  background-color:#fff;
+  /* background-color:#fff; */
+  background-color: var(--bg-color1);
   height:8px;
   overflow: visible !important;
   position: relative;
@@ -99,7 +100,7 @@
   position: relative;
   border-radius:0 !important;
   box-shadow: none;
-  border:1px solid black;
+  /* border:1px solid black; */
 }
 .progress .progress-bar{
   animation: animate-positive 2s;
@@ -110,12 +111,15 @@ border-radius:0 !important;
 .progress .progress-bar:after{
   content:"";
   position: absolute;
-  top: -5.6px;
-  right: 0px;
-  background-color: var(--text-color);
-  height:16px;
-  width: 16px;
-  border-radius: 50%;
+  top: -7.6px;
+  right: -10px;
+  /* background-color: var(--text-color); */
+  background-image: url(../images/coin.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  height:24px;
+  width: 24px;
+  /* border-radius: 50%; */
 /* border:1px solid black; */
 }
 .progress.green .progress-bar:after{

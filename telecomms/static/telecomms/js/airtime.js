@@ -260,6 +260,13 @@ $(document).ready(function(){
         $("#offerModal").css("display","none");
         $("#billSummary").css("display",'block');
     })
+    
+    // Reject Offer
+    $(".reject-offer").on("click",function(){
+        offerStatus = "rejected";
+        $("#offerModal").css("display","none");
+        $("#billSummary").css("display",'block');
+    })
 
     // 
     $("#saveBeneficiary").on("click",function(){
