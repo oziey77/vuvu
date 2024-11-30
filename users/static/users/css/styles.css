@@ -89,6 +89,11 @@
     display: flex;
     align-items: center;
   }
+  .soon-text{
+    text-align: center;
+    font-size: 0.8em;
+    display: none;
+  }
 /* progress-bar test */
 .progress{
   /* background-color:#fff; */

@@ -184,6 +184,12 @@ $(document).ready(function(){
 
 
   // 
+  $(".soon").on("click",function(){
+    $(".soon-text").css("display","block")
+    setTimeout(function(){
+      $(".soon-text").css("display","none")
+    },2200)
+  })
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function(event) {
     if (event.target.id == "PINValidation" || event.target.id == 'closePINValidation' || event.target.id == 'transactionFeedback' || event.target.id == 'billSummary') {

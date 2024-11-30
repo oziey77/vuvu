@@ -1213,12 +1213,12 @@ def getCurrentOffer(request):
                                     "code":"04",
                                     "message":"on offer found",
                                 })
-            elif totalTransactions == 6:
-                return JsonResponse({
-                    "code":"00",
-                    "currentOffer":"trustPilot",
-                    "discount":"30"
-                })
+            # elif totalTransactions == 6:
+            #     return JsonResponse({
+            #         "code":"00",
+            #         "currentOffer":"trustPilot",
+            #         "discount":"30"
+            #     })
             else:
                 return JsonResponse({
                     "code":"04",

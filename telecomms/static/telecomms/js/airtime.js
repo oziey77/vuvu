@@ -264,6 +264,8 @@ $(document).ready(function(){
     // Reject Offer
     $(".reject-offer").on("click",function(){
         offerStatus = "rejected";
+        $("#cashback").html(Number(calculatedDiscount).toLocaleString());  
+        $("#total").html(Number(amount - calculatedDiscount).toLocaleString(undefined,{maximumFractionDigits:2})); 
         $("#offerModal").css("display","none");
         $("#billSummary").css("display",'block');
     })
