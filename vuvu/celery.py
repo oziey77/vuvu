@@ -11,13 +11,13 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 
 
 
-app.conf.beat_schedule = {
-    "Update ATN Data Plans":{
-        'task':'telecomms.tasks.updateDataPlans',
-        # 'schedule':crontab(hour='*/3',minute=00 )
-        'schedule':crontab(minute='*/15')
-    },
-}
+# app.conf.beat_schedule = {
+#     "Update ATN Data Plans":{
+#         'task':'telecomms.tasks.updateDataPlans',
+#         # 'schedule':crontab(hour='*/3',minute=00 )
+#         'schedule':crontab(minute='*/15')
+#     },
+# }
 
 app.conf.beat_schedule = {
     "Update OneTime Deposit2":{
