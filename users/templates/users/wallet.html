@@ -95,7 +95,7 @@
         {% include 'users/includes/bottom-navs.html' %}   
         
         <!-- One Time Topup -->
-        <div class="setting-modal" id="oneTimeTopup" style="display: none;">
+        <div class="setting-modal" id="oneTimeTopup" style="display: none;" onclick="">
             {% csrf_token %}  
             <div class="content">
                 <input type="text" id="oneTimeTopupCharges" value="{{dynamicAccount.deposit_charges}}" hidden>
@@ -205,7 +205,7 @@
         
         </div>
         <!-- Virtual Account -->
-        <div class="setting-modal" id="virtuaAccModal" style="display: none;">
+        <div class="setting-modal" id="virtuaAccModal" style="display: none;" onclick="">
             {% csrf_token %}  
             <div class="content vacc">   
                 <div class="modal-indicator"></div>

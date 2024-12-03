@@ -56,7 +56,7 @@
         {% include 'users/includes/bottom-navs.html' %}   
         
         <!-- Change Password Modal -->
-        <div class="setting-modal" id="changePasswordModal">
+        <div class="setting-modal" id="changePasswordModal" onclick="">
             <div class="content">
                 <!-- <div class="initiate-password-chaange" style="display: none;">
                     <p>For security reasons, a six(6) digits OTP code will be sent to your registered email address to initiate password change on your account</p>
@@ -113,7 +113,7 @@
         
         </div>
         <!-- Set Transaction PIN -->
-        <div class="setting-modal" id="setTransactionPin">
+        <div class="setting-modal" id="setTransactionPin" onclick="">
             {% csrf_token %}  
             <div class="content">
                 <div class="modal-indicator">
@@ -172,7 +172,7 @@
         </div>
 
         <!-- Update Transaction PIN -->
-        <div class="setting-modal" id="updateTransactionPin">
+        <div class="setting-modal" id="updateTransactionPin" onclick="">
             {% csrf_token %}  
             <div class="content">
                 <div class="modal-indicator">
