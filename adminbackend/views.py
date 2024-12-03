@@ -16,7 +16,7 @@ from telecomms.forms import ATNDataPlanForm, HonourworldDataPlanForm, Twins10Dat
 from telecomms.models import ATNDataPlans, AirtimeServices, DataServices, HonouworldDataPlans, Twins10DataPlans
 from users.models import Notifications, Story, Transaction, User, UserWallet, WalletActivity
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 from vuvu.custom_functions import is_ajax
 
@@ -31,7 +31,7 @@ import zipfile
 def overviewPage(request):
     user = request.user
     if user.is_staff:
-        today = datetime.now()
+        today = datetime.now(timezone.utc)
         totalUsers = User.objects.filter().exclude(admin=True).count()
         transactions = Transaction.objects.all()
         totalRevenue =  transactions.filter(status='Success').aggregate(TOTAL = Sum('amount'))['TOTAL']
@@ -67,6 +67,17 @@ def overviewPage(request):
         dailyElectricityTransactions = transactions.filter(transaction_type="Electricity",created__date=today.date())
         if electricityTransactions.count() > 0:
             electricityRevenue =  electricityTransactions.aggregate(TOTAL = Sum('amount'))['TOTAL']
+
+        # Active users
+        activeDays = today - timedelta(days=10)
+        activeUsers = User.objects.filter(last_transacted__gte=datetime.date(activeDays)).exclude(admin=True)
+
+        # Pending Transaction
+        totalPending = 0
+        pendingTransactions = Transaction.objects.filter(status='Processing')
+        if pendingTransactions.count() > 0:
+            totalPending = pendingTransactions.aggregate(TOTAL = Sum('amount'))['TOTAL']
+
         context = {
            'totalUsers':totalUsers,
            'totalTrans':transactions.count(),
@@ -81,6 +92,8 @@ def overviewPage(request):
            'dailyDataTransactions':dailyDataTransactions.count(),
            'dailyCableTransactions':dailyCableTransactions.count(),
            'dailyElectricityTransactions':dailyElectricityTransactions.count(),
+           'activeUsers':activeUsers.count(),
+           'totalPending':totalPending
            
            
         }

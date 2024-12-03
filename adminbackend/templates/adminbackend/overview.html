@@ -34,7 +34,7 @@
                     </div> -->
                 </div>
                 <div class="card">
-                    <p class="data">0</p>
+                    <p class="data">{{activeUsers|intcomma}}</p>
                     <p class="title">Active Users</p>                    
                 </div>
                 <div class="card">
@@ -64,6 +64,10 @@
                 <div class="card">
                     <p class="data"><span>&#8358;</span>{{usersWalletBalance|intcomma}}</p>
                     <p class="title">Wallet Balances</p>
+                </div>
+                <div class="card">
+                    <p class="data"><span>&#8358;</span>{{totalPending|intcomma}}</p>
+                    <p class="title">Pending Transactions</p>
                 </div>
                 <div class="card">
                     <p class="data"><span>&#8358;</span>0</p>
