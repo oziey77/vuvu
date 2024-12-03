@@ -664,7 +664,7 @@ def buyData(request):
             offerType = request.POST.get('offerType')
             offerStatus = request.POST.get('offerStatus')
             offerDiscount = Decimal(5)
-            print(request.POST)
+            
             
             
             wallet = UserWallet.objects.get(user=user)  
@@ -1202,12 +1202,19 @@ def getCurrentOffer(request):
                         if key == 'storeRating':
                             offerIndex = completeOffers.index(offer)
                             rejectCount = completeOffers[offerIndex]['storeRating']['totalTrial']
+                            status = completeOffers[offerIndex]['storeRating']['status']
                             if rejectCount == 1: #first attempt for store rating
-                                return JsonResponse({
-                                    "code":"00",
-                                    "currentOffer":"storeRating",
-                                    "discount":"20"
-                                })
+                                if status == "completed":
+                                    return JsonResponse({
+                                        "code":"04",
+                                        "message":"on offer found",
+                                    })
+                                if status == "pending":
+                                    return JsonResponse({
+                                        "code":"00",
+                                        "currentOffer":"storeRating",
+                                        "discount":"20"
+                                    })
                             else:
                                 return JsonResponse({
                                     "code":"04",
