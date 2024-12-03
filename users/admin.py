@@ -6,7 +6,7 @@ from users.models import Beneficiary, Cashback, KYCData, SafeHavenAccount, Story
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['username','email','phone_number','referral_code','created','modified']
+    list_display = ['username','email','phone_number','referral_code','created','modified','staff','admin']
     search_fields = ('username','email','phone_number','referral_code',)
 admin.site.register(User,UserAdmin)
 

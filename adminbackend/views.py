@@ -33,12 +33,12 @@ def overviewPage(request):
     if user.is_staff:
         today = datetime.now(timezone.utc)
         totalUsers = User.objects.filter().exclude(admin=True).count()
-        transactions = Transaction.objects.all()
+        transactions = Transaction.objects.all().exclude(user__admin=True)
         totalRevenue =  transactions.filter(status='Success').aggregate(TOTAL = Sum('amount'))['TOTAL']
         usersWalletBalance =  UserWallet.objects.all().aggregate(TOTAL = Sum('balance'))['TOTAL']
         # Total Wallet funding
         totalFunding = 0
-        walletFunfing = WalletFunding.objects.all()
+        walletFunfing = WalletFunding.objects.all().exclude(method="Cashback")
         if walletFunfing.count() > 0:
             totalFunding =  walletFunfing.aggregate(TOTAL = Sum('amount'))['TOTAL']
 
