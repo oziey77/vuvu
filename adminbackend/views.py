@@ -78,6 +78,10 @@ def overviewPage(request):
         if pendingTransactions.count() > 0:
             totalPending = pendingTransactions.aggregate(TOTAL = Sum('amount'))['TOTAL']
 
+        # Total Discounts
+        # totalDiscounts = User.objects.all().exclude(admin=True).aggregate(TOTAL = Sum('discount_genarated'))['TOTAL']
+        totalDiscounts = transactions.filter(status='Success').aggregate(TOTAL = Sum('discount'))['TOTAL']
+
         context = {
            'totalUsers':totalUsers,
            'totalTrans':transactions.count(),
@@ -93,7 +97,8 @@ def overviewPage(request):
            'dailyCableTransactions':dailyCableTransactions.count(),
            'dailyElectricityTransactions':dailyElectricityTransactions.count(),
            'activeUsers':activeUsers.count(),
-           'totalPending':totalPending
+           'totalPending':totalPending,
+           'totalDiscounts':totalDiscounts,
            
            
         }
