@@ -34,7 +34,12 @@ def overviewPage(request):
         today = datetime.now(timezone.utc)
         totalUsers = User.objects.filter().exclude(admin=True).count()
         transactions = Transaction.objects.all().exclude(user__admin=True)
-        totalRevenue =  transactions.filter(status='Success').aggregate(TOTAL = Sum('amount'))['TOTAL']
+        # Total Revenue
+        totalRevenue = 0
+        totalDiscounts = 0
+        if transactions.count() > 0:
+            totalRevenue =  transactions.filter(status='Success').aggregate(TOTAL = Sum('amount'))['TOTAL']
+            totalDiscounts = transactions.filter(status='Success').aggregate(TOTAL = Sum('discount'))['TOTAL']
         usersWalletBalance =  UserWallet.objects.all().aggregate(TOTAL = Sum('balance'))['TOTAL']
         # Total Wallet funding
         totalFunding = 0
@@ -80,7 +85,7 @@ def overviewPage(request):
 
         # Total Discounts
         # totalDiscounts = User.objects.all().exclude(admin=True).aggregate(TOTAL = Sum('discount_genarated'))['TOTAL']
-        totalDiscounts = transactions.filter(status='Success').aggregate(TOTAL = Sum('discount'))['TOTAL']
+        
 
         context = {
            'totalUsers':totalUsers,

@@ -351,7 +351,7 @@
         
 
         <!-- Set Transaction PIN -->
-        <div class="setting-modal" id="setTransactionPin" >
+        <div class="setting-modal" id="setTransactionPin" onclick="">
             {% csrf_token %}
             
             <div class="content">
@@ -417,7 +417,7 @@
         </div>
 
         <!-- Give Away Modal-->
-        <div class="setting-modal" id="giveAwayFaq" >
+        <div class="setting-modal" id="giveAwayFaq" onclick="">
             <div class="content">
                 <div class="modal-indicator"></div>
                 <h5 class="title">How to Win🎁?</h5>
@@ -584,7 +584,7 @@
         </div>
 
         <!-- Feeback modal -->
-        <div class="setting-modal" id="transactionFeedback" style="display: none;">
+        <div class="setting-modal" id="transactionFeedback" style="display: none;" onclick="">
             <div class="content vacc">   
                 <div class="modal-indicator"></div>
                 <!-- Feedback -->
