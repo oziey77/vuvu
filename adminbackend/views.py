@@ -649,7 +649,7 @@ def refundTransaction(request,pk):
                 transaction.refunded = True
                 transaction.save()
 
-                refundedAmount = (transaction.amount - transaction.discount)
+                refundedAmount = (transaction.amount)
                 wallet.balance += refundedAmount
                 wallet.save()
 
