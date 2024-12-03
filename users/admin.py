@@ -7,7 +7,7 @@ from users.models import Beneficiary, Cashback, KYCData, SafeHavenAccount, Story
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username','email','phone_number','referral_code','created','modified']
-    search_fields = ['username','email','phone_number','referral_code',]
+    search_fields = ('username','email','phone_number','referral_code',)
 admin.site.register(User,UserAdmin)
 
 class UserConfirmationAdmin(admin.ModelAdmin):
@@ -17,28 +17,28 @@ admin.site.register(UserConfirmation,UserConfirmationAdmin)
 
 class UserWalletAdmin(admin.ModelAdmin):
     list_display = ['user','balance','cashback','referral_bonus']
-    search_fields = ['username__username','user__email',]
+    search_fields = ('user__username','user__email',)
 admin.site.register(UserWallet,UserWalletAdmin)
 
 class WalletActivityAdmin(admin.ModelAdmin):
     list_display = ['user','event_type','transaction_type','comment','amount','balanceBefore','balanceAfter',]
-    search_fields = ['user__username']
+    search_fields = ('user__username',)
 admin.site.register(WalletActivity,WalletActivityAdmin)
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ['user','transaction_type','operator','amount','balanceBefore','balanceAfter','created','status']
-    search_fields = ['user__username','reference']
+    search_fields = ('user__username','reference',)
 admin.site.register(Transaction,TransactionAdmin)
 
 
 class CashbackAdmin(admin.ModelAdmin):
     list_display = ['user','transaction_type','amount','created']
-    search_fields = ['user__username',]
+    search_fields = ('user__username',)
 admin.site.register(Cashback,CashbackAdmin)
 
 class SafeHavenAccountAdmin(admin.ModelAdmin):
     list_display = ['user','bank_name','account_number','account_name','created','last_funded']
-    search_fields = ('account_name','account_number')
+    search_fields = ('account_name','account_number',)
 admin.site.register(SafeHavenAccount,SafeHavenAccountAdmin)
 
 admin.site.register(TransactionPIN)
