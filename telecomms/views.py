@@ -601,7 +601,7 @@ def fetchDataPlans(request):
             })
         else:
             if activebackend == "ATN":
-                dataplans = ATNDataPlans.objects.filter(network_operator=operator).order_by("list_order")
+                dataplans = ATNDataPlans.objects.filter(network_operator=operator,available=True).order_by("list_order")
                 serializer = ATNDataPlanSerializer(dataplans,many=True)
                 return JsonResponse({
                     "code":"00",
@@ -609,7 +609,7 @@ def fetchDataPlans(request):
                     "plans":serializer.data,
                 })
             elif activebackend == "HONOURWORLD":
-                dataplans = HonouworldDataPlans.objects.filter(network_operator=operator).order_by("id")
+                dataplans = HonouworldDataPlans.objects.filter(network_operator=operator,available=True).order_by("id")
                 serializer = HonouworldDataPlanSerializer(dataplans,many=True)
                 extraPlans = None
                 # Fetch extra ATN Data Plans
@@ -627,7 +627,7 @@ def fetchDataPlans(request):
                     "extraPlans":extraPlans,
                 })
             elif activebackend == "TWINS10":
-                dataplans = Twins10DataPlans.objects.filter(network_operator=operator).order_by("id")
+                dataplans = Twins10DataPlans.objects.filter(network_operator=operator,available=True).order_by("id")
                 serializer = Twins10DataPlanSerializer(dataplans,many=True)
                 extraPlans = None
                 # Fetch extra ATN Data Plans

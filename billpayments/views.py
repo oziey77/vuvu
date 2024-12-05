@@ -446,6 +446,7 @@ def buyElectricity(request):
                             responseData = requests.request("POST", url, headers=headers, json=payload)
                             
                             responseData = json.loads(responseData.text)
+                            print(f"SafeHaven Vend response is '{responseData}' ")
                             if responseData['statusCode'] == 200:
                                 details = responseData["data"]
                                 metaData = details['metaData']
