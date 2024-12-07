@@ -9,6 +9,7 @@ $(document).ready(function(){
     var price;
     var is_ported = "off";
     var safeBeneficiary = "off";
+    var dataPlans
 
     // Offer Data
     var offerStatus = "None"
@@ -109,6 +110,7 @@ $(document).ready(function(){
                         $(".error-message").html();
                         $(".error-feedback").css('display','none');
                         let plans = response.plans;
+                        dataPlans = plans
                         $("#dataPlans").empty();
                         $("#dataPlans").append(`<option value='' selected disabled>Select Plan</option>`)
                         // Populate Extra Plans
@@ -225,18 +227,26 @@ $(document).ready(function(){
             let button  = $(this)
             button.attr('disabled',true);
             button.addClass('disabled')
-            let planDatails = $("#dataPlans option:selected").text().split('|');
-            let priceData = planDatails[3].split('₦');
-            dataCost = Number(priceData[1])
-            price = Number(priceData[1]).toLocaleString(undefined, {minimumFractionDigits: 2});
+            // Get planData
+            planID = $("#dataPlans").val()
+            // console.log(`SElected is ${selectedPlanID}`)
+            $.each(dataPlans,function(key,value){
+                if(value.package_id == planID){
+                    dataCost = Number(value.price)
+                    planName = `${value.plan} for ${value.validity}` 
+                }
+            })
+            // let planDatails = $("#dataPlans option:selected").text().split('|');
+            // let priceData = planDatails[3].split('₦');
+            // dataCost = Number(priceData[1])
+            price = dataCost.toLocaleString(undefined, {minimumFractionDigits: 2});
             recipient = $("#phone_number").val();
-            planID = $("#dataPlans").val();
-            planName = `${planDatails[0]}|${planDatails[1]} for ${planDatails[2]}`  
+            // planID = $("#dataPlans").val();
+            // planName = `${planDatails[0]}|${planDatails[1]} for ${planDatails[2]}`  
 
             if (planName.includes("AWOOF") && selectedOperator == 'MTN'){               
                 $("#defaultPromt").css("display","none");
-                $("#awoofPromt").css("display","block");
-                
+                $("#awoofPromt").css("display","block");                
             }
             else{
                 $("#defaultPromt").css("display","block");
