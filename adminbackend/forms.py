@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from adminbackend.models import AirtimeDiscount, BillServicesDiscount, VuvuStory
+from adminbackend.models import AirtimeDiscount, BillServicesDiscount, DashboardNotification, VuvuStory
 from payments.models import PartnerBank
 from users.models import Notifications
 
@@ -28,3 +28,8 @@ class BillDiscountForm(ModelForm):
     class Meta:
         model = BillServicesDiscount
         fields = ['rate']
+
+class DashboardNotificationForm(ModelForm):
+    class Meta:
+        model = DashboardNotification
+        fields = ['img','link']

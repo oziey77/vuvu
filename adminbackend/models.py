@@ -90,3 +90,11 @@ class BillServicesDiscount(models.Model):
 
     def __str__(self):
         return self.service_type
+    
+class DashboardNotification(models.Model):
+    name =  models.CharField(max_length=20,default='Notice')
+    link = models.CharField(max_length=800,default='#',blank=True)
+    img = models.ImageField()
+
+    def __str__(self):
+        return self.name

@@ -17,7 +17,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
 import requests
 
-from adminbackend.models import DataBackend, VuvuStory
+from adminbackend.models import DashboardNotification, DataBackend, VuvuStory
 from payments.models import DynamicAccountBackend, OneTimeDeposit, PartnerBank, WalletFunding
 from telecomms.models import ATNDataPlans, DataServices
 from telecomms.serializers import ATNDataPlanSerializer
@@ -512,6 +512,7 @@ def dashboardPage(request):
             pinSet = True
     except ObjectDoesNotExist:
         pass
+
     context = {
         "pinSet":pinSet,
         "period":period,
@@ -521,7 +522,33 @@ def dashboardPage(request):
         "giveAwayLevelComplete":giveAwayLevelComplete,
         "giveAwayLevel":giveAwayLevel,
     }
+
+    # Get dashboard notification
+    try:
+        notification = DashboardNotification.objects.get(name='Notice')
+        if notification is not None:
+            print("We have Notification now")
+            context.update({
+                'notification':notification
+            })
+            print(context)
+    except ObjectDoesNotExist:
+        print("We do not have Notification")
+        pass
+
     return render(request,'users/dashboard.html',context)
+
+@login_required(login_url='login')
+def closeNotification(request):
+    user = request.user
+    if is_ajax(request=request) and request.method == 'GET':
+        user.notification_closed = True
+        user.save()
+        return JsonResponse({
+            'code':'00',
+            'message':'notification closed successfully' 
+        })
+
 
 # Password Reset Successful page
 @login_required(login_url='login')

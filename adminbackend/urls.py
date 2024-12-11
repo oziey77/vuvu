@@ -36,6 +36,9 @@ urlpatterns=[
     path("notifications-management/",views.notificationsSetup,name="notifications-management"),
     path("send-general-notification/",views.sendGeneralNotification,name="send-general-notification"),
 
+    path("image-notifications/",views.imageNotificationsSetup,name="image-notifications"),
+    path("save-notice/",views.saveDashboardNotice,name="save-notice"),
+
     path("add-story/",views.vuvuStoryPage,name="add-story"),
     path("submitted-stories/",views.submittedStories,name="submitted-stories"),
     path("download-story/<str:pk>",views.downloadUserStory,name="download-story"),
@@ -46,9 +49,12 @@ urlpatterns=[
     path('bill-discounts/',views.billPaymentDiscount,name='bill-discounts'), 
     path("update-bill-discounts/",views.updatebillPaymentDiscount,name="update-bill-discounts"), 
     
+    path('pin-auth/',views.setAdminSecretKey,name='pin-auth'),
     # Ajax
     path("update-services/",views.updateService),
     path("twins10-balance/",views.fetchTwins10Balance),
     path("airtimeng-balance/",views.fetchAirtimeNGBalance),
     path("honourworld-balance/",views.fetchHonourworldBalance),
+
+    path("update-last-activity/",views.updateLastActivity),
 ]

@@ -43,5 +43,5 @@ urlpatterns = [
     path("validate-kyc/",views.validateKYC),
     path("redeem-cashback/",views.redeemCashback),
     path("claim-giveaway/",views.claimGiveAway),
-    
+    path("close-notification/",views.closeNotification),    
 ]

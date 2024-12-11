@@ -1,0 +1,60 @@
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    {% include 'adminbackend/includes/header.html' %}
+</head>
+<body>
+    <div class="main-container">
+        {% include 'adminbackend/includes/topbar.html' %}
+        
+
+        <!-- Main content -->
+        <div class="main-content">
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="feedback-messages {{message.tags}}">
+                        <p>{{message}}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <!-- DATA DISCOUNT BULK UPDATE -->
+            <div class="update-form-container">
+                {% if user.secret_key_set == False %}
+                <p class="header">Security PIN</p>
+                <form method="POST" action="" >
+                    {% csrf_token %}
+                    <div class="input-group-grid">
+                        <label for="link">New PIN</label><br>
+                        <input type="text" name="pin" value="" inputmode="numeric" minlength="6" placeholder="Set new security PIN" required>                       
+                    </div>
+                    <div class="input-group recepient">
+                        <input type="submit" name="update" value="Set PIN" class="primary-button">
+                    </div>                                            
+                </form>
+                {% elif user.secret_key_set == True %}
+                <p class="header">Security PIN</p>
+                <form method="POST" action="" >
+                    {% csrf_token %}
+                    <div class="input-group-grid">
+                        <label for="link">Enter PIN</label><br>
+                        <input type="text" name="pin" value="" inputmode="numeric" minlength="6" placeholder="Enter security PIN" required>                       
+                    </div>
+                    <div class="input-group recepient">
+                        <input type="submit" name="update" value="Submit" class="primary-button">
+                    </div>                                            
+                </form>
+                {% endif %}
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    {% include 'adminbackend/includes/scripts.html' %}
+</body>
+</html>

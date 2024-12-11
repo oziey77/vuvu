@@ -279,6 +279,36 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+/* Image Notification */
+.image-notification{
+  width: 100%;
+  max-width: 480px;
+  height: 100vh;
+  background-color: var(--overlay-bg-2);
+  position: fixed;
+  top: 0;
+  /* left: 0; */
+  z-index: 999999;
+  padding-top: 80px;
+}
+.image-notification .image-content{
+  width: 90%;
+  /* max-width: 480px; */
+  margin: 0 auto;
+  
+}
+.image-notification .image-content img{
+  width: 100%;
+}
+.image-notification .image-content .notification-close{
+  width: fit-content;
+  margin: 10px auto;
+}
+.image-notification .image-content .notf-imagebx{
+  border-radius: 20px;
+  overflow: hidden;
+}
+
   /* Form Errors */
   .form-errors{
     text-align: center;

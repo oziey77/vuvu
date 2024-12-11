@@ -205,7 +205,17 @@ $(document).ready(function(){
     }
     else if(event.target.id == "referralModal"){
       $("#referralModal").css('display','none')
-  }
+    }
+    else if(event.target.id == "image-notification" || event.target.id == "closeImageNotif"){
+      $("#image-notification").fadeOut()
+      $.ajax(({
+        url:'/close-notification/',
+        type:'GET',
+        success:function(response){
+          console.log(response)
+        }
+      }))
+    }
   };
 
   // Operator Validation

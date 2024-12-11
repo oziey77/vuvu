@@ -26,4 +26,11 @@ app.conf.beat_schedule = {
     }
 }
 
+app.conf.beat_schedule = {
+    "Update User Last Activity 2":{
+        'task':'users.tasks.updateUserLastActivity',
+        'schedule':crontab(minute='*/15')
+    }
+}
+
 app.autodiscover_tasks()

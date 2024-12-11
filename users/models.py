@@ -29,6 +29,7 @@ class User(AbstractBaseUser):
     admin = models.BooleanField(default=False) # a superuser
     created = models.DateField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+    last_activity = models.DateTimeField(auto_now_add=True)
     referral_code = models.CharField(max_length=15,null=True,blank=True,default='')
     referred_by = models.CharField(max_length=15,null=True,blank=True,default='')
     login_attempts_left = models.IntegerField(default=3)
@@ -36,9 +37,13 @@ class User(AbstractBaseUser):
     has_VPSAccount = models.BooleanField(default=False) # a superuser
     has_safeHavenAccount = models.BooleanField(default=False) # a superuser
     VPSAccount_reassigned = models.BooleanField(default=False)
+    secret_key = models.CharField(max_length=256,default="-",null=True,blank=True)
 
     bvn_verified = models.BooleanField(default=False)
     nin_verified = models.BooleanField(default=False)
+    notification_closed = models.BooleanField(default=False)
+    secret_key_set = models.BooleanField(default=False)
+    secret_key_timedout = models.BooleanField(default=True)
 
     vps_account_number = models.CharField(max_length=10,default='',blank=True)
     safeHavenAccount_account_number = models.CharField(max_length=10,default='',blank=True)
