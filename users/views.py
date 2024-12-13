@@ -2,7 +2,7 @@ from datetime import datetime,timedelta
 from decimal import Decimal
 import json
 import random
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout ,update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -51,9 +51,84 @@ class TokenGenerator(PasswordResetTokenGenerator):
 account_activation_token = TokenGenerator()
 
 
+def validateUsername(request):
+    if is_ajax(request=request) and request.method == "GET":
+        username = request.GET.get('username')
+        try:
+            user = User.objects.get(username=username.lower())
+            if user is not None and user.is_active == True:
+                return JsonResponse({
+                    'status':'success',
+                    'message':'Invalid'
+                })
+            elif user is not None and user.is_active == False:
+                user.delete()
+                return JsonResponse({
+                    'status':'success',
+                    'message':'Valid'
+                })
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                    'status':'success',
+                    'message':'Valid'
+                })
+        
+# Validate email before registration
+def validateEmail(request):
+    if is_ajax(request=request) and request.method == "GET":
+        email = request.GET.get('email')
+        try:
+            user = User.objects.get(email=email)
+            if user is not None and user.is_active == True:
+                return JsonResponse({
+                    'status':'success',
+                    'message':'Invalid'
+                })
+
+            elif user is not None and user.is_active == False:
+                user.delete()
+                return JsonResponse({
+                    'status':'success',
+                    'message':'Valid'
+                })
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                    'status':'success',
+                    'message':'Valid'
+                })
+    return HttpResponse("Unauthorized access")
+
+# Validate phone number before registration
+def validatePhoneNumber(request):
+    if is_ajax(request=request) and request.method == "GET":
+        phoneNumber = request.GET.get('phoneNumber')
+        try:
+            user = User.objects.get(phone_number=phoneNumber)
+            if user is not None and user.is_active == True:
+                return JsonResponse({
+                    'status':'success',
+                    'message':'Invalid'
+                })
+
+            elif user is not None and user.is_active == False:
+                user.delete()
+                return JsonResponse({
+                    'status':'success',
+                    'message':'Valid'
+                })
+
+        except ObjectDoesNotExist:
+            return JsonResponse({
+                    'status':'success',
+                    'message':'Valid'
+                })
+    return HttpResponse("Unauthorized access")
+
+
+
 # Register page
 def signupPage(request):
-    if is_ajax(request=request) and request.method == "POST":
+    if is_ajax(request=request) and request.method == "POST":        
         form = MyUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()  

@@ -27,6 +27,10 @@ urlpatterns = [
     
 
     # Ajax Calls    
+    path("validate-email/",views.validateEmail),
+    path("validate-username/",views.validateUsername),
+    path("validate-phoneNumber/",views.validatePhoneNumber),
+    
     path("resend-registration-code/",views.resendRegOTP),
     path("verify-registration/",views.verifyRegistration),
     path('user-balance/',views.fetchWalletBalance),

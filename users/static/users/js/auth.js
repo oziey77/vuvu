@@ -1,4 +1,10 @@
 $(document).ready(function(){
+    var usernameError = true
+    var emailError = true
+    var phoneNumberError = false
+    var passwordError = true
+
+
     var $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
     // Toggle Password field
     $('.password-reveal').on('click',function(){
@@ -11,7 +17,7 @@ $(document).ready(function(){
     });
 
     // Username
-    $("#username").bind("keyup focusout",function(){
+    $("#username").bind("focusout",function(){
         let username = $(this).val()
         if(username.indexOf(' ') >= 0){
             $("#usernameValidation").empty();
@@ -19,8 +25,34 @@ $(document).ready(function(){
             $("#usernameValidation").css('display','block');
         }
         else{
-            $("#usernameValidation").css('display','none') ;
-            inputValid();
+            $.ajax(({
+                url:"/validate-username/",
+                type:"GET",
+                data:{
+                    "username":username
+                },
+                success:function(response){
+                    data = response
+                    console.log(data)
+                    if(data["status"] == "success" && data["message"] == "Invalid"){
+                        $("#usernameValidation").empty();
+                        $("#usernameValidation").append(`<p style="margin-bottom:3px;">username already exist</p>`);
+                        $("#usernameValidation").css('display','block');
+                        // usernameError = true
+                        // setTimeout(function(){
+                        //     $("#username-error").css('display','none')
+                        // },2000)
+                    }
+                    else if (data["status"] == "success" && data["message"] == "Valid"){
+                        $("#usernameValidation").css('display','none') ;
+                        inputValid();
+                    }
+                }
+            }))
+
+
+
+            
         };
         
     });
@@ -35,15 +67,54 @@ $(document).ready(function(){
             $("#emailValidation").css('display','block');
         }
         else{
-            $("#emailValidation").css('display','none') ;
-            inputValid();
+
+            $.ajax(({
+                url:"/validate-email/",
+                type:"GET",
+                data:{
+                    "email":$(this).val()
+                },
+                success:function(response){
+                    data = response
+                    if(data["status"] == "success" && data["message"] == "Invalid"){
+                        $("#emailValidation").empty();
+                        $("#emailValidation").append(`<p style="margin-bottom:3px;">user with email already exist</p>`);
+                        $("#emailValidation").css('display','block');
+                    }
+                    else{
+                        $("#emailValidation").css('display','none') ;
+                        inputValid();
+                    }
+                }
+            }))
+            
         };
         
     });
 
     // PhoneNumber
     $("#phone_number").bind("focusout",function(){
-        inputValid();        
+        $.ajax(({
+            url:"/validate-phoneNumber/",
+            type:"GET",
+            data:{
+                "phoneNumber":$(this).val()
+            },
+            success:function(response){
+                data = response
+                if(data["status"] == "success" && data["message"] == "Invalid"){
+                    $("#phoneValidation").empty();
+                    $("#phoneValidation").append(`<p style="margin-bottom:3px;">user with phone number already exist</p>`);
+                    $("#phoneValidation").css('display','block');
+                    
+                }
+                else{
+                    $("#phoneValidation").css('display','none') ;
+                    inputValid();  
+                }
+            }
+        }))
+              
     });
 
     // PhoneNumber
