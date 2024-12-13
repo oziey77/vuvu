@@ -33,4 +33,12 @@ app.conf.beat_schedule = {
     }
 }
 
+app.conf.beat_schedule = {
+    "Check ATN Balance":{
+        'task':'adminbackend.tasks.checkAirtimeNgBalance',
+        'schedule':crontab(minute='*/15')
+    }
+}
+
+
 app.autodiscover_tasks()

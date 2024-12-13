@@ -82,7 +82,7 @@ def overviewPage(request):
                     electricityRevenue =  electricityTransactions.aggregate(TOTAL = Sum('amount'))['TOTAL']
 
                 # Active users
-                activeDays = today - timedelta(days=10)
+                activeDays = today - timedelta(days=5)
                 activeUsers = User.objects.filter(last_transacted__gte=datetime.date(activeDays)).exclude(admin=True)
 
                 # Pending Transaction
