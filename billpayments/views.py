@@ -168,6 +168,11 @@ def validateMeter(request):
 def buyElectricity(request):
     user = request.user
     totalWalletFunding = user.total_wallet_funding
+    wallet = UserWallet.objects.get(user=user) 
+    lifetimeDiscount = user.discount_genarated
+    successfulTransactions = user.successful_transaction_value
+    # Get user wallet
+    wallet = UserWallet.objects.get(user=user)
 
     # Check if user have ever made a deposit
     if is_ajax(request) and request.method == "POST": 
@@ -176,6 +181,13 @@ def buyElectricity(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
+            if (wallet.balance + (Decimal(100))) > ((totalWalletFunding + (lifetimeDiscount)) - successfulTransactions):
+                user.can_perform_transaction = False
+                user.save()
+                return JsonResponse({
+                    "code":"09",
+                    "message":f"internal server error"
+                })
             meterNumber = request.POST.get("meterNumber")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
@@ -186,8 +198,7 @@ def buyElectricity(request):
             amount = Decimal(request.POST.get("amount"))
             saveBeneficiary = request.POST.get('saveBeneficiary')
             
-            # Get user wallet
-            wallet = UserWallet.objects.get(user=user)
+            
 
             # Safe Beneficiary Logic
             if saveBeneficiary == "on":
@@ -756,6 +767,9 @@ def validateSmartcard(request):
 def buyCable(request):
     user = request.user
     totalWalletFunding = user.total_wallet_funding
+    wallet = UserWallet.objects.get(user=user) 
+    lifetimeDiscount = user.discount_genarated
+    successfulTransactions = user.successful_transaction_value
 
     # Check if user have ever made a deposit
     if is_ajax(request) and request.method == "POST": 
@@ -764,7 +778,13 @@ def buyCable(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
-            print(request.POST)
+            if (wallet.balance + (Decimal(100))) > ((totalWalletFunding + (lifetimeDiscount)) - successfulTransactions):
+                user.can_perform_transaction = False
+                user.save()
+                return JsonResponse({
+                    "code":"09",
+                    "message":f"internal server error"
+                })
             smartcardNumber = request.POST.get("smartcardNumber")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
@@ -775,9 +795,6 @@ def buyCable(request):
             amount = Decimal(request.POST.get("amount"))
             saveBeneficiary = request.POST.get('saveBeneficiary')
             
-            # Get user wallet
-            wallet = UserWallet.objects.get(user=user)
-
             # Safe Beneficiary Logic
             if saveBeneficiary == "on":
                 try:

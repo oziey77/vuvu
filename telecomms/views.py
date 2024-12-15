@@ -68,6 +68,9 @@ def getAirtimeDiscount(request):
 def buyAirtime(request):
     user = request.user
     totalWalletFunding = user.total_wallet_funding
+    wallet = UserWallet.objects.get(user=user) 
+    lifetimeDiscount = user.discount_genarated
+    successfulTransactions = user.successful_transaction_value
 
     # Check if user have ever made a deposit
     if is_ajax(request) and request.method == "POST": 
@@ -76,11 +79,17 @@ def buyAirtime(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
+            if (wallet.balance + (Decimal(100))) > ((totalWalletFunding + (lifetimeDiscount)) - successfulTransactions):
+                user.can_perform_transaction = False
+                user.save()
+                return JsonResponse({
+                    "code":"09",
+                    "message":f"internal server error"
+                })
             operator = request.POST.get('operator')
             recipient = request.POST.get('recipient')
             amount = Decimal(request.POST.get('amount'))
             airtimeAmount = amount 
-            wallet = UserWallet.objects.get(user=user)
             safeBeneficiary = request.POST.get('safeBeneficiary')
             offerType = request.POST.get('offerType')
             offerStatus = request.POST.get('offerStatus')
@@ -649,6 +658,9 @@ def fetchDataPlans(request):
 def buyData(request):
     user = request.user
     totalWalletFunding = user.total_wallet_funding
+    wallet = UserWallet.objects.get(user=user) 
+    lifetimeDiscount = user.discount_genarated
+    successfulTransactions = user.successful_transaction_value
 
     # Check if user have ever made a deposit
     if is_ajax(request) and request.method == "POST":   
@@ -657,6 +669,14 @@ def buyData(request):
         # if check_password(transcationPin,transPin.transaction_pin):
 
         if totalWalletFunding > 0:
+            if (wallet.balance + (Decimal(100))) > ((totalWalletFunding + (lifetimeDiscount)) - successfulTransactions):
+                user.can_perform_transaction = False
+                user.save()
+                return JsonResponse({
+                    "code":"09",
+                    "message":f"internal server error"
+                })
+            
             operator = request.POST.get('operator')
             recipient = request.POST.get('recipient')
             planID = request.POST.get('planID')
@@ -667,7 +687,7 @@ def buyData(request):
             
             
             
-            wallet = UserWallet.objects.get(user=user)  
+             
 
             # Safe Beneficiary Logic
             if safeBeneficiary == "on":
