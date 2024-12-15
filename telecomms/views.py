@@ -155,11 +155,11 @@ def buyAirtime(request):
 
 
             # First Check for duplicate transaction 
-            existingTran = Transaction.objects.filter(user=user,operator=operator,recipient=recipient,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+            existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
             if existingTran.count() > 0:
                 return JsonResponse({
                     "code":"09",
-                    "message":"Duplicate transaction wait 1 minute"
+                    "message":"Please wait 1 minute"
                 })          
                     
             
@@ -316,11 +316,11 @@ def buyAirtime(request):
 
                 # Second check for duplicate transaction
                 startTime = datetime.now() - timedelta(seconds=30) 
-                existingTran = Transaction.objects.filter(user=user,operator=operator,recipient=recipient,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
                 if existingTran.count() > 1:
                     return JsonResponse({
                         "code":"09",
-                        "message":"Duplicate transaction wait 1 minute"
+                        "message":"Please wait 1 minute"
                     })
                 else:
                     airtimeBackend = AirtimeBackend.objects.get(operator=operator)
@@ -804,11 +804,11 @@ def buyData(request):
                             'message':'selected plan is not valid'       
                         })
 
-                existingTran = Transaction.objects.filter(user=user,operator=operator,recipient=recipient,package=selectedPlan.plan,created__gte=datetime.now() - timedelta(seconds=45))
+                existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
                 if existingTran.count() > 0:
                     return JsonResponse({
                         "code":"09",
-                        "message":"Duplicate transaction wait 1 minute"
+                        "message":"Please wait 1 minute"
                     })
 
                 # Process user offers
@@ -954,11 +954,11 @@ def buyData(request):
                     user.last_transacted = datetime.now().date()
                     user.save()
 
-                    existingTran = Transaction.objects.filter(user=user,operator=operator,recipient=recipient,package=selectedPlan.plan,created__gte=datetime.now() - timedelta(seconds=45))
+                    existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
                     if existingTran.count() > 1:
                         return JsonResponse({
                             "code":"09",
-                            "message":"Duplicate transaction wait 1 minute"
+                            "message":"Please wait 1 minute"
                         })
 
                     if activeBackend == "ATN" or dataType == "Extra":

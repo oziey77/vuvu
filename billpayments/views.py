@@ -242,11 +242,11 @@ def buyElectricity(request):
 
 
             # duplicate transaction  
-            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=meterNumber,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+            existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
             if existingTran.count() > 0:
                 return JsonResponse({
                     "code":"09",
-                    "message":"Duplicate transaction wait 1 minute"
+                    "message":"Please wait 1 minute"
                 })          
                     
             
@@ -304,11 +304,11 @@ def buyElectricity(request):
 
                 # Second check for duplicate transaction
                 startTime = datetime.now() - timedelta(seconds=30) 
-                existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=meterNumber,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
                 if existingTran.count() > 1:
                     return JsonResponse({
                         "code":"09",
-                        "message":"Duplicate transaction wait 1 minute"
+                        "message":"Please wait 1 minute"
                     })
                 else:
                     electricityBackend = ElectricityBackend.objects.get(name='Main').active_backend
@@ -846,11 +846,11 @@ def buyCable(request):
 
 
             # Todo First Check for duplicate transaction  
-            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=smartcardNumber,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+            existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
             if existingTran.count() > 0:
                 return JsonResponse({
                     "code":"09",
-                    "message":"Duplicate transaction wait 1 minute"
+                    "message":"Please wait 1 minute"
                 })
             else:
                 cableBackend = CableBackend.objects.get(name='Main').active_backend
@@ -942,11 +942,11 @@ def buyCable(request):
 
                                     # Second check for duplicate transaction
                                     startTime = datetime.now() - timedelta(seconds=30) 
-                                    existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=smartcardNumber,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                                    existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
                                     if existingTran.count() > 1:
                                         return JsonResponse({
                                             "code":"09",
-                                            "message":"Duplicate transaction wait 1 minute"
+                                            "message":"Please wait 1 minute"
                                         })
                                     else:
                                             
@@ -1135,11 +1135,11 @@ def buyCable(request):
 
                                 # Second check for duplicate transaction
                                 startTime = datetime.now() - timedelta(seconds=30) 
-                                existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=smartcardNumber,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                                existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
                                 if existingTran.count() > 1:
                                     return JsonResponse({
                                         "code":"09",
-                                        "message":"Duplicate transaction wait 1 minute"
+                                        "message":"Please wait 1 minute"
                                     })
                                 else:                                            
                                     transaction.APIBackend = 'SafeHaven'
@@ -1406,11 +1406,11 @@ def fundBettingWallet(request):
 
 
             # Todo First Check for duplicate transaction  
-            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=accountId,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+            existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
             if existingTran.count() > 0:
                 return JsonResponse({
                     "code":"09",
-                    "message":"Duplicate transaction wait 1 minute"
+                    "message":"Please wait 1 minute"
                 })
             
             # Remove temp API KEY
@@ -1462,11 +1462,11 @@ def fundBettingWallet(request):
 
                 # Second check for duplicate transaction
                 startTime = datetime.now() - timedelta(seconds=30) 
-                existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=accountId,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
                 if existingTran.count() > 1:
                     return JsonResponse({
                         "code":"09",
-                        "message":"Duplicate transaction wait 1 minute"
+                        "message":"Please wait 1 minute"
                     })
                 else:
                     bettingBackend = CableBackend.objects.get(name='Main')
@@ -1768,11 +1768,11 @@ def buyInternetPlan(request):
 
 
             # Todo First Check for duplicate transaction  
-            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=customerID,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+            existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
             if existingTran.count() > 0:
                 return JsonResponse({
                     "code":"09",
-                    "message":"Duplicate transaction wait 1 minute"
+                    "message":"Please wait 1 minute"
                 })
             
             # Remove temp API KEY
@@ -1853,11 +1853,11 @@ def buyInternetPlan(request):
 
                             # Second check for duplicate transaction
                             startTime = datetime.now() - timedelta(seconds=30) 
-                            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=customerID,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                            existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
                             if existingTran.count() > 1:
                                 return JsonResponse({
                                     "code":"09",
-                                    "message":"Duplicate transaction wait 1 minute"
+                                    "message":"Please wait 1 minute"
                                 })
                             else:
                                 cableBackend = CableBackend.objects.get(name='Main')
@@ -2079,11 +2079,11 @@ def buyEducationPIN(request):
 
 
             # Todo First Check for duplicate transaction  
-            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=customerID,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+            existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
             if existingTran.count() > 0:
                 return JsonResponse({
                     "code":"09",
-                    "message":"Duplicate transaction wait 1 minute"
+                    "message":"Please wait 1 minute"
                 })
             
             # Remove temp API KEY
@@ -2164,11 +2164,11 @@ def buyEducationPIN(request):
 
                             # Second check for duplicate transaction
                             startTime = datetime.now() - timedelta(seconds=30) 
-                            existingTran = Transaction.objects.filter(user=user,operator=selectedOperatorName,recipient=customerID,amount=amount,created__gte=datetime.now() - timedelta(seconds=45))
+                            existingTran = Transaction.objects.filter(user=user,created__gte=datetime.now() - timedelta(seconds=45))
                             if existingTran.count() > 1:
                                 return JsonResponse({
                                     "code":"09",
-                                    "message":"Duplicate transaction wait 1 minute"
+                                    "message":"Please wait 1 minute"
                                 })
                             else:
                                 epinBackend = EPINBackend.objects.get(name='Main')
