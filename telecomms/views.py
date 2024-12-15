@@ -79,7 +79,7 @@ def buyAirtime(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
-            if (wallet.balance + (Decimal(100))) > ((totalWalletFunding + (lifetimeDiscount)) - successfulTransactions):
+            if (wallet.balance ) > (((totalWalletFunding + (lifetimeDiscount)) - successfulTransactions) + (Decimal(100))):
                 user.can_perform_transaction = False
                 user.save()
                 return JsonResponse({
@@ -669,7 +669,7 @@ def buyData(request):
         # if check_password(transcationPin,transPin.transaction_pin):
 
         if totalWalletFunding > 0:
-            if (wallet.balance + (Decimal(100))) > ((totalWalletFunding + (lifetimeDiscount)) - successfulTransactions):
+            if (wallet.balance ) > (((totalWalletFunding + (lifetimeDiscount)) - successfulTransactions) + (Decimal(100))):
                 user.can_perform_transaction = False
                 user.save()
                 return JsonResponse({
