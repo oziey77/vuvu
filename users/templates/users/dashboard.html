@@ -76,9 +76,12 @@
                         <small class="header">Current Balance</small>
                         <p class="point-balance"><span class="currency">N</span><span id="mainBalance">0.00</span></p>
                     </div>
-                    <div class="wallet-action">
-                        <a href="{% url 'wallet' %}" class="link-nav"  onclick="">Fund Wallet</a>
-                    </div>
+                    <a href="{% url 'wallet' %}" class="link-nav "  onclick="">
+                        <button class="button-animated pulse-button">Fund Wallet</button>  
+                    </a>                    
+                    <!-- <div class="wallet-action">                        
+                        <a href="{% url 'wallet' %}" class="link-nav "  onclick="">Fund Wallet</a>
+                    </div> -->
                 </div>
                 <div class="top-circle"></div>
                 <div class="bottom-circle"></div>
