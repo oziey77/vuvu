@@ -83,7 +83,11 @@ def overviewPage(request):
 
                 # Active users
                 activeDays = today - timedelta(days=5)
-                activeUsers = User.objects.filter(last_transacted__gte=datetime.date(activeDays)).exclude(admin=True)
+                activeUsersRaw = User.objects.filter(last_transacted__gte=datetime.date(activeDays)).exclude(admin=True)
+                activeUsers = []
+                for item in activeUsersRaw:
+                    if item.transaction_count > 0:
+                        activeUsers.append(item)
 
                 # Pending Transaction
                 totalPending = 0
@@ -109,7 +113,7 @@ def overviewPage(request):
                 'dailyDataTransactions':dailyDataTransactions.count(),
                 'dailyCableTransactions':dailyCableTransactions.count(),
                 'dailyElectricityTransactions':dailyElectricityTransactions.count(),
-                'activeUsers':activeUsers.count(),
+                'activeUsers':len(activeUsers),
                 'totalPending':totalPending,
                 'totalDiscounts':totalDiscounts,
                 
