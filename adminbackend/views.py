@@ -278,6 +278,9 @@ def userDetailPage(request,username):
                     customerWallet.balance += Decimal(amount)
                     customerWallet.save()
 
+                    customer.can_perform_transaction = True
+                    customer.save()
+
                     # Create wallet Activity
                     WalletActivity.objects.create(
                         user = customer,

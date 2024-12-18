@@ -181,6 +181,12 @@ def buyElectricity(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
+            if user.can_perform_transaction == False:
+                return JsonResponse({
+                    "code":"09",
+                    "message":f"user error, contact support"
+                })
+            
             if (wallet.balance ) > (((totalWalletFunding + (lifetimeDiscount)) - successfulTransactions) + (Decimal(100))):
                 user.can_perform_transaction = False
                 user.save()
@@ -778,6 +784,12 @@ def buyCable(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
+            if user.can_perform_transaction == False:
+                return JsonResponse({
+                    "code":"09",
+                    "message":f"user error, contact support"
+                })
+            
             if (wallet.balance ) > (((totalWalletFunding + (lifetimeDiscount)) - successfulTransactions) + (Decimal(100))):
                 user.can_perform_transaction = False
                 user.save()
@@ -1348,6 +1360,12 @@ def fundBettingWallet(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
+            if user.can_perform_transaction == False:
+                return JsonResponse({
+                    "code":"09",
+                    "message":f"user error, contact support"
+                })
+            
             accountId = request.POST.get("accountId")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
@@ -1708,6 +1726,11 @@ def buyInternetPlan(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
+            if user.can_perform_transaction == False:
+                return JsonResponse({
+                    "code":"09",
+                    "message":f"user error, contact support"
+                })
             customerID = request.POST.get("customerID")
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
@@ -2054,6 +2077,11 @@ def buyEducationPIN(request):
         # if check_password(transcationPin,transPin.transaction_pin):       
         
         if totalWalletFunding > 0:
+            if user.can_perform_transaction == False:
+                return JsonResponse({
+                    "code":"09",
+                    "message":f"user error, contact support"
+                })
             selectedOperator = request.POST.get("selectedOperator")
             selectedOperatorName = request.POST.get("selectedOperatorName")
             packageName = request.POST.get("packageName")

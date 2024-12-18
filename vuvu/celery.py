@@ -40,5 +40,15 @@ app.conf.beat_schedule = {
     }
 }
 
+app.conf.beat_schedule = {
+    "Check Suspicious Activities":{
+        'task':'users.tasks.checkSuspiciousActivities',
+        'schedule':crontab(minute='*/5')
+    }
+}
+
+
+
+
 
 app.autodiscover_tasks()
