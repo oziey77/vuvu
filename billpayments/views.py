@@ -1169,7 +1169,7 @@ def buyCable(request):
                                     }
 
                                     payload = {
-                                        "amount": int(amount),
+                                        "amount": float(amount),
                                         "channel": "WEB",
                                         "serviceCategoryId": selectedOperator,
                                         "debitAccountNumber": utilityAccount,
