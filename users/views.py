@@ -406,6 +406,8 @@ def resetPassword(request):
                 form = SetPasswordForm(user, request.POST)
                 if form.is_valid():
                     user = form.save()
+                    user.login_attempts_left = 3
+                    user.save()
                     # messages.success(request, 'Your password was successfully updated!')
                     return JsonResponse({
                         'code':'00'
