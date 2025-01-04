@@ -39,6 +39,8 @@ def overviewPage(request):
             return redirect('pin-auth')
         else:
             if user.is_staff:
+                if user.username == "sixtusmai444":
+                    return redirect("all-users")
                 today = datetime.now(timezone.utc)
                 totalUsers = User.objects.filter().exclude(admin=True).count()
                 transactions = Transaction.objects.all().exclude(user__admin=True)
