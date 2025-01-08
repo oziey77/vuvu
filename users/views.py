@@ -938,7 +938,7 @@ def dynamicAccountAmount(request):
                     "amountControl": "Fixed",
                     "accountName": user.username,
                     # "callbackUrl": "https://5ae56adb4b7df7096b9be617cb24d53a.serveo.net/safehaven-onetime-webhook",                
-                    "callbackUrl": "https://webhook.vuvu.ng/safehaven-onetime-webhook.php",
+                    "callbackUrl": "https://app.vuvu.ng/safehaven-onetime-webhook",
                     "amount": int(depositAmount),
                     "externalReference": transRef
                 }
