@@ -274,35 +274,46 @@ def userDetailPage(request,username):
                     sessionID = request.POST.get('session-id').strip()
                     amount = request.POST.get('amount')
                     # comment = request.POST.get('comment')
-                    # Get custome wallet
-                    customerWallet = UserWallet.objects.get(user=customer)
-                    balanceBefore = customerWallet.balance
-                    customerWallet.balance += Decimal(amount)
-                    customerWallet.save()
-
-                    customer.can_perform_transaction = True
-                    customer.save()
-
-                    # Create wallet Activity
-                    WalletActivity.objects.create(
-                        user = customer,
-                        event_type = "Credit",
-                        transaction_type = transactionType,
-                        comment = sessionID,
-                        amount = Decimal(amount),
-                        balanceBefore = balanceBefore,
-                        balanceAfter = customerWallet.balance,
-                    )
-                    messages.success(request,f'{amount} was successfully added to user wallet')
+                    amount = Decimal(amount)
+                    partnerBank = PartnerBank.objects.get(bank_name='SafeHaven MFB')
+                    depositCharges = partnerBank.deposit_charges
+                    
+                    
+                    settledAmount = Decimal(0)
+                    if amount <= Decimal(10000):
+                        settledAmount = amount - Decimal(amount * (depositCharges/Decimal(100)))
+                    elif amount > Decimal(10000):
+                        settledAmount = amount - Decimal(50) #Backend Settled amount
+                    
+                    
                     try:
                         fundRecord = WalletFunding.objects.get(user=customer,sessionId=sessionID)
                         if fundRecord is not None:
-                            pass
-                    except ObjectDoesNotExist:           
+                            messages.error(request,f'Session ID aready exist, please confirm issue was not previosly resolved')
+                    except ObjectDoesNotExist: 
+                        # Get custome wallet
+                        customerWallet = UserWallet.objects.get(user=customer)
+                        balanceBefore = customerWallet.balance
+                        customerWallet.balance += settledAmount
+                        customerWallet.save()
+
+                        customer.can_perform_transaction = True
+                        customer.save()
+
+                        # Create wallet Activity
+                        WalletActivity.objects.create(
+                            user = customer,
+                            event_type = "Credit",
+                            transaction_type = transactionType,
+                            comment = sessionID,
+                            amount = settledAmount,
+                            balanceBefore = balanceBefore,
+                            balanceAfter = customerWallet.balance,
+                        )          
                         WalletFunding.objects.create(
                             user = customer,
                             method = "Failed Deposit",
-                            amount = amount,
+                            amount = settledAmount,
                             balanceBefore = balanceBefore,
                             balanceAfter = customerWallet.balance,
                             sessionId = sessionID,
@@ -310,6 +321,8 @@ def userDetailPage(request,username):
                             sourceAccountNumber = "Vuvu",
                             sourceAccountName = "Vuvu Admin",
                         )
+                        messages.success(request,f'{settledAmount} was successfully added to user wallet')
+
                     return redirect('user-detail',customer.username)
 
 
@@ -825,7 +838,7 @@ def walletFundingPage(request):
                 customer = ''
                 if request.GET.get('customer'):
                     keyword = request.GET.get('customer').strip().lower()
-                    walletFundingRaw =  walletFundingRaw.filter(user__username=keyword)
+                    walletFundingRaw =  walletFundingRaw.filter(Q(user__username=keyword)|Q(sessionId__icontains=keyword))
                     if walletFundingRaw.count() == 0:
                         messages.error(request,f"no wallet funding record found for user'{keyword}'")
                     elif walletFundingRaw.count() > 0 :
