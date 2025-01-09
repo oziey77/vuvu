@@ -112,8 +112,8 @@ $(document).ready(function(){
                     console.log(response)
                     // let registrationError = response.data
                     // console.log(registrationError)
-                    $("#otpValidation").empty();
-                    $("#otpValidation").append(`<p>${response.data}</p>`);
+                    // $("#otpValidation").empty();
+                    // $("#otpValidation").append(`<p>${response.data}</p>`);
                     $("#otpValidation").css('display','block');
                     $("#submitNewPassword").attr("disabled",true);
                     $("#submitNewPassword").addClass("disabled");
