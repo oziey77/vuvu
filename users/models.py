@@ -145,7 +145,7 @@ class User(AbstractBaseUser):
         from payments.models import WalletFunding
         deposits = WalletFunding.objects.filter(user=self)
         total = 0
-        if deposits is not None:
+        if deposits.count() > 0:
             total = deposits.aggregate(TOTAL = Sum('amount'))['TOTAL']
         return total
     

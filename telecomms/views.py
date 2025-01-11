@@ -1182,7 +1182,7 @@ def buyData(request):
         else:
             return JsonResponse({
                 "code":"09",
-                "message":"No funding history found for your account"
+                "message":"Insufficient wallet Balance"
             })
         # else:
         #     return JsonResponse({
