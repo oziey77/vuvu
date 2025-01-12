@@ -336,6 +336,7 @@ def buyAirtime(request):
                         transaction.APIBackend = 'ATN'
                         transaction.save()
                         callBackUrl = "https://webhook.vuvu.ng/atn-webhook.php"
+                        # callBackUrl = "https://webhook.vuvu.ng/atn-webhook.php"
                         url = 'https://www.airtimenigeria.com/api/v1/airtime/purchase'
                         
                         payload = {
@@ -977,6 +978,7 @@ def buyData(request):
                         transaction.APIBackend = 'ATN'
                         transaction.save()
                         callBackUrl = "https://webhook.vuvu.ng/atn-webhook.php"
+                        # callBackUrl = ""
                         # API ENDPOINT for AIRTIME     
                         url = 'https://www.airtimenigeria.com/api/v1/data/purchase'
                         payload = {
@@ -1281,7 +1283,7 @@ def airtimeNGCallback(request):
         
         try:
             # Check if transaction is airtime recharge
-            transaction = Transaction.objects.get(APIreference=reference,reference=customerReference)
+            transaction = Transaction.objects.get(APIreference=reference,reference=customerReference,refunded=False)
             if transaction is not None:
                 if responseData['delivery_status'] == 'refunded':
                     wallet = UserWallet.objects.get(user=transaction.user)
