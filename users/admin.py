@@ -23,12 +23,12 @@ admin.site.register(UserWallet,UserWalletAdmin)
 
 class WalletActivityAdmin(admin.ModelAdmin):
     list_display = ['user','event_type','transaction_type','comment','amount','balanceBefore','balanceAfter',]
-    search_fields = ('user__username',)
+    search_fields = ('user__username','user__email')
 admin.site.register(WalletActivity,WalletActivityAdmin)
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ['user','transaction_type','operator','amount','balanceBefore','balanceAfter','created','status']
-    search_fields = ('user__username','reference',)
+    search_fields = ('user__username','reference','user__username')
 admin.site.register(Transaction,TransactionAdmin)
 
 
