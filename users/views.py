@@ -146,8 +146,8 @@ def signupPage(request):
                 user.is_active = False
                 user.referral_code = refCode
                 user.save() 
-                code =  request.POST['referral_code']  
-                if code !='':
+                code =  request.POST.get('referral_code',None) 
+                if code !='' and code is not None:
                     try:
                         referrer = User.objects.get(referral_code=code)
                         if referrer is not None:
