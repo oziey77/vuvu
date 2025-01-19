@@ -130,6 +130,7 @@ def validateMeter(request):
                     
                     
                     responseData = json.loads(responseData.text)
+                    print(f"Validation response is {responseData}")
                     if responseData['statusCode'] == 200:
                         customerDetails = responseData['data']
                         if customerDetails["vendType"] != meterType.upper():
@@ -202,6 +203,7 @@ def buyElectricity(request):
             customerName = request.POST.get("customerName")
             otherField = request.POST.get("otherField")
             amount = Decimal(request.POST.get("amount"))
+            amountRaw = amount
             saveBeneficiary = request.POST.get('saveBeneficiary')
             
             
@@ -450,7 +452,7 @@ def buyElectricity(request):
                             }                            
 
                             payload = {
-                                "amount": float(amount),
+                                "amount": float(amountRaw),
                                 "channel": "WEB",
                                 "serviceCategoryId": selectedOperator,
                                 "debitAccountNumber": utilityAccount,
@@ -1169,7 +1171,7 @@ def buyCable(request):
                                     }
 
                                     payload = {
-                                        "amount": float(amount),
+                                        "amount": float(cableAmount),
                                         "channel": "WEB",
                                         "serviceCategoryId": selectedOperator,
                                         "debitAccountNumber": utilityAccount,
