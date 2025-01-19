@@ -130,7 +130,7 @@ def validateMeter(request):
                     
                     
                     responseData = json.loads(responseData.text)
-                    print(f"Validation response is {responseData}")
+                    # print(f"Validation response is {responseData}")
                     if responseData['statusCode'] == 200:
                         customerDetails = responseData['data']
                         if customerDetails["vendType"] != meterType.upper():
@@ -476,7 +476,7 @@ def buyElectricity(request):
                             responseData = requests.request("POST", url, headers=headers, json=payload)
                             
                             responseData = json.loads(responseData.text)
-                            print(f"SafeHaven Vend response is '{responseData}' ")
+                            # print(f"SafeHaven Vend response is '{responseData}' ")
                             if responseData['statusCode'] == 200:
                                 details = responseData["data"]
                                 metaData = details['metaData']
