@@ -139,13 +139,24 @@ def validateMeter(request):
                             "message":"wrong meter type selected"
                             })
                         else:
-                            return JsonResponse({
-                                "code":"00",
-                                "customerName":customerDetails["name"],
-                                "address":customerDetails["address"],
-                                "amount":amount,
-                                'backend':"SafeHaven",    
-                            })
+                            if Decimal(amount) < customerDetails["minVendAmount"]:
+                                return JsonResponse({
+                                    "code":"09",
+                                    "message":f"Mininumum amount is {customerDetails['minVendAmount']}"
+                                })
+                            elif Decimal(amount) > customerDetails["maxVendAmount"]:
+                                return JsonResponse({
+                                    "code":"09",
+                                    "message":f"Maximum amount is {customerDetails['maxVendAmount']}"
+                                })
+                            else:                            
+                                return JsonResponse({
+                                    "code":"00",
+                                    "customerName":customerDetails["name"],
+                                    "address":customerDetails["address"],
+                                    "amount":amount,
+                                    'backend':"SafeHaven",    
+                                })
                     else:
                         return JsonResponse({
                             "code":"09",
