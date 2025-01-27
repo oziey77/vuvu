@@ -38,7 +38,7 @@ def checkAirtimeNgBalance():
                 subject = 'Vendor Balance Low'
                 message = f"This is to inform you that your vendor balance with Airtime Nigeria is low:NGN {vendorBalance['balance']}. Please recharge as soon as possible to prevent service disruption."
                 email_from =  'Vuvu <no-reply@vuvu.ng>'
-                recipient_list = ['oluwatobi.otusanya@gmail.com','theolaseni@gmail.com']
+                recipient_list = ['oluwatobi.otusanya@gmail.com','theolaseni@gmail.com','dmaicon91@gmail.com']
                 send_mail(subject,message,email_from,recipient_list)
 
             

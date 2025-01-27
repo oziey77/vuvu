@@ -253,7 +253,7 @@ $(document).ready(function(){
     // Confirm Offer
     $(".continue-offer").on("click",function(){
         // $("#dataAmount").html(price);
-        // $("#cashback").html(offerDiscount);  
+        // $("#cashback").html(offerDiscount);         
         $("#cashback").html(Number(offerDiscount).toLocaleString());  
         $("#total").html(Number(amount - offerDiscount).toLocaleString(undefined,{maximumFractionDigits:2})); 
         offerStatus = "claimed";
