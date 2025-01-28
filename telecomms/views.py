@@ -997,7 +997,6 @@ def buyData(request):
                         response = requests.request('POST', url, headers=headers, json=payload)
                         data = response.json()
 
-                        print(f"ATN RESPONSE IS {data}")
                         
 
                         if data['success'] == True:

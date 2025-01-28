@@ -572,7 +572,7 @@ def dashboardPage(request):
     if giveAwayLevel == 1:    
         if totalDataTrans < 10:
             giveAwayProgress = 20 + ((totalDataTrans/10) * 100)
-        if totalDataTrans >= currentGiveAway["transCount"]:
+        if (totalDataTrans + 2) >= currentGiveAway["transCount"]:
             giveAwayProgress = 100
             giveAwayLevelComplete = True
     else:    
@@ -604,13 +604,12 @@ def dashboardPage(request):
     try:
         notification = DashboardNotification.objects.get(name='Notice')
         if notification is not None:
-            print("We have Notification now")
+            
             context.update({
                 'notification':notification
             })
-            print(context)
-    except ObjectDoesNotExist:
-        print("We do not have Notification")
+            
+    except ObjectDoesNotExist:       
         pass
 
     return render(request,'users/dashboard.html',context)
@@ -641,7 +640,7 @@ def claimGiveAway(request):
         currentGiveAway = GIVEAWAY_DATA[f"level{giveAwayLevel}"]
         canClaim = False
 
-        if giveAwayLevel == 1 and totalDataTrans >= currentGiveAway["transCount"]:
+        if giveAwayLevel == 1 and (totalDataTrans + 2) >= currentGiveAway["transCount"]:
             canClaim = True
         elif giveAwayLevel == 2 and totalDataTrans >= currentGiveAway["transCount"]:
             canClaim = True
@@ -677,7 +676,7 @@ def claimGiveAway(request):
 
             response = requests.request('POST', url, headers=headers, json=payload)
             data = response.json()
-
+            
             
             if data['status'] == "success" or data['status'] == "processing":
                 user.give_away_level = 2
@@ -690,6 +689,7 @@ def claimGiveAway(request):
                     reference = transRef,
                     package = currentGiveAway["reward"],
                     message = "Give-away Reward",
+                    status = "Success",
                     amount = 0,
                     balanceBefore = wallet.balance,
                     balanceAfter = wallet.balance,
