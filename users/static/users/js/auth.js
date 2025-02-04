@@ -48,13 +48,8 @@ $(document).ready(function(){
                         inputValid();
                     }
                 }
-            }))
-
-
-
-            
-        };
-        
+            }))            
+        };        
     });
 
     // Email

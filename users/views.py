@@ -634,6 +634,11 @@ def claimGiveAway(request):
         operator = request.GET.get("selectedOperator")
         recipient = request.GET.get("recipient")
 
+        return JsonResponse({
+                "code":"09",
+                "message":"temporarily unavailable"
+            })
+
         transYear = datetime.now().date().year
         totalDataTrans = Transaction.objects.filter(user=user,transaction_type="Data",created__year=transYear).count()
         giveAwayLevel = user.give_away_level
