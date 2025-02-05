@@ -294,6 +294,7 @@ def buyAirtime(request):
                 WalletActivity.objects.create(
                     user = user,
                     event_type = "Debit",
+                    event_user = "Transaction",
                     transaction_type = "Airtime",
                     comment = f"Airtime {transRef}",
                     amount = amount,
@@ -382,6 +383,7 @@ def buyAirtime(request):
                             WalletActivity.objects.create(
                                 user = user,
                                 event_type = "Credit",
+                                event_user = "Transaction",
                                 transaction_type = "Airtime",
                                 comment = f"Airtime {transRef} Refund",
                                 amount = transaction.amount,
@@ -472,6 +474,7 @@ def buyAirtime(request):
                             WalletActivity.objects.create(
                                 user = user,
                                 event_type = "Credit",
+                                event_user = "Transaction",
                                 transaction_type = "Airtime",
                                 comment = f"Airtime {transRef} Refund",
                                 amount = transaction.amount,
@@ -543,6 +546,7 @@ def buyAirtime(request):
                             WalletActivity.objects.create(
                                 user = user,
                                 event_type = "Credit",
+                                event_user = "Transaction",
                                 transaction_type = "Airtime",
                                 comment = f"Airtime {transRef} Refund",
                                 amount = transaction.amount,
@@ -942,6 +946,7 @@ def buyData(request):
                     WalletActivity.objects.create(
                         user = user,
                         event_type = "Debit",
+                        event_user = "Transaction",
                         transaction_type = "Data",
                         comment = f"Data {transRef}",
                         amount = deductedAmount,                        
@@ -1025,6 +1030,7 @@ def buyData(request):
                             WalletActivity.objects.create(
                                 user = user,
                                 event_type = "Credit",
+                                event_user = "Transaction",
                                 transaction_type = "Data",
                                 comment = f"Data {transRef} Refund",
                                 amount = transaction.amount,
@@ -1086,6 +1092,7 @@ def buyData(request):
                             WalletActivity.objects.create(
                                 user = user,
                                 event_type = "Credit",
+                                event_user = "Transaction",
                                 transaction_type = "Data",
                                 comment = f"Data {transRef} Refund",
                                 amount = transaction.amount,
@@ -1153,6 +1160,7 @@ def buyData(request):
                             WalletActivity.objects.create(
                                 user = user,
                                 event_type = "Credit",
+                                event_user = "Transaction",
                                 transaction_type = "Data",
                                 comment = f"Data {transRef} Refund",
                                 amount = transaction.amount,
@@ -1304,6 +1312,7 @@ def airtimeNGCallback(request):
                     WalletActivity.objects.create(
                         user = transaction.user,
                         event_type = "Credit",
+                        event_user = "Transaction",
                         transaction_type = "Data",
                         comment = comment,
                         amount = transaction.amount,

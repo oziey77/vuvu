@@ -145,6 +145,7 @@ def safeHavenWebhook(request):
                     WalletActivity.objects.create(
                         user = transaction.user,
                         event_type = "Credit",
+                        event_user = "Deposit",
                         transaction_type = 'Top Up',
                         comment = sessionID,
                         amount = settledAmount,
@@ -293,6 +294,7 @@ def safeHavenOneTimeWebhook(request):
                                     WalletActivity.objects.create(
                                         user = transaction.user,
                                         event_type = "Credit",
+                                        event_user = "Deposit",
                                         transaction_type = 'Top Up',
                                         comment = sessionID,
                                         amount = settledAmount,

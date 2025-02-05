@@ -295,6 +295,7 @@ def buyElectricity(request):
                 WalletActivity.objects.create(
                     user = user,
                     event_type = "Debit",
+                    event_user = "Transaction",
                     transaction_type = "Electricity",
                     comment = f"Electricity {transRef}",
                     amount = amount,
@@ -416,6 +417,7 @@ def buyElectricity(request):
                             WalletActivity.objects.create(
                                 user = user,
                                 event_type = "Credit",
+                                event_user = "Transaction",
                                 transaction_type = "Electricity",
                                 comment = f"Electricity {transRef} Refund",
                                 amount = transaction.amount,
@@ -521,6 +523,7 @@ def buyElectricity(request):
                                 WalletActivity.objects.create(
                                     user = user,
                                     event_type = "Credit",
+                                    event_user = "Transaction",
                                     transaction_type = "Electricity",
                                     comment = f"Electricity {transRef} Refund",
                                     amount = transaction.amount,
@@ -939,6 +942,7 @@ def buyCable(request):
                                     WalletActivity.objects.create(
                                         user = user,
                                         event_type = "Debit",
+                                        event_user = "Transaction",
                                         transaction_type = "Cable",
                                         comment = f"Cable {transRef}",
                                         amount = amount,
@@ -1036,6 +1040,7 @@ def buyCable(request):
                                             WalletActivity.objects.create(
                                                 user = user,
                                                 event_type = "Credit",
+                                                event_user = "Transaction",
                                                 transaction_type = "Cable",
                                                 comment = f"Cable {transRef} Refund",
                                                 amount = transaction.amount,
@@ -1132,6 +1137,7 @@ def buyCable(request):
                                 WalletActivity.objects.create(
                                     user = user,
                                     event_type = "Debit",
+                                    event_user = "Transaction",
                                     transaction_type = "Cable",
                                     comment = f"Cable {transRef}",
                                     amount = amount,
@@ -1250,6 +1256,7 @@ def buyCable(request):
                                         WalletActivity.objects.create(
                                             user = user,
                                             event_type = "Credit",
+                                            event_user = "Transaction",
                                             transaction_type = "Cable",
                                             comment = f"Cable {transRef} Refund",
                                             amount = transaction.amount,
@@ -1468,6 +1475,7 @@ def fundBettingWallet(request):
                 WalletActivity.objects.create(
                     user = user,
                     event_type = "Debit",
+                    event_user = "Transaction",
                     transaction_type = "Bet Funding",
                     comment = f"Bet Funding {transRef}",
                     amount = Decimal(amount),
@@ -1580,6 +1588,7 @@ def fundBettingWallet(request):
                             WalletActivity.objects.create(
                                 user = user,
                                 event_type = "Credit",
+                                event_user = "Transaction",
                                 transaction_type = "Bet Funding",
                                 comment = f"Bet Funding {transRef} Refund",
                                 amount = transaction.amount,
@@ -1863,6 +1872,7 @@ def buyInternetPlan(request):
                             WalletActivity.objects.create(
                                 user = user,
                                 event_type = "Debit",
+                                event_user = "Transaction",
                                 transaction_type = "Internet",
                                 comment = f"Internet {transRef}",
                                 amount = Decimal(amount),
@@ -1975,6 +1985,7 @@ def buyInternetPlan(request):
                                         WalletActivity.objects.create(
                                             user = user,
                                             event_type = "Credit",
+                                            event_user = "Transaction",
                                             transaction_type = "Internet",
                                             comment = f"Internet {transRef} Refund",
                                             amount = transaction.amount,
@@ -2179,6 +2190,7 @@ def buyEducationPIN(request):
                             WalletActivity.objects.create(
                                 user = user,
                                 event_type = "Debit",
+                                event_user = "Transaction",
                                 transaction_type = "Education",
                                 comment = f"Education {transRef}",
                                 amount = Decimal(amount),
@@ -2291,6 +2303,7 @@ def buyEducationPIN(request):
                                         WalletActivity.objects.create(
                                             user = user,
                                             event_type = "Credit",
+                                            event_user = "Transaction",
                                             transaction_type = "Education",
                                             comment = f"Education {transRef} Refund",
                                             amount = transaction.amount,
