@@ -304,6 +304,7 @@ def userDetailPage(request,username):
                         WalletActivity.objects.create(
                             user = customer,
                             event_type = "Credit",
+                            event_user = f"Credit by:{user.username}",
                             transaction_type = transactionType,
                             comment = sessionID,
                             amount = settledAmount,
@@ -332,6 +333,46 @@ def userDetailPage(request,username):
                 return render(request,'adminbackend/user-detail.html',context)
             else:
                 return HttpResponse("Invalid credentials")
+
+@login_required(login_url='login')
+def debitUser(request,username):
+    user = request.user
+    if user.is_admin:
+        customer = User.objects.get(username=username)
+        if request.method == "POST" and user.is_staff:
+            transactionType = request.POST.get('transaction-type')
+            amount = request.POST.get('amount')
+            comment = request.POST.get('comment')
+            amount = Decimal(amount)
+            
+            # Get custome wallet
+            customerWallet = UserWallet.objects.get(user=customer)
+            if customerWallet.balance >= amount:
+                balanceBefore = customerWallet.balance
+                customerWallet.balance -= amount
+                customerWallet.save()
+
+                # customer.can_perform_transaction = True
+                # customer.save()
+
+                # Create wallet Activity
+                WalletActivity.objects.create(
+                    user = customer,
+                    event_type = "Debit",
+                    event_user = f"Debit by:{user.username}",
+                    transaction_type = transactionType,
+                    comment = comment,
+                    amount = amount,
+                    balanceBefore = balanceBefore,
+                    balanceAfter = customerWallet.balance,
+                )     
+                messages.success(request,f'{amount} was successfully debited from user wallet')
+            else:
+                messages.error(request,f'{amount} greater wallet balance')
+
+            return redirect('user-detail',customer.username)
+    else:
+        return HttpResponse("Invalid credentials")
     
 # User Wallet Funding Page
 @login_required(login_url='login')

@@ -21,9 +21,13 @@
         <div class="main-content">
             <!-- Fund user -->
              {% if user.is_staff %}
-            <form action="" method="post">
+             <div class="wallet-action-navs">
+                <button class="wallet-action-btn active" id="creditBTN" onclick="">Credit User</button>
+                <button class="wallet-action-btn" id="debitBTN" onclick="">Debit User</button>
+             </div>
+            <form action="" method="post" id="creditForm">
                 {% csrf_token %}
-                <p class="header">Fund User Wallet</p>
+                <p class="header">Credit User Wallet</p>
                 <div class="input-group">
                     <select name="transaction-type" id="" required>
                         <option value="Admin Top Up">Admin Top Up</option>
@@ -38,7 +42,26 @@
                 <!-- <div class="input-group">
                     <input type="text" placeholder="Remark" class="input-element" name="comment" required>                    
                 </div> -->
-                <button class="primary-button full-button">Fund User</button>
+                <button class="primary-button full-button">Credit User</button>
+            </form>
+            <form action="{% url 'debit-user' customer.username %}" method="post" id="debitForm" style="display: none;">
+                {% csrf_token %}
+                <p class="header">Debit User Wallet</p>
+                <div class="input-group">
+                    <select name="transaction-type" id="" required>
+                        <option value="Admin Deduction">Admin Deduction</option>
+                    </select>
+                </div>  
+                <div class="input-group">
+                    <input type="text" placeholder="Amount" class="input-element" name="amount" required>                    
+                </div>
+                <div class="input-group">
+                    <textarea name="comment" id="" rows="4" maxlength="95" required></textarea>                   
+                </div>
+                <!-- <div class="input-group">
+                    <input type="text" placeholder="Remark" class="input-element" name="comment" required>                    
+                </div> -->
+                <button class="primary-button full-button">Debit User</button>
             </form>
             {% if messages %}
                 {% for message in messages%}
@@ -92,5 +115,6 @@
 
     <!-- Scripts -->
     {% include 'adminbackend/includes/scripts.html' %}
+    <script src="{% static 'adminbackend/js/user-detail.js' %}?v=1.01"></script>
 </body>
 </html>

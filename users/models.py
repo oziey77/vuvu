@@ -224,6 +224,7 @@ TRANSACTION_TYPE = (
     ("Education","Education"),
     ("Top Up","Top Up"),
     ("Admin Top Up","Admin Top Up"),
+    ("Admin Deduction","Admin Deduction"),
     ("Cashback Withdrwal","Cashback Withdrwal"),
     ("Referral Bonus","Referral Bonus"),
     ("Give-Away","Give-Away"),
@@ -231,6 +232,7 @@ TRANSACTION_TYPE = (
 class WalletActivity(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     event_type = models.CharField(max_length=10,choices=EVENT_TYPE)
+    event_user = models.CharField(max_length=40,default="Transaction")
     transaction_type = models.CharField(max_length=20,choices=TRANSACTION_TYPE)
     comment = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10,decimal_places=2,default=0.00)

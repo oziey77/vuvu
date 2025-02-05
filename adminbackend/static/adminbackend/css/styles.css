@@ -208,6 +208,16 @@
     box-sizing: border-box;
     padding: 0 20px;
   }
+  .main-container .main-content .wallet-action-navs button{
+    padding: 10px 20px;
+  }
+  .main-container .main-content .wallet-action-navs button:first-child{
+    margin-right: 10px;
+  }
+  .main-container .main-content .wallet-action-navs button.active{
+    background-color: var(--primary-color);
+    color: #FFF;
+  }
   .main-container .main-content .filterButtonGroup form{
     display: flex;
     justify-content: space-around;

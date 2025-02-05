@@ -4,6 +4,7 @@ urlpatterns=[
     path('overview/',views.overviewPage,name='overview'),
     path('users/',views.usersPage,name='all-users'),
     path('user-detail/<str:username>',views.userDetailPage,name='user-detail'),
+    path('debit-user/<str:username>',views.debitUser,name='debit-user'),
     path('user-wallet-funding/<str:username>',views.userWalletfundingPage,name='user-wallet-funding'),
     path('user-wallet-activities/<str:username>',views.userWalletActivityPage,name='user-wallet-activities'),
     path("airtime-backends/",views.airtimeBackendPage,name='airtime-backends'), 
