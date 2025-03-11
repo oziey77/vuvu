@@ -303,18 +303,18 @@ def buyAirtime(request):
                 )
                 # Create Transaction Record
                 transaction = Transaction.objects.create(
-                                user = user,
-                                operator = operator,
-                                transaction_type = "Airtime",
-                                recipient = recipient,
-                                reference = transRef,
-                                package = f"{operator} VTU",
-                                unit_cost = airtimeAmount,
-                                amount = amount,
-                                discount = calculatedDiscount,
-                                balanceBefore = balanceBefore,
-                                balanceAfter = wallet.balance,
-                            )
+                        user = user,
+                        operator = operator,
+                        transaction_type = "Airtime",
+                        recipient = recipient,
+                        reference = transRef,
+                        package = f"{operator} VTU",
+                        unit_cost = airtimeAmount,
+                        amount = amount,
+                        discount = calculatedDiscount,
+                        balanceBefore = balanceBefore,
+                        balanceAfter = wallet.balance,
+                    )
                 
                 transaction.refresh_from_db()
 
@@ -354,7 +354,11 @@ def buyAirtime(request):
                             }
 
                         response = requests.request('POST', url, headers=headers, json=payload)
-                        data = response.json()
+                        # data = response.json()
+                        # print(f"ATN Raw response is {response}")
+                        data = json.loads(response.text)
+
+                        # print(f"ATN response {data}")
                         
                         if data['success'] == True:
 
@@ -1002,6 +1006,8 @@ def buyData(request):
                         response = requests.request('POST', url, headers=headers, json=payload)
                         data = response.json()
 
+                        # print(f"ATN response is {data}")
+
                         
 
                         if data['success'] == True:
@@ -1131,6 +1137,7 @@ def buyData(request):
 
                         response = requests.request('POST', url, headers=headers, json=payload)
                         data = response.json()
+                        print(f"Twins Response is response is {data}")
 
                         
                         if data['status'] == "success" or data['status'] == "processing":

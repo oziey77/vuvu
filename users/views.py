@@ -342,6 +342,7 @@ def loginPage(request):
             except ObjectDoesNotExist:
                 messages.error(request,'username/password is incorrect')
                 return redirect('login')
+    
     return render(request,'users/login.html')
 
 def logoutUser(request):
