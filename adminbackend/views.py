@@ -1500,6 +1500,42 @@ def updateLastActivity(request):
                     "code":"09",
                 })
 
+@login_required(login_url='login')
+def updatePlanStatus(request):
+    user = request.user
+    if user.is_admin:
+        if is_ajax(request=request) and request.method == 'GET':
+            planBackend = request.GET.get('backend')
+            planID = request.GET.get('id')
+            if planBackend == "ATN":
+                plan = ATNDataPlans.objects.get(id=planID)
+                if plan.available == True:
+                    plan.available = False
+                    plan.save()
+                else:
+                    plan.available = True
+                    plan.save()
+            if planBackend == "HONOURWORLD":
+                plan = HonouworldDataPlans.objects.get(id=planID)
+                if plan.available == True:
+                    plan.available = False
+                    plan.save()
+                else:
+                    plan.available = True
+                    plan.save()
+            if planBackend == "TWINS10":
+                plan = Twins10DataPlans.objects.get(id=planID)
+                if plan.available == True:
+                    plan.available = False
+                    plan.save()
+                else:
+                    plan.available = True
+                    plan.save()
+            
+            return JsonResponse({
+                "code":"00",
+                "message":"plan status updated"
+            })
 
 
 

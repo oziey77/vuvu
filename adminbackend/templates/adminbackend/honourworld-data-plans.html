@@ -44,6 +44,7 @@
                         <th scope="col">Plan</th>
                         <th scope="col">Vendor Rate</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Available</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -53,6 +54,19 @@
                         <td data-label="Plan">{{ data.plan }}</td>
                         <td data-label="Vendor Rate"><span>&#8358;</span>{{ data.vendor_price|intcomma }}</td>
                         <td data-label="Price"><span>&#8358;</span>{{ data.price|intcomma }}</td>
+                        <td data-label="Available">
+                            {% if data.available == True %}
+                            <label class="switch">
+                                <input class="checkbox plan-avaialbility" type="checkbox" id="plan-{{data.id}}" checked>
+                                <span class="slider round"></span>
+                            </label>
+                            {% else %}
+                            <label class="switch">
+                                <input class="checkbox plan-avaialbility" type="checkbox" id="plan-{{data.id}}" >
+                                <span class="slider round"></span>
+                            </label>
+                            {% endif %}
+                        </td>
                       </tr>
                     {% endfor %}
                     </tbody>
@@ -121,5 +135,28 @@
 
     <!-- Scripts -->
     {% include 'adminbackend/includes/scripts.html' %}
+    <script>
+        $(document).ready(function(){
+            console.log("connected")
+            // Update Plan availability
+            $(".plan-avaialbility").on('click',function(){  
+                let checkbox = $(this)      
+                let idData = $(this).attr('id').split('-')
+                $.ajax(({
+                    url:'/update-plan-status/',
+                    // headers: {'X-CSRFToken': $csrf_token},
+                    type:'GET',
+                    data:{
+                        'backend':"HONOURWORLD",
+                        'id':idData[1],
+                    },
+                    success:function(response){    
+                        console.log(response)        
+                    }
+                }))       
+                
+            })
+        })
+    </script>
 </body>
 </html>

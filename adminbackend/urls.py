@@ -58,4 +58,5 @@ urlpatterns=[
     path("honourworld-balance/",views.fetchHonourworldBalance),
 
     path("update-last-activity/",views.updateLastActivity),
+    path("update-plan-status/",views.updatePlanStatus),
 ]
