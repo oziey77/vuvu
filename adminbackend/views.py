@@ -1537,6 +1537,22 @@ def updatePlanStatus(request):
                 "message":"plan status updated"
             })
 
+# User Detials Page
+@login_required(login_url='login')
+def testPage(request):
+    user = request.user
+    # PIN 2FA
+    if user.secret_key_set == False:
+        return redirect('pin-auth')
+    elif user.secret_key_set == True:
+        if user.secret_key_timedout == True:
+            return redirect('pin-auth')
+        else:
+            if user.is_admin:
+                
+                return render(request,'adminbackend/test-page.html')
+            else:
+                return HttpResponse("Invalid credentials")
 
 
 

@@ -59,4 +59,5 @@ urlpatterns=[
 
     path("update-last-activity/",views.updateLastActivity),
     path("update-plan-status/",views.updatePlanStatus),
+    path('test-page/',views.testPage,name='test-page'),
 ]
